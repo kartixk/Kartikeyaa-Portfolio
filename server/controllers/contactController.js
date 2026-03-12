@@ -15,23 +15,23 @@ export const handleContact = async (req, res) => {
       const transporter = nodemailer.createTransport(
         process.env.SMTP_HOST && process.env.SMTP_HOST.includes('gmail.com')
           ? {
-              service: 'gmail',
-              auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS.replace(/\s+/g, ''), // Strip spaces from App Password just in case!
-              },
-            }
+            service: 'gmail',
+            auth: {
+              user: process.env.SMTP_USER,
+              pass: process.env.SMTP_PASS.replace(/\s+/g, ''), // Strip spaces from App Password just in case!
+            },
+          }
           : {
-              host: process.env.SMTP_HOST,
-              port: Number(process.env.SMTP_PORT) || 587,
-              secure: Boolean(process.env.SMTP_SECURE === 'true'),
-              auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS,
-              },
-            }
+            host: process.env.SMTP_HOST,
+            port: Number(process.env.SMTP_PORT) || 587,
+            secure: Boolean(process.env.SMTP_SECURE === 'true'),
+            auth: {
+              user: process.env.SMTP_USER,
+              pass: process.env.SMTP_PASS,
+            },
+          }
       );
-
+      //SS
       // 1. Notification to Admin (Kartikeya)
       await transporter.sendMail({
         from: `"Portfolio Notification" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
