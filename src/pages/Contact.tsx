@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Mail, Phone, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
@@ -11,7 +11,15 @@ const Contact = () => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  //SS
+
+  // Pre-warm the Render server when the page loads so it's awake when user submits
+  useEffect(() => {
+    const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+    if (baseUrl) {
+      fetch(`${baseUrl}/api/health`, { method: 'GET' }).catch(() => {/* silent */});
+    }
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !message) {
@@ -21,7 +29,7 @@ const Contact = () => {
 
     setIsSubmitting(true);
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 15s timeout
+    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout for Render cold starts
 
     try {
       const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
