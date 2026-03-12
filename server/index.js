@@ -17,7 +17,23 @@ if (process.env.NODE_ENV !== 'production') {
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
+const allowedOrigins = [
+  'http://localhost:8080',
+  'http://localhost:5173',
+  process.env.CORS_ORIGIN
+].filter(Boolean);
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    // Also allow any vercel.app subdomain, or specific allowed origins
+    if (!origin || (origin && origin.includes('vercel.app')) || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 app.use(express.json());
 
 app.get('/api/health', (_req, res) => {
