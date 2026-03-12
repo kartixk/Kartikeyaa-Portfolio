@@ -3,9 +3,9 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import contactRoutes from './routes/contactRoutes.js';
-
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,22 +45,43 @@ app.use('/api', contactRoutes);
 // Static file serving in production
 if (process.env.NODE_ENV === 'production') {
   const publicPath = path.resolve(__dirname, '..', 'dist');
-  console.log('Serving static files from:', publicPath);
+  console.log('Production mode detected. Serving static files from:', publicPath);
+
+  if (fs.existsSync(publicPath)) {
+    console.log('Static directory found. Contents:', fs.readdirSync(publicPath));
+  } else {
+    console.error('Static directory NOT FOUND at:', publicPath);
+    console.log('Root directory contains:', fs.readdirSync(path.resolve(__dirname, '..')));
+  }
 
   // Serve any static files
   app.use(express.static(publicPath));
 
   // Handle React routing, return all requests to React app
   app.get('*', (req, res) => {
+    // Only serve index.html for non-API requests
     if (!req.path.startsWith('/api')) {
       const indexPath = path.resolve(publicPath, 'index.html');
-      res.sendFile(indexPath, (err) => {
-        if (err) {
-          console.error('Error sending index.html:', err.message);
-          res.status(500).send('Frontend build not found. Please ensure the build command succeeded.');
-        }
-      });
+      if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+      } else {
+        console.error('index.html not found at:', indexPath);
+        res.status(404).send(`
+          <html>
+            <body>
+              <h1>Frontend Build Not Found</h1>
+              <p>The server is running, but the frontend build (index.html) was not found at <code>${indexPath}</code>.</p>
+              <p>Please check your Render build logs to ensure <code>npm run build</code> succeeded.</p>
+            </body>
+          </html>
+        `);
+      }
     }
+  });
+} else {
+  // Simple welcome message for non-production
+  app.get('/', (req, res) => {
+    res.send('Server is running in development mode. Use the frontend dev server for the UI.');
   });
 }
 
