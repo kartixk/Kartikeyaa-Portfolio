@@ -42,6 +42,19 @@ app.get('/api/health', (_req, res) => {
 
 app.use('/api', contactRoutes);
 
+// Static file serving in production
+if (process.env.NODE_ENV === 'production') {
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, '../dist')));
+
+  // Handle React routing, return all requests to React app
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+    }
+  });
+}
+
 const mongoUri = process.env.MONGODB_URI;
 
 if (!mongoUri) {
