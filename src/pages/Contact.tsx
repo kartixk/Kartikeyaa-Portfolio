@@ -11,7 +11,7 @@ const Contact = () => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  //SS
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !message) {
@@ -22,6 +22,7 @@ const Contact = () => {
     setIsSubmitting(true);
     try {
       const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+      console.log('Using API Base URL:', baseUrl ? baseUrl : 'EMPTY (Using relative path)');
       const response = await fetch(`${baseUrl}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -66,7 +67,7 @@ const Contact = () => {
                     I'm always open to new opportunities, collaborations, and interesting conversations. Feel free to reach out!
                   </p>
                 </div>
-                
+
                 <div className="space-y-6">
                   <div className="flex items-center gap-4 group">
                     <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
@@ -77,7 +78,7 @@ const Contact = () => {
                       <span className="text-foreground font-medium">kartikeyaa15@gmail.com</span>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center gap-4 group">
                     <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
                       <Phone className="text-primary" size={20} />
@@ -87,7 +88,7 @@ const Contact = () => {
                       <span className="text-foreground font-medium">+91-8250977949</span>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center gap-4 group">
                     <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
                       <MapPin className="text-primary" size={20} />
