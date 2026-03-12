@@ -20,6 +20,9 @@ const Contact = () => {
     }
 
     setIsSubmitting(true);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 15s timeout
+
     try {
       const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
       console.log('Using API Base URL:', baseUrl ? baseUrl : 'EMPTY (Using relative path)');
@@ -27,11 +30,15 @@ const Contact = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, phone: phone || undefined, message }),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const data = await response.json().catch(() => null);
-        throw new Error(data?.error || 'Failed to send message');
+        const errMsg = data?.error || `Server error (${response.status})`;
+        throw new Error(errMsg);
       }
 
       toast.success("Message sent! I'll get back to you soon.");
@@ -39,13 +46,25 @@ const Contact = () => {
       setEmail('');
       setPhone('');
       setMessage('');
-    } catch (error) {
-      console.error(error);
-      toast.error('Something went wrong while sending your message. Please try again.');
+    } catch (error: unknown) {
+      clearTimeout(timeoutId);
+      console.error('Contact form error:', error);
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          toast.error('Request timed out. The server may be waking up — please try again in 30 seconds.');
+        } else if (error.message.toLowerCase().includes('failed to fetch') || error.message.toLowerCase().includes('networkerror')) {
+          toast.error('Could not connect to the server. Please check your internet or try again later.');
+        } else {
+          toast.error(`Failed to send: ${error.message}`);
+        }
+      } else {
+        toast.error('Something went wrong. Please try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <PageTransition>
@@ -156,9 +175,21 @@ const Contact = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-3.5 mt-2 rounded-lg bg-primary text-primary-foreground font-semibold hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 glow-border"
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3.5 mt-2 rounded-lg bg-primary text-primary-foreground font-semibold hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed glow-border"
                 >
-                  {isSubmitting ? 'Sending...' : 'Send Message'} <Send size={18} />
+                  {isSubmitting ? (
+                    <>
+                      <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      Send Message <Send size={18} />
+                    </>
+                  )}
                 </button>
               </motion.form>
             </div>
