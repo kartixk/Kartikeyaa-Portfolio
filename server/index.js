@@ -45,40 +45,53 @@ app.use('/api', contactRoutes);
 // Static file serving in production
 if (process.env.NODE_ENV === 'production') {
   const publicPath = path.resolve(__dirname, '..', 'dist');
-  console.log('Production mode detected. Serving static files from:', publicPath);
+  console.log('Production mode detected.');
+  console.log('Static files path:', publicPath);
 
   if (fs.existsSync(publicPath)) {
-    console.log('Static directory found. Contents:', fs.readdirSync(publicPath));
+    console.log('Static directory exists. Contents:', fs.readdirSync(publicPath));
   } else {
-    console.error('Static directory NOT FOUND at:', publicPath);
-    console.log('Root directory contains:', fs.readdirSync(path.resolve(__dirname, '..')));
+    console.error('Static directory NOT FOUND.');
+    console.log('Root directory folders:', fs.readdirSync(path.resolve(__dirname, '..')));
   }
 
   // Serve any static files
   app.use(express.static(publicPath));
 
-  // Handle React routing, return all requests to React app
+  // Handle React routing
   app.get('*', (req, res) => {
-    // Only serve index.html for non-API requests
     if (!req.path.startsWith('/api')) {
       const indexPath = path.resolve(publicPath, 'index.html');
       if (fs.existsSync(indexPath)) {
         res.sendFile(indexPath);
       } else {
-        console.error('index.html not found at:', indexPath);
-        res.status(404).send(`
-          <html>
-            <body>
-              <h1>Frontend Build Not Found</h1>
-              <p>The server is running, but the frontend build (index.html) was not found at <code>${indexPath}</code>.</p>
-              <p>Please check your Render build logs to ensure <code>npm run build</code> succeeded.</p>
-            </body>
-          </html>
-        `);
+        const rootIndexPath = path.resolve(__dirname, '..', 'index.html');
+        console.error('index.html not found in dist. Looking in root.');
+        
+        if (fs.existsSync(rootIndexPath)) {
+          console.warn('Serving root index.html as fallback (this might not work correctly).');
+          res.sendFile(rootIndexPath);
+        } else {
+           res.status(404).send(`
+            <div style="font-family: sans-serif; padding: 20px;">
+              <h1>Deployment Error: Build Missing</h1>
+              <p>The server is running, but the <code>dist/index.html</code> file is missing.</p>
+              <hr/>
+              <h3>Action Required:</h3>
+              <ol>
+                <li>Go to Render Dashboard -> Settings</li>
+                <li>Ensure <b>Build Command</b> is set to: <code>npm run render-build</code></li>
+                <li>Ensure <b>Start Command</b> is set to: <code>npm start</code></li>
+                <li>Go to "Manual Deploy" -> "Clear Build Cache & Deploy"</li>
+              </ol>
+            </div>
+          `);
+        }
       }
     }
   });
-} else {
+}
+ else {
   // Simple welcome message for non-production
   app.get('/', (req, res) => {
     res.send('Server is running in development mode. Use the frontend dev server for the UI.');
