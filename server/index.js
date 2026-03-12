@@ -44,13 +44,22 @@ app.use('/api', contactRoutes);
 
 // Static file serving in production
 if (process.env.NODE_ENV === 'production') {
+  const publicPath = path.resolve(__dirname, '..', 'dist');
+  console.log('Serving static files from:', publicPath);
+
   // Serve any static files
-  app.use(express.static(path.join(__dirname, '../dist')));
+  app.use(express.static(publicPath));
 
   // Handle React routing, return all requests to React app
   app.get('*', (req, res) => {
     if (!req.path.startsWith('/api')) {
-      res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+      const indexPath = path.resolve(publicPath, 'index.html');
+      res.sendFile(indexPath, (err) => {
+        if (err) {
+          console.error('Error sending index.html:', err.message);
+          res.status(500).send('Frontend build not found. Please ensure the build command succeeded.');
+        }
+      });
     }
   });
 }
