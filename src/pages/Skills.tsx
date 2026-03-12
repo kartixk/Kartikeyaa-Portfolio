@@ -21,8 +21,8 @@ const skillCategories = [
   },
   {
     icon: Brain,
-    title: 'Other',
-    skills: ['Machine Learning', 'IoT', 'NLP', 'TensorFlow'],
+    title: 'Currently Exploring',
+    skills: ['Machine Learning Basics', 'IoT', 'NLP Concepts', 'TensorFlow (Beginner)'],
   },
 ];
 

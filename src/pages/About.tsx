@@ -1,15 +1,9 @@
 import { motion } from 'framer-motion';
-import { User, MapPin, Mail, Phone, Github, Linkedin, Globe, Brain, Cpu, Server, GraduationCap, Briefcase, Code2, Rocket } from 'lucide-react';
+import { User, MapPin, Mail, Phone, Github, Linkedin, Globe, Cpu, Server, GraduationCap, Briefcase, Code2, Rocket } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import SectionHeader from '@/components/SectionHeader';
 
 const timeline = [
-  {
-    year: '2022',
-    title: 'Started B.Tech at GITAM University',
-    description: 'Began Computer Science journey specializing in IoT',
-    icon: GraduationCap,
-  },
   {
     year: '2024',
     title: 'MERN Full Stack Training',
@@ -25,16 +19,28 @@ const timeline = [
   {
     year: '2025',
     title: 'AI-ML Virtual Internship',
-    description: 'Deep learning & NLP projects with EduSkills',
-    icon: Brain,
+    description: 'Explored AI/ML foundations through EduSkills virtual internship',
+    icon: Code2,
+  },
+  {
+    year: '2022',
+    title: 'Started B.Tech at GITAM University',
+    description: 'Began Computer Science journey specializing in IoT',
+    icon: GraduationCap,
+  },
+  {
+    year: '2020',
+    title: 'Senior Secondary – Sri Chaitanya Junior College',
+    description: 'Completed 12th (PCM) and developed a strong interest in computing',
+    icon: GraduationCap,
   },
 ];
 
 const highlights = [
   { label: 'MERN Stack Development', icon: Globe, color: 'primary' },
-  { label: 'Machine Learning Projects', icon: Brain, color: 'secondary' },
-  { label: 'IoT Systems Development', icon: Cpu, color: 'accent' },
-  { label: 'Scalable Full Stack Apps', icon: Server, color: 'primary' },
+  { label: 'API & Backend Engineering', icon: Server, color: 'primary' },
+  { label: 'IoT & Real‑time Systems', icon: Cpu, color: 'accent' },
+  { label: 'Clean, Usable Interfaces', icon: Code2, color: 'secondary' },
 ];
 
 const interests = [
@@ -43,12 +49,6 @@ const interests = [
     description: 'Building modern, responsive web applications with React and Node.js',
     icon: Globe,
     gradient: 'from-primary/20 to-primary/5',
-  },
-  {
-    title: 'AI / Machine Learning',
-    description: 'Creating intelligent models for sentiment analysis and classification',
-    icon: Brain,
-    gradient: 'from-secondary/20 to-secondary/5',
   },
   {
     title: 'IoT Systems',
@@ -61,6 +61,12 @@ const interests = [
     description: 'Designing multi-tenant architectures and optimized backend services',
     icon: Rocket,
     gradient: 'from-primary/20 to-accent/5',
+  },
+  {
+    title: 'Learning AI / ML',
+    description: 'Currently exploring ML concepts through internships and personal projects',
+    icon: Code2,
+    gradient: 'from-secondary/20 to-secondary/5',
   },
 ];
 
@@ -87,17 +93,16 @@ const About = () => {
                 </div>
                 <div>
                   <h3 className="text-xl font-heading font-bold text-foreground">B Venkata Sai Kartikeya</h3>
-                  <p className="text-sm text-primary font-medium">Full Stack Developer & AI/ML Enthusiast</p>
+                  <p className="text-sm text-primary font-medium">Full Stack MERN Developer · IoT Enthusiast</p>
                 </div>
               </div>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                Computer Science undergraduate at GITAM University specializing in software development,
-                machine learning, and IoT systems. I thrive on building performant, scalable applications
-                and exploring the intersection of web technologies and artificial intelligence.
+                Computer Science undergraduate at GITAM University with a strong focus on web development and IoT
+                systems. I enjoy taking ideas from a simple sketch to a reliable, production-ready application.
               </p>
               <p className="text-muted-foreground leading-relaxed mb-6">
-                With hands-on experience in the MERN stack, Python-based ML models, and real-time IoT
-                monitoring systems, I bring a versatile skill set to every project I undertake.
+                Most of my recent work lives in the MERN stack and real-time monitoring projects. I care about clear
+                architecture, maintainable code, and smooth user experiences more than chasing every new buzzword.
               </p>
 
               {/* Social buttons */}
@@ -180,7 +185,7 @@ const About = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: i * 0.1 }}
                     whileHover={{ y: -4, scale: 1.03 }}
-                    className="glass-card p-5 text-center hover:border-primary/40 transition-all duration-300 group"
+                    className="glass-card p-5 text-center hover:border-primary/40 transition-all duration-300 group cursor-pointer"
                   >
                     <div className="mx-auto mb-3 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                       <Icon className="text-primary" size={20} />
@@ -263,7 +268,7 @@ const About = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: i * 0.1 }}
                     whileHover={{ y: -6, scale: 1.02 }}
-                    className="glass-card glow-border p-6 group cursor-default overflow-hidden relative"
+                    className="glass-card glow-border p-6 group cursor-pointer overflow-hidden relative"
                   >
                     {/* Gradient overlay */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${interest.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
