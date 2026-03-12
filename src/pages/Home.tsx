@@ -6,9 +6,10 @@ import PageTransition from '@/components/PageTransition';
 import SectionHeader from '@/components/SectionHeader';
 import { useProjectsStore } from '@/stores/projectsStore';
 
-// Particle canvas component
+// Particle canvas component with subtle cursor "gravity"
 const ParticleBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mouseRef = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -26,7 +27,17 @@ const ParticleBackground = () => {
     resize();
     window.addEventListener('resize', resize);
 
-    for (let i = 0; i < 60; i++) {
+    const handlePointerMove = (event: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
+      };
+    };
+
+    window.addEventListener('pointermove', handlePointerMove);
+
+    for (let i = 0; i < 45; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -37,44 +48,52 @@ const ParticleBackground = () => {
       });
     }
 
-    const animate = () => {
+    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+    const drawFrame = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach((p) => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
+        if (!prefersReducedMotion) {
+          const mouse = mouseRef.current;
+          if (mouse) {
+            const dx = mouse.x - p.x;
+            const dy = mouse.y - p.y;
+            const dist = Math.hypot(dx, dy) || 1;
+            const force = Math.min(80 / dist, 0.25);
+            p.vx += (dx / dist) * force * 0.02;
+            p.vy += (dy / dist) * force * 0.02;
+          }
+
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0) p.x = canvas.width;
+          if (p.x > canvas.width) p.x = 0;
+          if (p.y < 0) p.y = canvas.height;
+          if (p.y > canvas.height) p.y = 0;
+        }
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(14, 165, 233, ${p.opacity})`;
         ctx.fill();
       });
+    };
 
-      // Draw connections
-      particles.forEach((a, i) => {
-        particles.slice(i + 1).forEach((b) => {
-          const dist = Math.hypot(a.x - b.x, a.y - b.y);
-          if (dist < 120) {
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = `rgba(14, 165, 233, ${0.08 * (1 - dist / 120)})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        });
-      });
-
+    const animate = () => {
+      drawFrame();
       animationId = requestAnimationFrame(animate);
     };
-    animate();
+
+    if (prefersReducedMotion) {
+      drawFrame();
+    } else {
+      animate();
+    }
 
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener('resize', resize);
+      window.removeEventListener('pointermove', handlePointerMove);
     };
   }, []);
 
@@ -171,26 +190,7 @@ const Home = () => {
             />
           </div>
 
-          {/* Floating tech icons */}
-          {floatingIcons.map((item) => (
-            <motion.div
-              key={item.label}
-              className="absolute text-2xl opacity-20 pointer-events-none select-none hidden md:block"
-              style={{ left: item.x, top: item.y }}
-              animate={{
-                y: [0, -15, 0, 10, 0],
-                rotate: [0, 5, -5, 0],
-              }}
-              transition={{
-                duration: 6,
-                repeat: Infinity,
-                delay: item.delay,
-                ease: 'easeInOut',
-              }}
-            >
-              <span className="text-3xl">{item.icon}</span>
-            </motion.div>
-          ))}
+          {/* Floating tech emojis removed for a cleaner background */}
 
           <div className="section-container text-center relative z-10 pt-24">
             {/* Role badge */}
