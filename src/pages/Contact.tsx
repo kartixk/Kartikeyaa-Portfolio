@@ -12,14 +12,6 @@ const Contact = () => {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Pre-warm the Render server when the page loads so it's awake when user submits
-  useEffect(() => {
-    const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
-    if (baseUrl) {
-      fetch(`${baseUrl}/api/health`, { method: 'GET' }).catch(() => {/* silent */});
-    }
-  }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !message) {
@@ -28,25 +20,16 @@ const Contact = () => {
     }
 
     setIsSubmitting(true);
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout for Render cold starts
-
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
-      console.log('Using API Base URL:', baseUrl ? baseUrl : 'EMPTY (Using relative path)');
-      const response = await fetch(`${baseUrl}/api/contact`, {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, phone: phone || undefined, message }),
-        signal: controller.signal,
       });
-
-      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const data = await response.json().catch(() => null);
-        const errMsg = data?.error || `Server error (${response.status})`;
-        throw new Error(errMsg);
+        throw new Error(data?.error || `Error (${response.status})`);
       }
 
       toast.success("Message sent! I'll get back to you soon.");
@@ -54,25 +37,13 @@ const Contact = () => {
       setEmail('');
       setPhone('');
       setMessage('');
-    } catch (error: unknown) {
-      clearTimeout(timeoutId);
-      console.error('Contact form error:', error);
-      if (error instanceof Error) {
-        if (error.name === 'AbortError') {
-          toast.error('Request timed out. The server may be waking up — please try again in 30 seconds.');
-        } else if (error.message.toLowerCase().includes('failed to fetch') || error.message.toLowerCase().includes('networkerror')) {
-          toast.error('Could not connect to the server. Please check your internet or try again later.');
-        } else {
-          toast.error(`Failed to send: ${error.message}`);
-        }
-      } else {
-        toast.error('Something went wrong. Please try again.');
-      }
+    } catch (error) {
+      console.error('Contact error:', error);
+      toast.error('Failed to send. Please email me at kartikeyaa15@gmail.com');
     } finally {
       setIsSubmitting(false);
     }
   };
-
 
   return (
     <PageTransition>
