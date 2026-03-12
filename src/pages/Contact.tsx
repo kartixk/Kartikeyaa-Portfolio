@@ -22,6 +22,7 @@ const Contact = () => {
     setIsSubmitting(true);
     try {
       const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+      console.log('Using API Base URL:', baseUrl ? baseUrl : 'EMPTY (Using relative path)');
       const response = await fetch(`${baseUrl}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
