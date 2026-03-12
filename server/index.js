@@ -27,7 +27,11 @@ app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
     // Also allow any vercel.app subdomain, or specific allowed origins
-    if (!origin || (origin && origin.includes('vercel.app')) || allowedOrigins.includes(origin)) {
+    // Allow requests from Vercel, Render subdomains, and localhost
+    if (!origin || 
+        origin.includes('vercel.app') || 
+        origin.includes('onrender.com') || 
+        allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -65,28 +69,22 @@ if (process.env.NODE_ENV === 'production') {
       if (fs.existsSync(indexPath)) {
         res.sendFile(indexPath);
       } else {
-        const rootIndexPath = path.resolve(__dirname, '..', 'index.html');
-        console.error('index.html not found in dist. Looking in root.');
-        
-        if (fs.existsSync(rootIndexPath)) {
-          console.warn('Serving root index.html as fallback (this might not work correctly).');
-          res.sendFile(rootIndexPath);
-        } else {
-           res.status(404).send(`
-            <div style="font-family: sans-serif; padding: 20px;">
-              <h1>Deployment Error: Build Missing</h1>
-              <p>The server is running, but the <code>dist/index.html</code> file is missing.</p>
-              <hr/>
-              <h3>Action Required:</h3>
-              <ol>
-                <li>Go to Render Dashboard -> Settings</li>
-                <li>Ensure <b>Build Command</b> is set to: <code>npm run render-build</code></li>
-                <li>Ensure <b>Start Command</b> is set to: <code>npm start</code></li>
-                <li>Go to "Manual Deploy" -> "Clear Build Cache & Deploy"</li>
-              </ol>
-            </div>
-          `);
-        }
+        res.status(404).send(`
+          <div style="font-family: sans-serif; padding: 20px; line-height: 1.6;">
+            <h1 style="color: #d32f2f;">Deployment Error: Build Folder Missing</h1>
+            <p>The backend server is running, but the <b>frontend build</b> (the <code>dist</code> folder) was not created.</p>
+            <hr/>
+            <h3>How to fix this:</h3>
+            <ol>
+              <li>Go to your <b>Render Dashboard</b>.</li>
+              <li>Go to <b>Settings</b>.</li>
+              <li>Check your <b>Build Command</b>. It MUST be: <code>npm run render-build</code></li>
+              <li>Check your <b>Start Command</b>. It MUST be: <code>npm start</code></li>
+              <li>Go to <b>Manual Deploy</b> and click <b>"Clear Build Cache & Deploy"</b>.</li>
+            </ol>
+            <p><i>Note: The build process usually takes 2-3 minutes. Check the "Logs" tab in Render to see if "vite build" completes successfully.</i></p>
+          </div>
+        `);
       }
     }
   });
