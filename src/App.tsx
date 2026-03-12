@@ -5,6 +5,7 @@ import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import Navbar from '@/components/Navbar';
 import { AnimatePresence } from 'framer-motion';
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -44,6 +45,7 @@ const App = () => (
           </AnimatePresence>
         </Suspense>
       </BrowserRouter>
+      <SpeedInsights />
     </TooltipProvider>
   </QueryClientProvider>
 );
