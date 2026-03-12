@@ -17,7 +17,7 @@ const ParticleBackground = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationId: number;
+    let animationId: number | undefined;
     const particles: { x: number; y: number; vx: number; vy: number; size: number; opacity: number }[] = [];
 
     const resize = () => {
@@ -91,7 +91,9 @@ const ParticleBackground = () => {
     }
 
     return () => {
-      cancelAnimationFrame(animationId);
+      if (animationId !== undefined) {
+        cancelAnimationFrame(animationId);
+      }
       window.removeEventListener('resize', resize);
       window.removeEventListener('pointermove', handlePointerMove);
     };
@@ -251,7 +253,8 @@ const Home = () => {
                 <Mail size={18} /> Contact Me
               </Link>
               <a
-                href="#"
+                href="https://res.cloudinary.com/dvf0ugwrr/image/upload/fl_attachment/v1773323338/kartikeyaa-Resume_sko8bi.pdf"
+                download="Kartikeya-Resume.pdf"
                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl glass-card border border-accent/30 text-accent font-semibold hover:border-accent/60 hover:shadow-[0_0_20px_hsl(160_84%_39%/0.2)] transition-all duration-300"
               >
                 <Download size={18} /> Download Resume
@@ -266,21 +269,34 @@ const Home = () => {
               className="flex items-center justify-center gap-5 mt-10"
             >
               {[
-                { href: 'mailto:kartikeyaa15@gmail.com', icon: Mail, label: 'Email' },
+                { to: '/contact', icon: Mail, label: 'Email' },
                 { href: 'https://linkedin.com', icon: Linkedin, label: 'LinkedIn' },
                 { href: 'https://github.com', icon: Github, label: 'GitHub' },
-              ].map(({ href, icon: Icon, label }) => (
-                <motion.a
-                  key={label}
-                  href={href}
-                  target={href.startsWith('mailto') ? undefined : '_blank'}
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.15, y: -2 }}
-                  className="p-2.5 rounded-lg glass-card border border-border/40 text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
-                >
-                  <Icon size={20} />
-                </motion.a>
-              ))}
+              ].map(({ href, to, icon: Icon, label }) => {
+                if (to) {
+                  return (
+                    <Link
+                      key={label}
+                      to={to}
+                      className="inline-block p-2.5 rounded-lg glass-card border border-border/40 text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors hover:scale-110 hover:-translate-y-1"
+                    >
+                      <Icon size={20} />
+                    </Link>
+                  );
+                }
+                return (
+                  <motion.a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.15, y: -2 }}
+                    className="p-2.5 rounded-lg glass-card border border-border/40 text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
+                  >
+                    <Icon size={20} />
+                  </motion.a>
+                );
+              })}
             </motion.div>
           </div>
 

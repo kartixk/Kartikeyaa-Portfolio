@@ -48,39 +48,54 @@ const Contact = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen pt-24 gradient-bg">
-        <div className="section-container !py-12 md:!py-16 flex items-center">
-          <div className="w-full max-w-5xl mx-auto">
+      <div className="min-h-screen pt-20 pb-10 gradient-bg flex flex-col justify-center">
+        <div className="section-container !py-4 flex items-center">
+          <div className="w-full max-w-4xl mx-auto">
             <SectionHeader title="Contact" subtitle="Let's work together" />
 
-            <div className="grid md:grid-cols-2 gap-10 items-stretch">
+            <div className="grid md:grid-cols-2 gap-12 items-start">
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="space-y-6"
+                className="space-y-8 py-4"
               >
-                <p className="text-muted-foreground leading-relaxed">
-                  I'm always open to new opportunities, collaborations, and interesting conversations. Feel free to reach out!
-                </p>
                 <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                      <Mail className="text-primary" size={18} />
+                  <h3 className="text-2xl font-bold gradient-text">Get in Touch</h3>
+                  <p className="text-muted-foreground leading-relaxed max-w-md">
+                    I'm always open to new opportunities, collaborations, and interesting conversations. Feel free to reach out!
+                  </p>
+                </div>
+                
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4 group">
+                    <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                      <Mail className="text-primary" size={20} />
                     </div>
-                    <span className="text-muted-foreground">kartikeyaa15@gmail.com</span>
+                    <div>
+                      <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Email</p>
+                      <span className="text-foreground font-medium">kartikeyaa15@gmail.com</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                      <Phone className="text-primary" size={18} />
+                  
+                  <div className="flex items-center gap-4 group">
+                    <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                      <Phone className="text-primary" size={20} />
                     </div>
-                    <span className="text-muted-foreground">+91-8250977949</span>
+                    <div>
+                      <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Phone</p>
+                      <span className="text-foreground font-medium">+91-8250977949</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                      <MapPin className="text-primary" size={18} />
+                  
+                  <div className="flex items-center gap-4 group">
+                    <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                      <MapPin className="text-primary" size={20} />
                     </div>
-                    <span className="text-muted-foreground">Visakhapatnam, India</span>
+                    <div>
+                      <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Location</p>
+                      <span className="text-foreground font-medium">Visakhapatnam, India</span>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -90,54 +105,59 @@ const Contact = () => {
                 initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="glass-card glow-border p-6 space-y-4"
+                className="glass-card glow-border p-8 space-y-5"
               >
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Name</label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
-                    placeholder="Your name"
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-1.5 ml-1">Name</label>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-inter"
+                      placeholder="Your name"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-1.5 ml-1">Phone</label>
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-inter"
+                      placeholder="Optional"
+                    />
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Phone (optional)</label>
-                  <input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
-                    placeholder="+91-XXXXXXXXXX"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Email</label>
+                  <label className="block text-sm font-medium text-foreground mb-1.5 ml-1">Email</label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
+                    className="w-full px-4 py-2.5 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-inter"
                     placeholder="your@email.com"
+                    required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Message</label>
+                  <label className="block text-sm font-medium text-foreground mb-1.5 ml-1">Message</label>
                   <textarea
                     rows={4}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow resize-none"
+                    className="w-full px-4 py-2.5 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-inter resize-none"
                     placeholder="What's on your mind?"
+                    required
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity disabled:opacity-50 glow-border"
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3.5 mt-2 rounded-lg bg-primary text-primary-foreground font-semibold hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 glow-border"
                 >
-                  {isSubmitting ? 'Sending...' : 'Send Message'} <Send size={16} />
+                  {isSubmitting ? 'Sending...' : 'Send Message'} <Send size={18} />
                 </button>
               </motion.form>
             </div>
