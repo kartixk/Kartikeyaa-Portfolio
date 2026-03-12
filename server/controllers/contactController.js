@@ -25,10 +25,12 @@ export const handleContact = async (req, res) => {
         const transporter = nodemailer.createTransport(
           process.env.SMTP_HOST && process.env.SMTP_HOST.includes('gmail.com')
             ? {
-              service: 'gmail',
+              host: 'smtp.gmail.com',
+              port: 465,
+              secure: true,
               auth: {
                 user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS.replace(/\s+/g, ''), // Strip spaces from App Password just in case!
+                pass: process.env.SMTP_PASS,
               },
             }
             : {
