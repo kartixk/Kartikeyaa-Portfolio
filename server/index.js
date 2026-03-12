@@ -69,20 +69,27 @@ if (process.env.NODE_ENV === 'production') {
       if (fs.existsSync(indexPath)) {
         res.sendFile(indexPath);
       } else {
+        const rootPath = path.resolve(__dirname, '..');
+        const rootFiles = fs.readdirSync(rootPath);
+        console.error('index.html not found. Root directory contents:', rootFiles);
+        
         res.status(404).send(`
-          <div style="font-family: sans-serif; padding: 20px; line-height: 1.6;">
+          <div style="font-family: sans-serif; padding: 20px; line-height: 1.6; max-width: 800px; margin: 0 auto;">
             <h1 style="color: #d32f2f;">Deployment Error: Build Folder Missing</h1>
-            <p>The backend server is running, but the <b>frontend build</b> (the <code>dist</code> folder) was not created.</p>
+            <p>The backend server is running, but the <b>frontend build</b> (the <code>dist</code> folder) was not found.</p>
+            <p>Current Directory: <code>${process.cwd()}</code></p>
+            <p>Looking for dist at: <code>${publicPath}</code></p>
             <hr/>
             <h3>How to fix this:</h3>
             <ol>
               <li>Go to your <b>Render Dashboard</b>.</li>
               <li>Go to <b>Settings</b>.</li>
-              <li>Check your <b>Build Command</b>. It MUST be: <code>npm run render-build</code></li>
-              <li>Check your <b>Start Command</b>. It MUST be: <code>npm start</code></li>
+              <li>Ensure <b>Build Command</b> is exactly: <code>npm run render-build</code></li>
+              <li>Ensure <b>Start Command</b> is exactly: <code>npm start</code></li>
+              <li>Ensure <b>Environment Variable</b> <code>NODE_ENV</code> is <code>production</code></li>
               <li>Go to <b>Manual Deploy</b> and click <b>"Clear Build Cache & Deploy"</b>.</li>
             </ol>
-            <p><i>Note: The build process usually takes 2-3 minutes. Check the "Logs" tab in Render to see if "vite build" completes successfully.</i></p>
+            <p><i>Note: The build process usually takes 2-3 minutes. Check the "Logs" tab in Render for any errors during <code>npm run build</code>.</i></p>
           </div>
         `);
       }
