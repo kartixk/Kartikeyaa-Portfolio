@@ -1,7 +1,7 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowRight, Github, Linkedin, Mail, Download, ExternalLink, Briefcase, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useRef, useEffect, useState, useMemo } from 'react';
+import { useRef, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
 import SectionHeader from '@/components/SectionHeader';
 import { useProjectsStore } from '@/stores/projectsStore';
