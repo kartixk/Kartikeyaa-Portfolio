@@ -5,15 +5,9 @@ import SectionHeader from '@/components/SectionHeader';
 
 const timeline = [
   {
-    year: 'Dec 2025 - Present',
-    title: 'MERN Stack Developer Intern',
-    description: 'Working on real-world projects at Spotmies LLP',
-    icon: Code2,
-  },
-  {
-    year: '2025',
-    title: 'AI-ML Virtual Internship',
-    description: 'Explored AI/ML foundations through EduSkills virtual internship',
+    year: '2024',
+    title: 'MERN Full Stack Training',
+    description: 'Completed intensive training at XceedIQ Innovate360',
     icon: Code2,
   },
   {
@@ -23,9 +17,9 @@ const timeline = [
     icon: Briefcase,
   },
   {
-    year: '2024',
-    title: 'MERN Full Stack Training',
-    description: 'Completed intensive training at XceedIQ Innovate360',
+    year: '2025',
+    title: 'AI-ML Virtual Internship',
+    description: 'Explored AI/ML foundations through EduSkills virtual internship',
     icon: Code2,
   },
   {
@@ -37,12 +31,17 @@ const timeline = [
   {
     year: '2020',
     title: 'Senior Secondary – Sri Chaitanya Junior College',
-    description: 'Completed 12th (PCM) with 85%',
+    description: 'Completed 12th (PCM) and developed a strong interest in computing',
     icon: GraduationCap,
   },
 ];
 
-
+const highlights = [
+  { label: 'MERN Stack Development', icon: Globe, color: 'primary' },
+  { label: 'API & Backend Engineering', icon: Server, color: 'primary' },
+  { label: 'IoT & Real‑time Systems', icon: Cpu, color: 'accent' },
+  { label: 'Clean, Usable Interfaces', icon: Code2, color: 'secondary' },
+];
 
 const interests = [
   {
@@ -165,7 +164,38 @@ const About = () => {
             </motion.div>
           </div>
 
-
+          {/* ─── HIGHLIGHTS ─── */}
+          <div className="mb-20">
+            <motion.h3
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-xl font-heading font-semibold text-foreground mb-6 text-center"
+            >
+              What I Specialize In
+            </motion.h3>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {highlights.map((h, i) => {
+                const Icon = h.icon;
+                return (
+                  <motion.div
+                    key={h.label}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: i * 0.1 }}
+                    whileHover={{ y: -4, scale: 1.03 }}
+                    className="glass-card p-5 text-center hover:border-primary/40 transition-all duration-300 group cursor-pointer"
+                  >
+                    <div className="mx-auto mb-3 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                      <Icon className="text-primary" size={20} />
+                    </div>
+                    <p className="text-sm font-medium text-foreground">{h.label}</p>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
 
           {/* ─── TIMELINE ─── */}
           <div className="mb-20">
@@ -191,8 +221,9 @@ const About = () => {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: i * 0.15 }}
-                    className={`relative flex items-start mb-10 md:mb-12 ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'
-                      } pl-16 md:pl-0`}
+                    className={`relative flex items-start mb-10 md:mb-12 ${
+                      isLeft ? 'md:flex-row' : 'md:flex-row-reverse'
+                    } pl-16 md:pl-0`}
                   >
                     {/* Dot on line */}
                     <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 w-5 h-5 rounded-full bg-background border-2 border-primary flex items-center justify-center z-10">

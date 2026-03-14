@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Mail, Phone, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
@@ -21,7 +21,8 @@ const Contact = () => {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch('/api/contact', {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+      const response = await fetch(`${baseUrl}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, phone: phone || undefined, message }),
@@ -29,7 +30,7 @@ const Contact = () => {
 
       if (!response.ok) {
         const data = await response.json().catch(() => null);
-        throw new Error(data?.error || `Error (${response.status})`);
+        throw new Error(data?.error || 'Failed to send message');
       }
 
       toast.success("Message sent! I'll get back to you soon.");
@@ -38,8 +39,8 @@ const Contact = () => {
       setPhone('');
       setMessage('');
     } catch (error) {
-      console.error('Contact error:', error);
-      toast.error('Failed to send. Please email me at kartikeyaa15@gmail.com');
+      console.error(error);
+      toast.error('Something went wrong while sending your message. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -47,54 +48,39 @@ const Contact = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen pt-20 pb-10 gradient-bg flex flex-col justify-center">
-        <div className="section-container !py-4 flex items-center">
-          <div className="w-full max-w-4xl mx-auto">
+      <div className="min-h-screen pt-24 gradient-bg">
+        <div className="section-container !py-12 md:!py-16 flex items-center">
+          <div className="w-full max-w-5xl mx-auto">
             <SectionHeader title="Contact" subtitle="Let's work together" />
 
-            <div className="grid md:grid-cols-2 gap-12 items-start">
+            <div className="grid md:grid-cols-2 gap-10 items-stretch">
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="space-y-8 py-4"
+                className="space-y-6"
               >
+                <p className="text-muted-foreground leading-relaxed">
+                  I'm always open to new opportunities, collaborations, and interesting conversations. Feel free to reach out!
+                </p>
                 <div className="space-y-4">
-                  <h3 className="text-2xl font-bold gradient-text">Get in Touch</h3>
-                  <p className="text-muted-foreground leading-relaxed max-w-md">
-                    I'm always open to new opportunities, collaborations, and interesting conversations. Feel free to reach out!
-                  </p>
-                </div>
-
-                <div className="space-y-6">
-                  <div className="flex items-center gap-4 group">
-                    <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                      <Mail className="text-primary" size={20} />
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <Mail className="text-primary" size={18} />
                     </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Email</p>
-                      <span className="text-foreground font-medium">kartikeyaa15@gmail.com</span>
-                    </div>
+                    <span className="text-muted-foreground">kartikeyaa15@gmail.com</span>
                   </div>
-
-                  <div className="flex items-center gap-4 group">
-                    <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                      <Phone className="text-primary" size={20} />
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <Phone className="text-primary" size={18} />
                     </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Phone</p>
-                      <span className="text-foreground font-medium">+91-8250977949</span>
-                    </div>
+                    <span className="text-muted-foreground">+91-8250977949</span>
                   </div>
-
-                  <div className="flex items-center gap-4 group">
-                    <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                      <MapPin className="text-primary" size={20} />
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <MapPin className="text-primary" size={18} />
                     </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Location</p>
-                      <span className="text-foreground font-medium">Visakhapatnam, India</span>
-                    </div>
+                    <span className="text-muted-foreground">Visakhapatnam, India</span>
                   </div>
                 </div>
               </motion.div>
@@ -104,71 +90,54 @@ const Contact = () => {
                 initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="glass-card glow-border p-8 space-y-5"
+                className="glass-card glow-border p-6 space-y-4"
               >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-1.5 ml-1">Name</label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-inter"
-                      placeholder="Your name"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-1.5 ml-1">Phone</label>
-                    <input
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-inter"
-                      placeholder="Optional"
-                    />
-                  </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1">Name</label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
+                    placeholder="Your name"
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5 ml-1">Email</label>
+                  <label className="block text-sm font-medium text-foreground mb-1">Phone (optional)</label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
+                    placeholder="+91-XXXXXXXXXX"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1">Email</label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-inter"
+                    className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
                     placeholder="your@email.com"
-                    required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5 ml-1">Message</label>
+                  <label className="block text-sm font-medium text-foreground mb-1">Message</label>
                   <textarea
                     rows={4}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-inter resize-none"
+                    className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow resize-none"
                     placeholder="What's on your mind?"
-                    required
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-3.5 mt-2 rounded-lg bg-primary text-primary-foreground font-semibold hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed glow-border"
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity disabled:opacity-50 glow-border"
                 >
-                  {isSubmitting ? (
-                    <>
-                      <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      Send Message <Send size={18} />
-                    </>
-                  )}
+                  {isSubmitting ? 'Sending...' : 'Send Message'} <Send size={16} />
                 </button>
               </motion.form>
             </div>
