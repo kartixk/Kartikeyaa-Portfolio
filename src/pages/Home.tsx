@@ -1,7 +1,7 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowRight, Github, Linkedin, Mail, Download, ExternalLink, Briefcase, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useRef, useEffect, useState, useMemo } from 'react';
+import { useRef, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
 import SectionHeader from '@/components/SectionHeader';
 import { useProjectsStore } from '@/stores/projectsStore';
@@ -92,8 +92,6 @@ const Home = () => {
               style={{ background: 'radial-gradient(circle, hsl(160 84% 39% / 0.06), transparent 70%)' }}
             />
           </div>
-
-          {/* Floating tech emojis removed for a cleaner background */}
 
           <div className="section-container text-center relative z-10 pt-24">
             {/* Role badge */}
