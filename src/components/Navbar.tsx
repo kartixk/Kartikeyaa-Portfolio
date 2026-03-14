@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Code2 } from 'lucide-react';
+import GradientMenu from '@/components/ui/gradient-menu';
 
 const navItems = [
   { label: 'Home', path: '/' },
@@ -26,21 +27,9 @@ const Navbar = () => {
             <span className="gradient-text">Kartikeya</span>
           </Link>
 
-          {/* Desktop */}
-          <div className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  location.pathname === item.path
-                    ? 'text-primary bg-primary/10'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+          {/* Desktop — gradient pill menu */}
+          <div className="hidden md:flex items-center">
+            <GradientMenu />
           </div>
 
           {/* Mobile toggle */}
