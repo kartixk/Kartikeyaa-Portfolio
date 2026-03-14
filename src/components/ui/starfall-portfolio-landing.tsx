@@ -69,7 +69,7 @@ const AuroraBackground: React.FC = () => {
 };
 
 // --- DEFAULT DATA ---
-const defaultData = {
+const defaultData: Required<Omit<PortfolioPageProps, 'showAnimatedBackground'>> = {
   logo: { initials: 'MT', name: 'Meng To' },
   navLinks: [ { label: 'About', href: '#about' }, { label: 'Projects', href: '#projects' }, { label: 'Skills', href: '#skills' } ],
   resume: { label: 'Resume' },
