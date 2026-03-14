@@ -1,116 +1,11 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowRight, Github, Linkedin, Mail, Download, ExternalLink, Briefcase, ChevronRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { useRef, useEffect, useState, useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useRef } from 'react';
 import PageTransition from '@/components/PageTransition';
 import SectionHeader from '@/components/SectionHeader';
 import { useProjectsStore } from '@/stores/projectsStore';
-
-// Particle canvas component with subtle cursor "gravity"
-const ParticleBackground = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef<{ x: number; y: number } | null>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animationId: number | undefined;
-    const particles: { x: number; y: number; vx: number; vy: number; size: number; opacity: number }[] = [];
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    const handlePointerMove = (event: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current = {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top,
-      };
-    };
-
-    window.addEventListener('pointermove', handlePointerMove);
-
-    for (let i = 0; i < 45; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        size: Math.random() * 2 + 0.5,
-        opacity: Math.random() * 0.5 + 0.1,
-      });
-    }
-
-    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-
-    const drawFrame = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((p) => {
-        if (!prefersReducedMotion) {
-          const mouse = mouseRef.current;
-          if (mouse) {
-            const dx = mouse.x - p.x;
-            const dy = mouse.y - p.y;
-            const dist = Math.hypot(dx, dy) || 1;
-            const force = Math.min(80 / dist, 0.25);
-            p.vx += (dx / dist) * force * 0.02;
-            p.vy += (dy / dist) * force * 0.02;
-          }
-
-          p.x += p.vx;
-          p.y += p.vy;
-          if (p.x < 0) p.x = canvas.width;
-          if (p.x > canvas.width) p.x = 0;
-          if (p.y < 0) p.y = canvas.height;
-          if (p.y > canvas.height) p.y = 0;
-        }
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(14, 165, 233, ${p.opacity})`;
-        ctx.fill();
-      });
-    };
-
-    const animate = () => {
-      drawFrame();
-      animationId = requestAnimationFrame(animate);
-    };
-
-    if (prefersReducedMotion) {
-      drawFrame();
-    } else {
-      animate();
-    }
-
-    return () => {
-      if (animationId !== undefined) {
-        cancelAnimationFrame(animationId);
-      }
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('pointermove', handlePointerMove);
-    };
-  }, []);
-
-  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />;
-};
-
-// Floating tech icons
-const floatingIcons = [
-  { label: 'React', icon: '⚛️', x: '10%', y: '20%', delay: 0 },
-  { label: 'Node', icon: '🟢', x: '85%', y: '15%', delay: 0.5 },
-  { label: 'Python', icon: '🐍', x: '75%', y: '70%', delay: 1 },
-  { label: 'MongoDB', icon: '🍃', x: '15%', y: '75%', delay: 1.5 },
-  { label: 'Docker', icon: '🐳', x: '90%', y: '45%', delay: 2 },
-  { label: 'JS', icon: '✨', x: '5%', y: '50%', delay: 2.5 },
-];
+import { PortfolioPage } from '@/components/ui/starfall-portfolio-landing';
 
 // Tech stack strip data
 const techStack = [
@@ -122,34 +17,10 @@ const techStack = [
   { name: 'Docker', color: 'hsl(210, 80%, 55%)' },
 ];
 
-// Text reveal animation
-const textReveal = {
-  hidden: { opacity: 0 },
-  visible: (i: number) => ({
-    opacity: 1,
-    transition: { delay: i * 0.05, duration: 0.3 },
-  }),
-};
-
-const charReveal = (text: string, baseDelay: number = 0) => {
-  return text.split('').map((char, i) => (
-    <motion.span
-      key={i}
-      custom={i + baseDelay}
-      variants={textReveal}
-      initial="hidden"
-      animate="visible"
-      className="inline-block"
-    >
-      {char === ' ' ? '\u00A0' : char}
-    </motion.span>
-  ));
-};
-
 const Home = () => {
   const { projects } = useProjectsStore();
   const featuredProjects = projects.slice(0, 3);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const skillsPreview = [
     { category: 'Frontend', skills: ['React', 'TypeScript', 'Tailwind CSS'] },
@@ -165,157 +36,63 @@ const Home = () => {
 
   return (
     <PageTransition>
-      <div ref={containerRef} className="gradient-bg">
-        {/* ─── HERO SECTION ─── */}
-        <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
-          <ParticleBackground />
-
-          {/* Animated gradient orbs */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <motion.div
-              animate={{ x: [0, 40, 0], y: [0, -30, 0], scale: [1, 1.1, 1] }}
-              transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute top-1/4 left-1/5 w-80 h-80 rounded-full blur-3xl"
-              style={{ background: 'radial-gradient(circle, hsl(199 89% 48% / 0.12), transparent 70%)' }}
-            />
-            <motion.div
-              animate={{ x: [0, -30, 0], y: [0, 40, 0], scale: [1, 1.15, 1] }}
-              transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute bottom-1/4 right-1/5 w-96 h-96 rounded-full blur-3xl"
-              style={{ background: 'radial-gradient(circle, hsl(270 60% 55% / 0.1), transparent 70%)' }}
-            />
-            <motion.div
-              animate={{ x: [0, 20, 0], y: [0, -20, 0] }}
-              transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl"
-              style={{ background: 'radial-gradient(circle, hsl(160 84% 39% / 0.06), transparent 70%)' }}
-            />
-          </div>
-
-          {/* Floating tech emojis removed for a cleaner background */}
-
-          <div className="section-container text-center relative z-10 pt-24">
-            {/* Role badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card border border-primary/30 mb-6"
-            >
-              <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-              <span className="text-sm font-medium text-primary tracking-wide">
-                Full Stack Developer · MERN · AI/ML · IoT
-              </span>
-            </motion.div>
-
-            {/* Name with character reveal */}
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold mb-4 leading-tight">
-              <span className="gradient-text block">{charReveal('B Venkata Sai')}</span>
-              <motion.span
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8, duration: 0.6 }}
-                className="text-foreground block"
-              >
-                Kartikeya
-              </motion.span>
-            </h1>
-
-            {/* Description */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.1, duration: 0.6 }}
-              className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
-            >
-              Computer Science undergraduate specializing in software development,
-              machine learning, and IoT systems. Experienced in building full stack
-              applications and data-driven models.
-            </motion.p>
-
-            {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.4, duration: 0.5 }}
-              className="flex items-center justify-center gap-4 flex-wrap"
-            >
-              <Link
-                to="/projects"
-                className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-primary text-primary-foreground font-semibold hover:shadow-[0_0_30px_hsl(199_89%_48%/0.4)] transition-all duration-300 hover:scale-105"
-              >
-                View Projects <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl glass-card border border-border/60 text-foreground font-semibold hover:border-primary/50 hover:shadow-[0_0_20px_hsl(199_89%_48%/0.2)] transition-all duration-300"
-              >
-                <Mail size={18} /> Contact Me
-              </Link>
-              <a
-                href="https://res.cloudinary.com/dvf0ugwrr/image/upload/fl_attachment/v1773323338/kartikeyaa-Resume_sko8bi.pdf"
-                download="Kartikeya-Resume.pdf"
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl glass-card border border-accent/30 text-accent font-semibold hover:border-accent/60 hover:shadow-[0_0_20px_hsl(160_84%_39%/0.2)] transition-all duration-300"
-              >
-                <Download size={18} /> Download Resume
-              </a>
-            </motion.div>
-
-            {/* Social links */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.8, duration: 0.5 }}
-              className="flex items-center justify-center gap-5 mt-10"
-            >
-              {[
-                { to: '/contact', icon: Mail, label: 'Email' },
-                { href: 'https://linkedin.com', icon: Linkedin, label: 'LinkedIn' },
-                { href: 'https://github.com', icon: Github, label: 'GitHub' },
-              ].map(({ href, to, icon: Icon, label }) => {
-                if (to) {
-                  return (
-                    <Link
-                      key={label}
-                      to={to}
-                      className="inline-block p-2.5 rounded-lg glass-card border border-border/40 text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors hover:scale-110 hover:-translate-y-1"
-                    >
-                      <Icon size={20} />
-                    </Link>
-                  );
-                }
-                return (
-                  <motion.a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.15, y: -2 }}
-                    className="p-2.5 rounded-lg glass-card border border-border/40 text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
-                  >
-                    <Icon size={20} />
-                  </motion.a>
-                );
-              })}
-            </motion.div>
-          </div>
-
-          {/* Scroll indicator */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 2.5 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          >
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex items-start justify-center p-1.5"
-            >
-              <motion.div className="w-1.5 h-1.5 rounded-full bg-primary" />
-            </motion.div>
-          </motion.div>
-        </section>
+      <div className="gradient-bg">
+        {/* ─── STARFALL HERO ─── */}
+        <PortfolioPage
+          logo={{
+            initials: 'BK',
+            name: 'Kartikeya',
+          }}
+          navLinks={[
+            { label: 'About', href: '/about' },
+            { label: 'Projects', href: '/projects' },
+            { label: 'Skills', href: '/skills' },
+          ]}
+          resume={{
+            label: 'Download Resume',
+            onClick: () => {
+              window.open('https://res.cloudinary.com/dvf0ugwrr/image/upload/fl_attachment/v1773323338/kartikeyaa-Resume_sko8bi.pdf', '_blank');
+            },
+          }}
+          hero={{
+            titleLine1: 'Full Stack Developer &',
+            titleLine2Gradient: 'AI/ML Enthusiast',
+            subtitle: 'Computer Science undergraduate specializing in software development, machine learning, and IoT systems. Experienced in building full stack applications and data-driven models.',
+          }}
+          ctaButtons={{
+            primary: {
+              label: 'View Projects',
+              onClick: () => navigate('/projects'),
+            },
+            secondary: {
+              label: 'Contact Me',
+              onClick: () => navigate('/contact'),
+            },
+          }}
+          projects={[
+            {
+              title: 'Velvet Plate',
+              description: 'Full stack SaaS restaurant management with multi-tenant architecture.',
+              tags: ['React', 'Node.js', 'MongoDB'],
+            },
+            {
+              title: 'Zenith-Zap Platform',
+              description: 'Mobile-first React platform supporting 50+ daily users.',
+              tags: ['React', 'Express', 'REST API'],
+            },
+            {
+              title: 'Sentiment Analysis',
+              description: 'BiLSTM ML model for sentiment classification with 82% accuracy.',
+              tags: ['Python', 'TensorFlow', 'NLP'],
+            },
+          ]}
+          stats={[
+            { value: '10+', label: 'Projects Built' },
+            { value: '2+', label: 'Internships' },
+            { value: '82%', label: 'ML Accuracy' },
+          ]}
+          showAnimatedBackground={true}
+        />
 
         {/* ─── TECH STACK STRIP ─── */}
         <section className="relative py-8 border-y border-border/30 overflow-hidden">
