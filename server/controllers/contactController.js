@@ -48,7 +48,7 @@ export const handleContact = async (req, res) => {
       await transporter.sendMail({
         from: `"B Venkata Sai Kartikeya" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
         to: email,
-        subject: `Thanks for reaching out, ${name}!`,
+        subject: `Thanks for reaching out, `,
         html: `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,21 +61,21 @@ export const handleContact = async (req, res) => {
 </head>
 <body style="margin:0;padding:0;background:#f8fafc;font-family:'DM Sans',Helvetica,Arial,sans-serif;">
 
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;padding:56px 16px 64px;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;padding:32px 16px 48px;">
 <tr><td align="center">
-<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;box-shadow:0 4px 20px -2px rgba(0,0,0,0.05);overflow:hidden;">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;margin:0 auto;background:#ffffff;border-radius:12px;box-shadow:0 4px 20px -2px rgba(0,0,0,0.05);overflow:hidden;">
 
   <!-- Thin top accent line -->
   <tr>
-    <td style="height:2px;background:linear-gradient(90deg,transparent 0%,#6d28d9 30%,#06b6d4 70%,transparent 100%);"></td>
+    <td style="height:3px;background:linear-gradient(90deg,transparent 0%,#6d28d9 30%,#06b6d4 70%,transparent 100%);"></td>
   </tr>
 
   <!-- HEADER BLOCK -->
   <tr>
-    <td style="padding:60px 56px 52px;text-align:center;">
+    <td style="padding:48px 40px 40px;text-align:center;">
 
       <!-- Monogram -->
-      <table cellpadding="0" cellspacing="0" style="margin:0 auto 36px;">
+      <table cellpadding="0" cellspacing="0" style="margin:0 auto 24px;">
         <tr>
           <td style="width:64px;height:64px;text-align:center;vertical-align:middle;position:relative;">
             <!-- Outer ring -->
@@ -90,8 +90,8 @@ export const handleContact = async (req, res) => {
       </table>
 
       <!-- Name wordmark -->
-      <p style="margin:0 0 10px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:5px;text-transform:uppercase;color:#64748b;">B · Venkata Sai Kartikeya</p>
-      <h1 style="margin:0;font-family:'DM Serif Display',Georgia,serif;font-size:38px;font-weight:400;color:#0f172a;letter-spacing:-1px;line-height:1.1;">Your message<br><em style="color:#6d28d9;font-style:italic;">has arrived.</em></h1>
+      <p style="margin:0 0 8px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:5px;text-transform:uppercase;color:#64748b;">B · Venkata Sai Kartikeya</p>
+      <h1 style="margin:0;font-family:'DM Serif Display',Georgia,serif;font-size:34px;font-weight:400;color:#0f172a;letter-spacing:-1px;line-height:1.2;">Your message<br><em style="color:#6d28d9;font-style:italic;">has arrived.</em></h1>
     </td>
   </tr>
 
@@ -104,30 +104,30 @@ export const handleContact = async (req, res) => {
 
   <!-- BODY BLOCK -->
   <tr>
-    <td style="padding:48px 56px 40px;">
+    <td style="padding:40px 48px 32px;">
 
       <!-- Greeting -->
       <p style="margin:0 0 6px;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#64748b;">Hello,</p>
-      <p style="margin:0 0 28px;font-family:'DM Serif Display',Georgia,serif;font-size:28px;font-weight:400;color:#0f172a;line-height:1.2;">${name}</p>
+      <p style="margin:0 0 16px;font-family:'DM Serif Display',Georgia,serif;font-size:24px;font-weight:400;color:#0f172a;line-height:1.2;">${name}</p>
 
-      <p style="margin:0 0 36px;font-size:15px;line-height:1.85;color:#475569;font-weight:400;">
+      <p style="margin:0 0 28px;font-size:15px;line-height:1.7;color:#475569;font-weight:400;">
         Thank you for taking the time to reach out. Your message has been safely delivered to my inbox — I've read every word, and I genuinely appreciate you connecting with me.
       </p>
 
       <!-- Response time strip -->
-      <table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:36px;">
+      <table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:28px;">
         <tr>
           <td style="background:#f8fafc;border:1px solid rgba(139,92,246,0.1);border-radius:8px;padding:0;">
             <table cellpadding="0" cellspacing="0" width="100%">
               <tr>
                 <!-- Left accent bar -->
                 <td style="width:4px;background:linear-gradient(180deg,#6d28d9,#06b6d4);border-radius:8px 0 0 8px;">&nbsp;</td>
-                <td style="padding:20px 24px;">
+                <td style="padding:16px 20px;">
                   <p style="margin:0 0 3px;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#64748b;">Response Window</p>
-                  <p style="margin:0;font-family:'DM Serif Display',Georgia,serif;font-size:24px;color:#334155;font-weight:400;">24 – 48 hours</p>
+                  <p style="margin:0;font-family:'DM Serif Display',Georgia,serif;font-size:20px;color:#334155;font-weight:400;">24 – 48 hours</p>
                 </td>
-                <td style="padding-right:24px;text-align:right;vertical-align:middle;">
-                  <span style="font-size:28px;opacity:0.2;color:#64748b;">◷</span>
+                <td style="padding-right:20px;text-align:right;vertical-align:middle;">
+                  <span style="font-size:24px;opacity:0.2;color:#64748b;">◷</span>
                 </td>
               </tr>
             </table>
@@ -136,16 +136,16 @@ export const handleContact = async (req, res) => {
       </table>
 
       <!-- Quote block -->
-      <table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:36px;">
+      <table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:32px;">
         <tr>
-          <td style="padding:20px 24px 20px 28px;background:rgba(109,40,217,0.03);border-left:3px solid #6d28d9;border-radius:0 8px 8px 0;">
-            <p style="margin:0 0 8px;font-family:'DM Serif Display',Georgia,serif;font-size:17px;font-style:italic;color:#6d28d9;line-height:1.7;">"The details are not the details.<br>They make the design."</p>
+          <td style="padding:16px 20px 16px 24px;background:rgba(109,40,217,0.03);border-left:3px solid #6d28d9;border-radius:0 8px 8px 0;">
+            <p style="margin:0 0 8px;font-family:'DM Serif Display',Georgia,serif;font-size:16px;font-style:italic;color:#6d28d9;line-height:1.6;">"The details are not the details.<br>They make the design."</p>
             <p style="margin:0;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#64748b;">— Charles Eames</p>
           </td>
         </tr>
       </table>
 
-      <p style="margin:0;font-size:14px;line-height:1.9;color:#475569;font-weight:400;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#475569;font-weight:400;">
         While you wait, explore my work on
         <a href="https://github.com/kartixk" style="color:#06b6d4;text-decoration:none;font-weight:500;border-bottom:1px solid rgba(6,182,212,0.3);">GitHub</a>
         &nbsp;or browse the
@@ -157,19 +157,19 @@ export const handleContact = async (req, res) => {
 
   <!-- DIVIDER -->
   <tr>
-    <td style="padding:0 56px;">
+    <td style="padding:0 48px;">
       <div style="height:1px;background:rgba(0,0,0,0.05);"></div>
     </td>
   </tr>
 
   <!-- SIGNATURE BLOCK -->
   <tr>
-    <td style="padding:32px 56px 44px;">
+    <td style="padding:28px 48px 36px;">
       <table cellpadding="0" cellspacing="0" width="100%">
         <tr>
           <td>
             <p style="margin:0 0 2px;font-family:'DM Serif Display',Georgia,serif;font-size:18px;font-weight:400;color:#0f172a;">B Venkata Sai Kartikeya</p>
-            <p style="margin:0 0 12px;font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:#64748b;">Full-Stack Developer · MERN &amp; IoT</p>
+            <p style="margin:0 0 10px;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#64748b;">Full-Stack Developer · MERN &amp; IoT</p>
             <p style="margin:0;font-size:12px;color:#475569;font-weight:400;">Visakhapatnam, India &nbsp;&nbsp;·&nbsp;&nbsp; kartikeyaa15@gmail.com</p>
           </td>
         </tr>
@@ -179,7 +179,7 @@ export const handleContact = async (req, res) => {
 
   <!-- Bottom accent line -->
   <tr>
-    <td style="height:2px;background:linear-gradient(90deg,transparent 0%,#6d28d9 30%,#06b6d4 70%,transparent 100%);"></td>
+    <td style="height:3px;background:linear-gradient(90deg,transparent 0%,#6d28d9 30%,#06b6d4 70%,transparent 100%);"></td>
   </tr>
 
 </table>
@@ -187,7 +187,7 @@ export const handleContact = async (req, res) => {
 <!-- Footer -->
 <table cellpadding="0" cellspacing="0" width="100%">
   <tr>
-    <td style="padding:24px 16px 0;text-align:center;">
+    <td style="padding:20px 16px 0;text-align:center;">
       <p style="margin:0;font-size:11px;font-weight:400;letter-spacing:0.5px;color:#94a3b8;">Automated confirmation · No reply necessary</p>
     </td>
   </tr>

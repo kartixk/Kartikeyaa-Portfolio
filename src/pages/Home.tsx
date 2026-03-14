@@ -5,6 +5,7 @@ import { useRef, useEffect, useState, useMemo } from 'react';
 import PageTransition from '@/components/PageTransition';
 import SectionHeader from '@/components/SectionHeader';
 import { useProjectsStore } from '@/stores/projectsStore';
+import { AuroraBackground } from '@/components/ui/starfall-portfolio-landing';
 
 // Floating tech icons
 const floatingIcons = [
@@ -72,28 +73,10 @@ const Home = () => {
       <div ref={containerRef} className="gradient-bg">
         {/* ─── HERO SECTION ─── */}
         <section className="min-h-screen flex items-center justify-center relative z-10">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <motion.div
-              animate={{ x: [0, 40, 0], y: [0, -30, 0], scale: [1, 1.1, 1] }}
-              transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute top-1/4 left-1/5 w-80 h-80 rounded-full blur-3xl"
-              style={{ background: 'radial-gradient(circle, hsl(199 89% 48% / 0.12), transparent 70%)' }}
-            />
-            <motion.div
-              animate={{ x: [0, -30, 0], y: [0, 40, 0], scale: [1, 1.15, 1] }}
-              transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute bottom-1/4 right-1/5 w-96 h-96 rounded-full blur-3xl"
-              style={{ background: 'radial-gradient(circle, hsl(270 60% 55% / 0.1), transparent 70%)' }}
-            />
-            <motion.div
-              animate={{ x: [0, 20, 0], y: [0, -20, 0] }}
-              transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl"
-              style={{ background: 'radial-gradient(circle, hsl(160 84% 39% / 0.06), transparent 70%)' }}
-            />
+          <div className="absolute inset-0 overflow-hidden">
+            <AuroraBackground />
+            <div className="absolute inset-0 z-[1] bg-black/45" />
           </div>
-
-          {/* Floating tech emojis removed for a cleaner background */}
 
           <div className="section-container text-center relative z-10 pt-24">
             {/* Role badge */}

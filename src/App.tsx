@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState, useCallback } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import Navbar from '@/components/Navbar';
@@ -27,6 +27,39 @@ const Loading = () => (
   </div>
 );
 
+const AppContent = ({ showPreloader }: { showPreloader: boolean }) => {
+  const location = useLocation();
+  const showGlobalAurora = location.pathname !== '/';
+
+  return (
+    <>
+      {showGlobalAurora && (
+        <div className="fixed inset-0 z-0 pointer-events-none">
+          <AuroraBackground />
+        </div>
+      )}
+      {!showPreloader && <Navbar />}
+      <Suspense fallback={<Loading />}>
+        <AnimatePresence mode="wait">
+          {!showPreloader && (
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/skills" element={<Skills />} />
+              <Route path="/experience" element={<Experience />} />
+              <Route path="/education" element={<Education />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/demo" element={<Demo />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          )}
+        </AnimatePresence>
+      </Suspense>
+    </>
+  );
+};
+
 const App = () => {
   const [showPreloader, setShowPreloader] = useState(true);
   const handlePreloaderComplete = useCallback(() => setShowPreloader(false), []);
@@ -37,30 +70,10 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <SmoothScrolling>
-            <div className="fixed inset-0 z-0 pointer-events-none">
-              <AuroraBackground />
-            </div>
             <Sonner />
             <BrowserRouter>
-            {!showPreloader && <Navbar />}
-            <Suspense fallback={<Loading />}>
-              <AnimatePresence mode="wait">
-                {!showPreloader && (
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/projects" element={<Projects />} />
-                    <Route path="/skills" element={<Skills />} />
-                    <Route path="/experience" element={<Experience />} />
-                    <Route path="/education" element={<Education />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/demo" element={<Demo />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                )}
-              </AnimatePresence>
-            </Suspense>
-          </BrowserRouter>
+              <AppContent showPreloader={showPreloader} />
+            </BrowserRouter>
           </SmoothScrolling>
         </TooltipProvider>
       </QueryClientProvider>
