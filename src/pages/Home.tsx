@@ -6,100 +6,6 @@ import PageTransition from '@/components/PageTransition';
 import SectionHeader from '@/components/SectionHeader';
 import { useProjectsStore } from '@/stores/projectsStore';
 
-// Particle canvas component with subtle cursor "gravity"
-const ParticleBackground = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef<{ x: number; y: number } | null>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animationId: number | undefined = undefined;
-    const particles: { x: number; y: number; vx: number; vy: number; size: number; opacity: number }[] = [];
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    const handlePointerMove = (event: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current = {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top,
-      };
-    };
-
-    window.addEventListener('pointermove', handlePointerMove);
-
-    for (let i = 0; i < 45; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        size: Math.random() * 2 + 0.5,
-        opacity: Math.random() * 0.5 + 0.1,
-      });
-    }
-
-    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-
-    const drawFrame = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((p) => {
-        if (!prefersReducedMotion) {
-          const mouse = mouseRef.current;
-          if (mouse) {
-            const dx = mouse.x - p.x;
-            const dy = mouse.y - p.y;
-            const dist = Math.hypot(dx, dy) || 1;
-            const force = Math.min(80 / dist, 0.25);
-            p.vx += (dx / dist) * force * 0.02;
-            p.vy += (dy / dist) * force * 0.02;
-          }
-
-          p.x += p.vx;
-          p.y += p.vy;
-          if (p.x < 0) p.x = canvas.width;
-          if (p.x > canvas.width) p.x = 0;
-          if (p.y < 0) p.y = canvas.height;
-          if (p.y > canvas.height) p.y = 0;
-        }
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(14, 165, 233, ${p.opacity})`;
-        ctx.fill();
-      });
-    };
-
-    const animate = () => {
-      drawFrame();
-      animationId = requestAnimationFrame(animate);
-    };
-
-    if (prefersReducedMotion) {
-      drawFrame();
-    } else {
-      animate();
-    }
-
-    return () => {
-      if (animationId !== undefined) cancelAnimationFrame(animationId);
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('pointermove', handlePointerMove);
-    };
-  }, []);
-
-  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />;
-};
-
 // Floating tech icons
 const floatingIcons = [
   { label: 'React', icon: '⚛️', x: '10%', y: '20%', delay: 0 },
@@ -165,10 +71,7 @@ const Home = () => {
     <PageTransition>
       <div ref={containerRef} className="gradient-bg">
         {/* ─── HERO SECTION ─── */}
-        <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
-          <ParticleBackground />
-
-          {/* Animated gradient orbs */}
+        <section className="min-h-screen flex items-center justify-center relative z-10">
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <motion.div
               animate={{ x: [0, 40, 0], y: [0, -30, 0], scale: [1, 1.1, 1] }}

@@ -6,16 +6,18 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import Navbar from '@/components/Navbar';
 import Preloader from '@/components/ui/preloader';
 import { AnimatePresence } from 'framer-motion';
+import SmoothScrolling from '@/components/SmoothScrolling';
+import { AuroraBackground } from '@/components/ui/starfall-portfolio-landing';
 
-const Home       = lazy(() => import('./pages/Home'));
-const About      = lazy(() => import('./pages/About'));
-const Projects   = lazy(() => import('./pages/Projects'));
-const Skills     = lazy(() => import('./pages/Skills'));
+const Home = lazy(() => import('./pages/Home'));
+const About = lazy(() => import('./pages/About'));
+const Projects = lazy(() => import('./pages/Projects'));
+const Skills = lazy(() => import('./pages/Skills'));
 const Experience = lazy(() => import('./pages/Experience'));
-const Education  = lazy(() => import('./pages/Education'));
-const Contact    = lazy(() => import('./pages/Contact'));
-const Demo       = lazy(() => import('./pages/Demo'));
-const NotFound   = lazy(() => import('./pages/NotFound'));
+const Education = lazy(() => import('./pages/Education'));
+const Contact = lazy(() => import('./pages/Contact'));
+const Demo = lazy(() => import('./pages/Demo'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 const queryClient = new QueryClient();
 
@@ -34,27 +36,32 @@ const App = () => {
       {showPreloader && <Preloader onComplete={handlePreloaderComplete} />}
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <Sonner />
-          <BrowserRouter>
+          <SmoothScrolling>
+            <div className="fixed inset-0 z-0 pointer-events-none">
+              <AuroraBackground />
+            </div>
+            <Sonner />
+            <BrowserRouter>
             {!showPreloader && <Navbar />}
             <Suspense fallback={<Loading />}>
               <AnimatePresence mode="wait">
                 {!showPreloader && (
                   <Routes>
-                    <Route path="/"           element={<Home />} />
-                    <Route path="/about"      element={<About />} />
-                    <Route path="/projects"   element={<Projects />} />
-                    <Route path="/skills"     element={<Skills />} />
+                    <Route path="/" element={<Home />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/projects" element={<Projects />} />
+                    <Route path="/skills" element={<Skills />} />
                     <Route path="/experience" element={<Experience />} />
-                    <Route path="/education"  element={<Education />} />
-                    <Route path="/contact"    element={<Contact />} />
-                    <Route path="/demo"       element={<Demo />} />
-                    <Route path="*"           element={<NotFound />} />
+                    <Route path="/education" element={<Education />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/demo" element={<Demo />} />
+                    <Route path="*" element={<NotFound />} />
                   </Routes>
                 )}
               </AnimatePresence>
             </Suspense>
           </BrowserRouter>
+          </SmoothScrolling>
         </TooltipProvider>
       </QueryClientProvider>
     </>

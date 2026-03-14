@@ -48,72 +48,62 @@ const Contact = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen pt-24 gradient-bg">
-        <div className="section-container !py-12 md:!py-16 flex items-center">
-          <div className="w-full max-w-5xl mx-auto">
-            <SectionHeader title="Contact" subtitle="Let's work together" />
+      <div className="h-screen pt-20 flex flex-col justify-center gradient-bg overflow-hidden">
+        <div className="w-full max-w-5xl mx-auto px-6">
+          <SectionHeader title="Contact" subtitle="Let's work together" />
 
-            <div className="grid md:grid-cols-2 gap-10 items-stretch">
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="space-y-6"
-              >
-                <p className="text-muted-foreground leading-relaxed">
-                  I'm always open to new opportunities, collaborations, and interesting conversations. Feel free to reach out!
-                </p>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                      <Mail className="text-primary" size={18} />
-                    </div>
-                    <span className="text-muted-foreground">kartikeyaa15@gmail.com</span>
+          <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="space-y-8"
+            >
+              <p className="text-muted-foreground leading-relaxed text-lg">
+                I'm always open to new opportunities, collaborations, and interesting conversations. Feel free to reach out!
+              </p>
+              <div className="space-y-5">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-primary/10">
+                    <Mail className="text-primary" size={20} />
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                      <Phone className="text-primary" size={18} />
-                    </div>
-                    <span className="text-muted-foreground">+91-8250977949</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                      <MapPin className="text-primary" size={18} />
-                    </div>
-                    <span className="text-muted-foreground">Visakhapatnam, India</span>
-                  </div>
+                  <span className="text-muted-foreground text-base">kartikeyaa15@gmail.com</span>
                 </div>
-              </motion.div>
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-primary/10">
+                    <Phone className="text-primary" size={20} />
+                  </div>
+                  <span className="text-muted-foreground text-base">+91-8250977949</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-primary/10">
+                    <MapPin className="text-primary" size={20} />
+                  </div>
+                  <span className="text-muted-foreground text-base">Visakhapatnam, India</span>
+                </div>
+              </div>
+            </motion.div>
 
-              <motion.form
-                onSubmit={handleSubmit}
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="glass-card glow-border p-6 space-y-4"
-              >
+            <motion.form
+              onSubmit={handleSubmit}
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="glass-card glow-border p-6 md:p-8 space-y-4"
+            >
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5">Name</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
+                  placeholder="Your name"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Name</label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
-                    placeholder="Your name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Phone (optional)</label>
-                  <input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
-                    placeholder="+91-XXXXXXXXXX"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Email</label>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">Email</label>
                   <input
                     type="email"
                     value={email}
@@ -123,24 +113,34 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Message</label>
-                  <textarea
-                    rows={4}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow resize-none"
-                    placeholder="What's on your mind?"
+                  <label className="block text-sm font-medium text-foreground mb-1.5">Phone <span className="text-muted-foreground/50">(optional)</span></label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
+                    placeholder="+91-"
                   />
                 </div>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity disabled:opacity-50 glow-border"
-                >
-                  {isSubmitting ? 'Sending...' : 'Send Message'} <Send size={16} />
-                </button>
-              </motion.form>
-            </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5">Message</label>
+                <textarea
+                  rows={3}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow resize-none"
+                  placeholder="What's on your mind?"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full flex items-center justify-center gap-2 px-6 py-3.5 mt-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity disabled:opacity-50 glow-border"
+              >
+                {isSubmitting ? 'Sending...' : 'Send Message'} <Send size={18} />
+              </button>
+            </motion.form>
           </div>
         </div>
       </div>
