@@ -21,12 +21,19 @@ const Contact = () => {
 
     setIsSubmitting(true);
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+      const baseUrl = import.meta.env.DEV ? 'http://localhost:5000' : (import.meta.env.VITE_API_BASE_URL || '');
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+
       const response = await fetch(`${baseUrl}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, phone: phone || undefined, message }),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const data = await response.json().catch(() => null);
@@ -59,27 +66,27 @@ const Contact = () => {
               viewport={{ once: true }}
               className="space-y-8"
             >
-              <p className="text-muted-foreground leading-relaxed text-lg">
+              <p className="text-white/70 leading-relaxed text-lg font-light">
                 I'm always open to new opportunities, collaborations, and interesting conversations. Feel free to reach out!
               </p>
-              <div className="space-y-5">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-primary/10">
-                    <Mail className="text-primary" size={20} />
+              <div className="space-y-6 pt-4">
+                <div className="flex items-center gap-4 group cursor-default">
+                  <div className="p-3.5 rounded-xl bg-primary/10 border border-primary/20 group-hover:bg-primary/20 transition-colors">
+                    <Mail className="text-primary" size={22} />
                   </div>
-                  <span className="text-muted-foreground text-base">kartikeyaa15@gmail.com</span>
+                  <span className="text-white/90 text-lg font-light tracking-wide">kartikeyaa15@gmail.com</span>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-primary/10">
-                    <Phone className="text-primary" size={20} />
+                <div className="flex items-center gap-4 group cursor-default">
+                  <div className="p-3.5 rounded-xl bg-primary/10 border border-primary/20 group-hover:bg-primary/20 transition-colors">
+                    <Phone className="text-primary" size={22} />
                   </div>
-                  <span className="text-muted-foreground text-base">+91-8250977949</span>
+                  <span className="text-white/90 text-lg font-light tracking-wide">+91-8250977949</span>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-primary/10">
-                    <MapPin className="text-primary" size={20} />
+                <div className="flex items-center gap-4 group cursor-default">
+                  <div className="p-3.5 rounded-xl bg-primary/10 border border-primary/20 group-hover:bg-primary/20 transition-colors">
+                    <MapPin className="text-primary" size={22} />
                   </div>
-                  <span className="text-muted-foreground text-base">Visakhapatnam, India</span>
+                  <span className="text-white/90 text-lg font-light tracking-wide">Visakhapatnam, India</span>
                 </div>
               </div>
             </motion.div>
@@ -89,54 +96,54 @@ const Contact = () => {
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="glass-card glow-border p-6 md:p-8 space-y-4"
+              className="glass-card p-6 md:p-8 space-y-5"
             >
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1.5">Name</label>
+                <label className="block text-sm font-medium text-white/80 mb-1.5 geist-font">Name</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all font-light"
                   placeholder="Your name"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Email</label>
+                  <label className="block text-sm font-medium text-white/80 mb-1.5 geist-font">Email</label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
+                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all font-light"
                     placeholder="your@email.com"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Phone <span className="text-muted-foreground/50">(optional)</span></label>
+                  <label className="block text-sm font-medium text-white/80 mb-1.5 geist-font">Phone <span className="text-white/40">(optional)</span></label>
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
+                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all font-light"
                     placeholder="+91-"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1.5">Message</label>
+                <label className="block text-sm font-medium text-white/80 mb-1.5 geist-font">Message</label>
                 <textarea
-                  rows={3}
+                  rows={4}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow resize-none"
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all resize-none font-light"
                   placeholder="What's on your mind?"
                 />
               </div>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3.5 mt-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity disabled:opacity-50 glow-border"
+                className="w-full flex items-center justify-center gap-2 px-6 py-4 mt-4 rounded-lg primary-button text-black font-semibold tracking-wide disabled:opacity-50"
               >
                 {isSubmitting ? 'Sending...' : 'Send Message'} <Send size={18} />
               </button>
