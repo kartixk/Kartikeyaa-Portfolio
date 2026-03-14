@@ -3,6 +3,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import contactRoutes from './routes/contactRoutes.js';
+import rateLimit from 'express-rate-limit';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
 
+app.use('/api/contact', rateLimit({ windowMs: 60000, max: 5 }));
 app.use('/api', contactRoutes);
 
 const mongoUri = process.env.MONGODB_URI;
