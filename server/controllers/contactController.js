@@ -43,6 +43,14 @@ export const handleContact = async (req, res) => {
           .filter(Boolean)
           .join('\n'),
       });
+
+      // Send auto-reply to the user
+      await transporter.sendMail({
+        from: `"Kartikeya" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+        to: email,
+        subject: `Thank you for reaching out!`,
+        text: `Hi ${name},\n\nThank you for getting in touch! I have received your message and will get back to you as soon as possible.\n\nHere is a copy of your message:\n\n"${message}"\n\nBest regards,\nKartikeya\n\n(This is an automated confirmation email)`
+      });
     }
 
     return res.status(201).json({ success: true, data: { id: docId } });
