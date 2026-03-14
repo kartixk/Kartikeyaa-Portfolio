@@ -9,7 +9,13 @@ export const handleContact = async (req, res) => {
       return res.status(400).json({ success: false, error: 'Name, email, and message are required.' });
     }
 
-    const doc = await ContactMessage.create({ name, email, phone, message });
+    let docId = null;
+    try {
+      const doc = await ContactMessage.create({ name, email, phone, message });
+      docId = doc._id;
+    } catch (dbError) {
+      console.warn('Failed to save contact message to database, proceeding with email anyway:', dbError.message);
+    }
 
     if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS && process.env.CONTACT_RECIPIENT) {
       const transporter = nodemailer.createTransport({
@@ -39,7 +45,7 @@ export const handleContact = async (req, res) => {
       });
     }
 
-    return res.status(201).json({ success: true, data: { id: doc._id } });
+    return res.status(201).json({ success: true, data: { id: docId } });
   } catch (error) {
     console.error('Error handling contact message', error);
     return res.status(500).json({ success: false, error: 'Failed to submit message. Please try again later.' });
