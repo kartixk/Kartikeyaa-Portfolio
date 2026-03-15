@@ -30,7 +30,21 @@ export const handleContact = async (req, res) => {
       console.warn('MONGODB_URI is not set. Skipping database persistence.');
     }
 
-    if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS && process.env.CONTACT_RECIPIENT) {
+    const emailConfigured =
+      Boolean(process.env.SMTP_HOST) &&
+      Boolean(process.env.SMTP_USER) &&
+      Boolean(process.env.SMTP_PASS) &&
+      Boolean(process.env.CONTACT_RECIPIENT);
+
+    if (!emailConfigured) {
+      console.error('Contact email is not configured. Missing one or more SMTP/recipient environment variables.');
+      return res.status(503).json({
+        success: false,
+        error: 'Email service is currently unavailable. Please try again later.',
+      });
+    }
+
+    {
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: Number(process.env.SMTP_PORT),
@@ -225,12 +239,22 @@ export const handleContact = async (req, res) => {
         withTimeout(autoReply, 12000, 'Auto-reply send'),
       ]);
 
+      const hasEmailFailure = emailResults.some((result) => result.status === 'rejected');
+
       emailResults.forEach((result, index) => {
         if (result.status === 'rejected') {
           const target = index === 0 ? 'owner notification' : 'auto-reply';
           console.warn(`Contact email warning (${target}):`, result.reason?.message || result.reason);
         }
       });
+
+      if (hasEmailFailure) {
+        return res.status(502).json({
+          success: false,
+          error: 'Message received but email delivery failed. Please try again later.',
+          data: { id: docId },
+        });
+      }
     }
 
     return res.status(201).json({ success: true, data: { id: docId } });
