@@ -26,9 +26,10 @@ const Contact = () => {
 
     setIsSubmitting(true);
     try {
-      const baseUrl =
-        import.meta.env.VITE_API_BASE_URL ||
-        "https://kartikeyaa-portfolio.onrender.com";
+      // Determine the correct base URL
+      const baseUrl = import.meta.env.DEV 
+        ? 'http://localhost:5000' 
+        : (import.meta.env.VITE_API_BASE_URL || 'https://kartikeyaa-portfolio.onrender.com');
 
       const response = await fetch(`${baseUrl}/api/contact`, {
         method: "POST",

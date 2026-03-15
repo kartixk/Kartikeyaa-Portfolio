@@ -5,13 +5,24 @@ import dotenv from 'dotenv';
 import contactRoutes from './routes/contactRoutes.js';
 import rateLimit from 'express-rate-limit';
 
-dotenv.config();
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load .env from the server directory first, then fallback to the root project directory
+dotenv.config({ path: path.join(__dirname, '.env') });
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
   process.env.CORS_ORIGIN,
+  'https://kartikeyaa-portfolio.vercel.app',
+  'https://kartikeyaa.me',
+  'https://www.kartikeyaa.me',
   'http://localhost:8080',
   'http://127.0.0.1:8080'
 ].filter(Boolean);
@@ -21,9 +32,11 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.error(`CORS Blocked: ${origin} is not in allowed list`);
       callback(new Error('Not allowed by CORS'));
     }
-  }
+  },
+  credentials: true
 }));
 app.use(express.json());
 

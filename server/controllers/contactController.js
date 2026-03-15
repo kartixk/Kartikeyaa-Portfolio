@@ -10,22 +10,31 @@ export const handleContact = async (req, res) => {
     }
 
     let docId = null;
-    try {
-      const doc = await ContactMessage.create({ name, email, phone, message });
-      docId = doc._id;
-    } catch (dbError) {
-      console.warn('Failed to save contact message to database, proceeding with email anyway:', dbError.message);
+    if (process.env.MONGODB_URI) {
+      try {
+        const doc = await ContactMessage.create({ name, email, phone, message });
+        docId = doc._id;
+      } catch (dbError) {
+        console.warn('Failed to save contact message to database, proceeding with email anyway:', dbError.message);
+      }
+    } else {
+      console.warn('MONGODB_URI is not set. Skipping database persistence.');
     }
 
     if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS && process.env.CONTACT_RECIPIENT) {
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
-        port: Number(process.env.SMTP_PORT) || 587,
-        secure: Boolean(process.env.SMTP_SECURE === 'true'),
+        port: Number(process.env.SMTP_PORT),
+        // Force secure to true if using port 465, otherwise use the env variable
+        secure: Number(process.env.SMTP_PORT) === 465 ? true : Boolean(process.env.SMTP_SECURE === 'true'),
         auth: {
           user: process.env.SMTP_USER,
           pass: process.env.SMTP_PASS,
         },
+        // Adding TLS options helps prevent connection issues in some environments
+        tls: {
+          rejectUnauthorized: false
+        }
       });
 
       await transporter.sendMail({
