@@ -6,6 +6,44 @@ import { useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
 import SectionHeader from '@/components/SectionHeader';
 
+const DEFAULT_API_BASE_URL = 'https://kartikeyaa-portfolio.onrender.com';
+
+const normalizeBaseUrl = (value?: string) => {
+  if (!value) return null;
+  return value.replace(/\/+$/, '');
+};
+
+const fetchWithTimeout = async (url: string, options: RequestInit, timeoutMs = 12000) => {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+};
+
+const buildApiCandidates = (path: string) => {
+  const envBase = normalizeBaseUrl(import.meta.env.VITE_API_BASE_URL);
+  const localDevBase = 'http://localhost:5000';
+
+  const candidates = import.meta.env.DEV
+    ? [
+        `/api/${path}`,
+        `${localDevBase}/api/${path}`,
+        envBase ? `${envBase}/api/${path}` : null,
+        `${DEFAULT_API_BASE_URL}/api/${path}`,
+      ]
+    : [
+        envBase ? `${envBase}/api/${path}` : null,
+        `/api/${path}`,
+        `${DEFAULT_API_BASE_URL}/api/${path}`,
+      ];
+
+  return [...new Set(candidates.filter((value): value is string => Boolean(value)))];
+};
+
 const Contact = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -14,7 +52,8 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    fetch("https://kartikeyaa-portfolio.onrender.com/api/health").catch(() => {});
+    const [healthUrl] = buildApiCandidates('health');
+    fetch(healthUrl).catch(() => {});
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -26,27 +65,53 @@ const Contact = () => {
 
     setIsSubmitting(true);
     try {
-      // Determine the correct base URL
-      const baseUrl = import.meta.env.DEV 
-        ? 'http://localhost:5000' 
-        : (import.meta.env.VITE_API_BASE_URL || 'https://kartikeyaa-portfolio.onrender.com');
+      const payload = {
+        name,
+        email,
+        phone: phone || undefined,
+        message,
+      };
 
-      const response = await fetch(`${baseUrl}/api/contact`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          phone: phone || undefined,
-          message,
-        }),
-      });
+      const apiCandidates = buildApiCandidates('contact');
+      let submitError: Error | null = null;
+      let delivered = false;
 
-      if (!response.ok) {
-        const data = await response.json().catch(() => null);
-        throw new Error(data?.error || 'Failed to send message');
+      for (const endpoint of apiCandidates) {
+        try {
+          const response = await fetchWithTimeout(endpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          });
+
+          if (!response.ok) {
+            const data = await response.json().catch(() => null);
+            const message = data?.error || `Failed to send message (${response.status})`;
+
+            if ([404, 502, 503, 504].includes(response.status)) {
+              submitError = new Error(message);
+              continue;
+            }
+
+            throw new Error(message);
+          }
+
+          delivered = true;
+          break;
+        } catch (error) {
+          if (error instanceof DOMException && error.name === 'AbortError') {
+            submitError = new Error('Request timed out. Please try again.');
+          } else {
+            submitError = error instanceof Error ? error : new Error('Network request failed');
+          }
+          continue;
+        }
+      }
+
+      if (!delivered) {
+        throw submitError || new Error('Failed to send message');
       }
 
       toast.success("Message sent! I'll get back to you soon.");
@@ -56,7 +121,8 @@ const Contact = () => {
       setMessage('');
     } catch (error) {
       console.error(error);
-      toast.error('Something went wrong while sending your message. Please try again.');
+      const message = error instanceof Error ? error.message : 'Something went wrong while sending your message. Please try again.';
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }

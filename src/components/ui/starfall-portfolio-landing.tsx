@@ -57,27 +57,9 @@ const AuroraBackground: React.FC = () => {
         float noise(vec2 p){ vec2 ip=floor(p);vec2 u=fract(p);u=u*u*(3.0-2.0*u);float res=mix(mix(rand(ip),rand(ip+vec2(1.0,0.0)),u.x),mix(rand(ip+vec2(0.0,1.0)),rand(ip+vec2(1.0,1.0)),u.x),u.y);return res*res; }
         float fbm(vec2 x) { float v=0.0;float a=0.3;vec2 shift=vec2(100);mat2 rot=mat2(cos(0.5),sin(0.5),-sin(0.5),cos(0.50));for(int i=0;i<NUM_OCTAVES;++i){v+=a*noise(x);x=rot*x*2.0+shift;a*=0.4;}return v;}
         void main() {
-          vec2 p=((gl_FragCoord.xy)-iResolution.xy*0.5)/iResolution.y*mat2(6.,-4.,4.,6.);
-          vec4 o=vec4(0.);
-          float f=2.+fbm(p+vec2(iTime*5.,0.))*.5;
-          for(float i=0.;i++<35.;){
-            vec2 v=p+cos(i*i+(iTime+p.x*.08)*.025+i*vec2(13.,11.))*3.5;
-            float tailNoise=fbm(v+vec2(iTime*.5,i))*.3*(1.-(i/35.));
-            // Cyan palette: near-zero red, high green (0.7-1.0), max blue (0.85-1.0)
-            vec4 auroraColors=vec4(
-              0.0 + 0.08*sin(i*.2+iTime*.4),
-              0.72 + 0.28*cos(i*.3+iTime*.5),
-              0.88 + 0.12*sin(i*.4+iTime*.3),
-              1.0
-            );
-            vec4 currentContribution=auroraColors*exp(sin(i*i+iTime*.8))/length(max(v,vec2(v.x*f*.015,v.y*1.5)));
-            float thinnessFactor=smoothstep(0.,1.,i/35.)*.6;
-            o+=currentContribution*(1.+tailNoise*.8)*thinnessFactor;
-          }
-          o=tanh(pow(o/100.,vec4(1.6)));
-          // Apply a final cyan tint: suppress red, boost green+blue slightly
-          vec4 cyanTint = vec4(0.0, 1.08, 1.12, 1.0);
-          gl_FragColor = o * cyanTint * 1.4;
+          vec2 p=((gl_FragCoord.xy)-iResolution.xy*0.5)/iResolution.y*mat2(6.,-4.,4.,6.);vec4 o=vec4(0.);float f=2.+fbm(p+vec2(iTime*5.,0.))*.5;
+          for(float i=0.;i++<35.;){vec2 v=p+cos(i*i+(iTime+p.x*.08)*.025+i*vec2(13.,11.))*3.5;float tailNoise=fbm(v+vec2(iTime*.5,i))*.3*(1.-(i/35.));vec4 auroraColors=vec4(.1+.3*sin(i*.2+iTime*.4),.3+.5*cos(i*.3+iTime*.5),.7+.3*sin(i*.4+iTime*.3),1.);vec4 currentContribution=auroraColors*exp(sin(i*i+iTime*.8))/length(max(v,vec2(v.x*f*.015,v.y*1.5)));float thinnessFactor=smoothstep(0.,1.,i/35.)*.6;o+=currentContribution*(1.+tailNoise*.8)*thinnessFactor;}
+          o=tanh(pow(o/100.,vec4(1.6)));gl_FragColor=o*1.5;
         }`,
     });
 
@@ -114,14 +96,22 @@ const AuroraBackground: React.FC = () => {
 };
 
 // --- DEFAULT DATA ---
-const defaultData = {
+const defaultData: {
+  logo: NonNullable<PortfolioPageProps['logo']>;
+  navLinks: NonNullable<PortfolioPageProps['navLinks']>;
+  resume: NonNullable<PortfolioPageProps['resume']>;
+  hero: NonNullable<PortfolioPageProps['hero']>;
+  ctaButtons: NonNullable<PortfolioPageProps['ctaButtons']>;
+  projects: NonNullable<PortfolioPageProps['projects']>;
+  stats: NonNullable<PortfolioPageProps['stats']>;
+} = {
   logo: { initials: 'MT', name: 'Meng To' },
   navLinks: [
     { label: 'About', href: '#about' },
     { label: 'Projects', href: '#projects' },
     { label: 'Skills', href: '#skills' },
   ],
-  resume: { label: 'Resume', onClick: undefined },
+  resume: { label: 'Resume' },
   hero: {
     titleLine1: 'Creative Developer &',
     titleLine2Gradient: 'Digital Designer',
@@ -129,27 +119,24 @@ const defaultData = {
       'I craft beautiful digital experiences through code and design. Specializing in modern web development, UI/UX design, and bringing innovative ideas to life.',
   },
   ctaButtons: {
-    primary: { label: 'View My Work', onClick: undefined },
-    secondary: { label: 'Get In Touch', onClick: undefined },
+    primary: { label: 'View My Work' },
+    secondary: { label: 'Get In Touch' },
   },
   projects: [
     {
       title: 'FinTech Mobile App',
       description: 'React Native app with AI-powered financial insights.',
       tags: ['React Native', 'Node.js'],
-      imageContent: undefined,
     },
     {
       title: 'Data Visualization Platform',
       description: 'Interactive dashboard for complex data analysis.',
       tags: ['D3.js', 'Python'],
-      imageContent: undefined,
     },
     {
       title: '3D Portfolio Site',
       description: 'Immersive WebGL experience with 3D elements.',
       tags: ['Three.js', 'WebGL'],
-      imageContent: undefined,
     },
   ],
   stats: [

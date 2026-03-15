@@ -5,6 +5,7 @@ import path from "path";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
+  const devApiTarget = env.VITE_DEV_API_BASE_URL || 'http://localhost:5000';
 
   return {
     server: {
@@ -15,7 +16,7 @@ export default defineConfig(({ mode }) => {
       },
       proxy: {
         '/api': {
-          target: env.VITE_API_BASE_URL || 'http://localhost:5000',
+          target: devApiTarget,
           changeOrigin: true,
           secure: false,
         }

@@ -1,6 +1,15 @@
 import ContactMessage from '../models/ContactMessage.js';
 import nodemailer from 'nodemailer';
 
+const withTimeout = (promise, timeoutMs, label) => {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => {
+      setTimeout(() => reject(new Error(`${label} timed out after ${timeoutMs}ms`)), timeoutMs);
+    }),
+  ]);
+};
+
 export const handleContact = async (req, res) => {
   try {
     const { name, email, phone, message } = req.body || {};
@@ -31,13 +40,16 @@ export const handleContact = async (req, res) => {
           user: process.env.SMTP_USER,
           pass: process.env.SMTP_PASS,
         },
+        connectionTimeout: 10000,
+        greetingTimeout: 10000,
+        socketTimeout: 10000,
         // Adding TLS options helps prevent connection issues in some environments
         tls: {
           rejectUnauthorized: false
         }
       });
 
-      await transporter.sendMail({
+      const mailToOwner = transporter.sendMail({
         from: `"Portfolio Contact" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
         to: process.env.CONTACT_RECIPIENT,
         subject: `New portfolio contact from ${name}`,
@@ -53,8 +65,7 @@ export const handleContact = async (req, res) => {
           .join('\n'),
       });
 
-      // Premium auto-reply to sender
-      await transporter.sendMail({
+      const autoReply = transporter.sendMail({
         from: `"B Venkata Sai Kartikeya" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
         to: email,
         subject: `Thanks for reaching out, `,
@@ -207,6 +218,18 @@ export const handleContact = async (req, res) => {
 
 </body>
 </html>`
+      });
+
+      const emailResults = await Promise.allSettled([
+        withTimeout(mailToOwner, 12000, 'Owner email send'),
+        withTimeout(autoReply, 12000, 'Auto-reply send'),
+      ]);
+
+      emailResults.forEach((result, index) => {
+        if (result.status === 'rejected') {
+          const target = index === 0 ? 'owner notification' : 'auto-reply';
+          console.warn(`Contact email warning (${target}):`, result.reason?.message || result.reason);
+        }
       });
     }
 
