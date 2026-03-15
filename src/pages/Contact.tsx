@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Mail, Phone, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
+import { useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
 import SectionHeader from '@/components/SectionHeader';
 
@@ -12,6 +13,10 @@ const Contact = () => {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  useEffect(() => {
+    fetch("https://kartikeyaa-portfolio.onrender.com/api/health").catch(() => {});
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !message) {
@@ -21,19 +26,23 @@ const Contact = () => {
 
     setIsSubmitting(true);
     try {
-      const baseUrl = import.meta.env.DEV ? 'http://localhost:5000' : (import.meta.env.VITE_API_BASE_URL || '');
-      
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      // Determine the correct base URL
+      const baseUrl = import.meta.env.DEV 
+        ? 'http://localhost:5000' 
+        : (import.meta.env.VITE_API_BASE_URL || 'https://kartikeyaa-portfolio.onrender.com');
 
       const response = await fetch(`${baseUrl}/api/contact`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone: phone || undefined, message }),
-        signal: controller.signal
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          phone: phone || undefined,
+          message,
+        }),
       });
-
-      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const data = await response.json().catch(() => null);
