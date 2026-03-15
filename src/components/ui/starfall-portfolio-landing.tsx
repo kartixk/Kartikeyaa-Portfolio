@@ -158,7 +158,7 @@ const defaultData = {
     { value: '15+', label: 'Happy Clients' },
   ],
 };
-//asdfghjkl
+//asdfghjn kl
 // --- MAIN CUSTOMIZABLE PORTFOLIO COMPONENT ---vbhbhjbyhjjbuy
 const PortfolioPage: React.FC<PortfolioPageProps> = ({
   logo = defaultData.logo,
