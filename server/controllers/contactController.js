@@ -98,8 +98,6 @@ export const handleContact = async (req, res) => {
     if (resendConfigured) {
       const resend = new Resend(process.env.RESEND_API_KEY);
       const submittedAt = formatIstTimestamp(new Date());
-      const requesterIp = req.headers['x-forwarded-for'] || req.ip || 'Unavailable';
-      const requesterUserAgent = req.headers['user-agent'] || 'Unavailable';
 
       const ownerTextBody = [
         'NEW PORTFOLIO CONTACT SUBMISSION',
@@ -133,7 +131,6 @@ export const handleContact = async (req, res) => {
           <tr><td style="padding:8px 0;color:#6b7280;">Email</td><td style="padding:8px 0;"><a href="mailto:${escapeHtml(email)}" style="color:#0ea5e9;text-decoration:none;">${escapeHtml(email)}</a></td></tr>
           <tr><td style="padding:8px 0;color:#6b7280;">Phone</td><td style="padding:8px 0;">${escapeHtml(phone || 'Not provided')}</td></tr>
           <tr><td style="padding:8px 0;color:#6b7280;">Submitted (IST)</td><td style="padding:8px 0;">${escapeHtml(submittedAt)}</td></tr>
-          <tr><td style="padding:8px 0;color:#6b7280;">IP</td><td style="padding:8px 0;">${escapeHtml(requesterIp)}</td></tr>
         </table>
         <div style="margin-top:16px;padding:14px;border:1px solid #e5e7eb;background:#f9fafb;border-radius:8px;">
           <div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#6b7280;margin-bottom:8px;">Message</div>
