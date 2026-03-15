@@ -37,7 +37,6 @@ const buildApiCandidates = (path: string) => {
       ]
     : [
         envBase ? `${envBase}/api/${path}` : null,
-        `/api/${path}`,
         `${DEFAULT_API_BASE_URL}/api/${path}`,
       ];
 
@@ -90,7 +89,7 @@ const Contact = () => {
             const data = await response.json().catch(() => null);
             const message = data?.error || `Failed to send message (${response.status})`;
 
-            if ([404, 502, 503, 504].includes(response.status)) {
+            if ([404, 503, 504].includes(response.status)) {
               submitError = new Error(message);
               continue;
             }
