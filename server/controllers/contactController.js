@@ -18,6 +18,54 @@ const sendResendEmail = async (client, payload) => {
   return result;
 };
 
+const parseRecipients = (...rawValues) => {
+  return rawValues
+    .filter(Boolean)
+    .flatMap((value) => String(value).split(','))
+    .map((value) => value.trim())
+    .filter((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value));
+};
+
+const sendWithRetry = async (sendFn, retries = 1, label = 'Email send') => {
+  let lastError;
+
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    try {
+      return await sendFn();
+    } catch (error) {
+      lastError = error;
+      if (attempt < retries) {
+        console.warn(`${label} failed on attempt ${attempt + 1}, retrying...`, error?.message || error);
+      }
+    }
+  }
+
+  throw lastError;
+};
+
+const escapeHtml = (value = '') =>
+  String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const formatIstTimestamp = (date = new Date()) => {
+  const formatted = new Intl.DateTimeFormat('en-IN', {
+    timeZone: 'Asia/Kolkata',
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+  }).format(date);
+
+  return `${formatted} IST (UTC+05:30)`;
+};
+
 export const handleContact = async (req, res) => {
   try {
     const { name, email, phone, message } = req.body || {};
@@ -38,28 +86,77 @@ export const handleContact = async (req, res) => {
       console.warn('MONGODB_URI is not set. Skipping database persistence.');
     }
 
-    const emailRecipient = process.env.CONTACT_RECIPIENT;
+    const ownerRecipients = parseRecipients(
+      process.env.CONTACT_RECIPIENT,
+      process.env.CONTACT_RECIPIENTS,
+      process.env.OWNER_EMAIL,
+      process.env.CONTACT_EMAIL,
+    );
     const fromAddress = process.env.RESEND_FROM || 'Portfolio Contact <onboarding@resend.dev>';
-    const resendConfigured = Boolean(process.env.RESEND_API_KEY) && Boolean(emailRecipient);
+    const resendConfigured = Boolean(process.env.RESEND_API_KEY) && ownerRecipients.length > 0;
 
     if (resendConfigured) {
       const resend = new Resend(process.env.RESEND_API_KEY);
+      const submittedAt = formatIstTimestamp(new Date());
+      const requesterIp = req.headers['x-forwarded-for'] || req.ip || 'Unavailable';
+      const requesterUserAgent = req.headers['user-agent'] || 'Unavailable';
 
-      const mailToOwner = sendResendEmail(resend, {
-        from: fromAddress,
-        to: emailRecipient,
-        subject: `New portfolio contact from ${name}`,
-        text: [
-          `Name: ${name}`,
-          `Email: ${email}`,
-          phone ? `Phone: ${phone}` : null,
-          '',
-          'Message:',
-          message,
-        ]
-          .filter(Boolean)
-          .join('\n'),
-      });
+      const ownerTextBody = [
+        'NEW PORTFOLIO CONTACT SUBMISSION',
+        '',
+        `Name: ${name}`,
+        `Email: ${email}`,
+        `Phone: ${phone || 'Not provided'}`,
+        `Submitted At (IST): ${submittedAt}`,
+        
+        '',
+        'Message:',
+        message,
+      ].join('\n');
+
+      const ownerHtmlBody = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>New Portfolio Contact</title>
+</head>
+<body style="margin:0;padding:24px;background:#f5f7fb;font-family:Segoe UI,Arial,sans-serif;color:#111827;">
+  <table cellpadding="0" cellspacing="0" width="100%" style="max-width:680px;margin:0 auto;background:#ffffff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
+    <tr>
+      <td style="padding:18px 22px;background:#0f172a;color:#f8fafc;font-size:18px;font-weight:600;">New portfolio contact submission</td>
+    </tr>
+    <tr>
+      <td style="padding:20px 22px;">
+        <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;">
+          <tr><td style="padding:8px 0;color:#6b7280;width:170px;">Name</td><td style="padding:8px 0;font-weight:600;">${escapeHtml(name)}</td></tr>
+          <tr><td style="padding:8px 0;color:#6b7280;">Email</td><td style="padding:8px 0;"><a href="mailto:${escapeHtml(email)}" style="color:#0ea5e9;text-decoration:none;">${escapeHtml(email)}</a></td></tr>
+          <tr><td style="padding:8px 0;color:#6b7280;">Phone</td><td style="padding:8px 0;">${escapeHtml(phone || 'Not provided')}</td></tr>
+          <tr><td style="padding:8px 0;color:#6b7280;">Submitted (IST)</td><td style="padding:8px 0;">${escapeHtml(submittedAt)}</td></tr>
+          <tr><td style="padding:8px 0;color:#6b7280;">IP</td><td style="padding:8px 0;">${escapeHtml(requesterIp)}</td></tr>
+        </table>
+        <div style="margin-top:16px;padding:14px;border:1px solid #e5e7eb;background:#f9fafb;border-radius:8px;">
+          <div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#6b7280;margin-bottom:8px;">Message</div>
+          <pre style="white-space:pre-wrap;word-break:break-word;margin:0;font:14px/1.6 Segoe UI,Arial,sans-serif;color:#111827;">${escapeHtml(message)}</pre>
+        </div>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+      const mailToOwner = sendWithRetry(
+        () => sendResendEmail(resend, {
+          from: fromAddress,
+          to: ownerRecipients,
+          replyTo: email,
+          subject: `New portfolio contact: ${name} (${email})`,
+          text: ownerTextBody,
+          html: ownerHtmlBody,
+        }),
+        1,
+        'Owner notification send',
+      );
 
       const autoReply = sendResendEmail(resend, {
         from: fromAddress,
@@ -214,7 +311,7 @@ export const handleContact = async (req, res) => {
       return res.status(201).json({ success: true, data: { id: docId } });
     }
 
-    console.error('Contact email is not configured. Set RESEND_API_KEY + CONTACT_RECIPIENT.');
+    console.error('Contact email is not configured. Set RESEND_API_KEY + CONTACT_RECIPIENT (or CONTACT_RECIPIENTS/OWNER_EMAIL).');
     return res.status(503).json({
       success: false,
       error: 'Email service is currently unavailable. Please try again later.',

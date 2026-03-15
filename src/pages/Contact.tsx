@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Mail, Phone, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
-import { useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
 import SectionHeader from '@/components/SectionHeader';
 
@@ -26,12 +25,10 @@ const fetchWithTimeout = async (url: string, options: RequestInit, timeoutMs = 1
 
 const buildApiCandidates = (path: string) => {
   const envBase = normalizeBaseUrl(import.meta.env.VITE_API_BASE_URL);
-  const localDevBase = 'http://localhost:5000';
 
   const candidates = import.meta.env.DEV
     ? [
         `/api/${path}`,
-        `${localDevBase}/api/${path}`,
         envBase ? `${envBase}/api/${path}` : null,
         `${DEFAULT_API_BASE_URL}/api/${path}`,
       ]
@@ -49,11 +46,6 @@ const Contact = () => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    const [healthUrl] = buildApiCandidates('health');
-    fetch(healthUrl).catch(() => {});
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
