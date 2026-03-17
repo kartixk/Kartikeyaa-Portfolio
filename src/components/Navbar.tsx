@@ -19,25 +19,21 @@ const Navbar = () => {
   const location = useLocation();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-border/50 backdrop-blur-xl">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2 font-heading font-bold text-xl">
-            <Code2 className="text-primary" size={24} />
-            <span className="gradient-text">Kartikeya</span>
-          </Link>
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-4xl glass-card px-6 py-3 flex items-center justify-between">
+      <Link to="/" className="flex items-center gap-2 font-heading font-bold text-xl">
+        <Code2 className="text-primary" size={24} />
+        <span className="gradient-text">Kartikeya</span>
+      </Link>
 
-          {/* Desktop — gradient pill menu */}
-          <div className="hidden md:flex items-center">
-            <GradientMenu />
-          </div>
-
-          {/* Mobile toggle */}
-          <button onClick={() => setOpen(!open)} className="md:hidden text-foreground p-2">
-            {open ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
+      {/* Desktop — gradient pill menu */}
+      <div className="hidden md:flex items-center">
+        <GradientMenu />
       </div>
+
+      {/* Mobile toggle */}
+      <button onClick={() => setOpen(!open)} className="md:hidden text-foreground p-2">
+        {open ? <X size={24} /> : <Menu size={24} />}
+      </button>
 
       {/* Mobile menu */}
       <AnimatePresence>
@@ -54,11 +50,10 @@ const Navbar = () => {
                   key={item.path}
                   to={item.path}
                   onClick={() => setOpen(false)}
-                  className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    location.pathname === item.path
+                  className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${location.pathname === item.path
                       ? 'text-primary bg-primary/10'
                       : 'text-muted-foreground hover:text-foreground'
-                  }`}
+                    }`}
                 >
                   {item.label}
                 </Link>
