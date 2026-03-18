@@ -39,11 +39,11 @@ const fadeUp: Variants = {
 };
 
 const contactLinks = [
-  { icon: Mail, label: 'Email', value: 'kartikeyaa15@gmail.com', href: 'mailto:kartikeyaa15@gmail.com' },
+  { icon: Mail, label: 'Email', value: 'kartikeyaa15@gmail.com', href: 'https://mail.google.com/mail/?view=cm&fs=1&to=kartikeyaa15@gmail.com', external: true },
   { icon: Phone, label: 'Phone', value: '+91-8250977949', href: 'tel:+918250977949' },
   { icon: MapPin, label: 'Location', value: 'Visakhapatnam, India', href: '#' },
-  { icon: Github, label: 'GitHub', value: 'github.com/kartikeya', href: 'https://github.com', external: true },
-  { icon: Linkedin, label: 'LinkedIn', value: 'linkedin.com/in/kartikeya', href: 'https://linkedin.com', external: true },
+  { icon: Github, label: 'GitHub', value: 'github.com/kartikeya', href: 'https://github.com/kartikeya', external: true },
+  { icon: Linkedin, label: 'LinkedIn', value: 'linkedin.com/in/kartikeya', href: 'https://linkedin.com/in/kartikeya', external: true },
 ];
 
 const Contact = () => {
@@ -184,16 +184,16 @@ const Contact = () => {
                   variants={fadeUp} custom={6} initial="hidden" whileInView="show" viewport={{ once: true }}
                   className="relative glass-card p-5 rounded-xl border border-accent/20"
                 >
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="relative flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-60" />
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent" />
-                  </span>
-                  <p className="text-xs font-semibold tracking-[0.14em] uppercase text-accent">Currently Available</p>
-                </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Open to full-time roles, internships, and freelance projects. Response time is typically within 24 hours.
-                </p>
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="relative flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-60" />
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent" />
+                    </span>
+                    <p className="text-xs font-semibold tracking-[0.14em] uppercase text-accent">Currently Available</p>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Open to full-time roles, internships, and freelance projects. Response time is typically within 24 hours.
+                  </p>
                 </motion.div>
               </div>
             </motion.div>
@@ -204,92 +204,92 @@ const Contact = () => {
             >
               <div className="relative rounded-2xl border-[0.75px] border-border p-2">
                 <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
-              <form
-                onSubmit={handleSubmit}
-                className="relative glass-card glow-border p-7 md:p-9 space-y-5 overflow-hidden rounded-xl"
-              >
-                {/* Subtle corner glow */}
-                <div className="pointer-events-none absolute top-0 right-0 w-40 h-40 bg-primary/5 rounded-full blur-3xl" />
+                <form
+                  onSubmit={handleSubmit}
+                  className="relative glass-card glow-border p-7 md:p-9 space-y-5 overflow-hidden rounded-xl"
+                >
+                  {/* Subtle corner glow */}
+                  <div className="pointer-events-none absolute top-0 right-0 w-40 h-40 bg-primary/5 rounded-full blur-3xl" />
 
-                <div className="relative z-10 space-y-5">
-                  {/* Name */}
-                  <div>
-                    <label className="block text-xs font-semibold tracking-[0.14em] uppercase text-muted-foreground mb-2">
-                      Name <span className="text-primary">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all text-sm"
-                      placeholder="Your full name"
-                    />
-                  </div>
-
-                  {/* Email + Phone */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="relative z-10 space-y-5">
+                    {/* Name */}
                     <div>
                       <label className="block text-xs font-semibold tracking-[0.14em] uppercase text-muted-foreground mb-2">
-                        Email <span className="text-primary">*</span>
+                        Name <span className="text-primary">*</span>
                       </label>
                       <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all text-sm"
-                        placeholder="your@email.com"
+                        placeholder="Your full name"
                       />
                     </div>
+
+                    {/* Email + Phone */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-semibold tracking-[0.14em] uppercase text-muted-foreground mb-2">
+                          Email <span className="text-primary">*</span>
+                        </label>
+                        <input
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all text-sm"
+                          placeholder="your@email.com"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold tracking-[0.14em] uppercase text-muted-foreground mb-2">
+                          Phone <span className="text-muted-foreground/40 normal-case tracking-normal font-normal">(optional)</span>
+                        </label>
+                        <input
+                          type="tel"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all text-sm"
+                          placeholder="+91 XXXXX XXXXX"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Message */}
                     <div>
                       <label className="block text-xs font-semibold tracking-[0.14em] uppercase text-muted-foreground mb-2">
-                        Phone <span className="text-muted-foreground/40 normal-case tracking-normal font-normal">(optional)</span>
+                        Message <span className="text-primary">*</span>
                       </label>
-                      <input
-                        type="tel"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all text-sm"
-                        placeholder="+91 XXXXX XXXXX"
+                      <textarea
+                        rows={5}
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all resize-none text-sm"
+                        placeholder="Tell me about your project, idea, or just say hello..."
                       />
                     </div>
-                  </div>
 
-                  {/* Message */}
-                  <div>
-                    <label className="block text-xs font-semibold tracking-[0.14em] uppercase text-muted-foreground mb-2">
-                      Message <span className="text-primary">*</span>
-                    </label>
-                    <textarea
-                      rows={5}
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all resize-none text-sm"
-                      placeholder="Tell me about your project, idea, or just say hello..."
-                    />
+                    {/* Submit */}
+                    <motion.button
+                      type="submit"
+                      disabled={isSubmitting}
+                      whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+                      whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+                      className="w-full flex items-center justify-center gap-2.5 px-6 py-4 rounded-xl bg-primary text-primary-foreground font-semibold text-sm tracking-wide hover:shadow-[0_0_30px_hsl(var(--primary)/0.4)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                          </svg>
+                          Sending...
+                        </>
+                      ) : (
+                        <>Send Message <Send size={15} /></>
+                      )}
+                    </motion.button>
                   </div>
-
-                  {/* Submit */}
-                  <motion.button
-                    type="submit"
-                    disabled={isSubmitting}
-                    whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
-                    whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-                    className="w-full flex items-center justify-center gap-2.5 px-6 py-4 rounded-xl bg-primary text-primary-foreground font-semibold text-sm tracking-wide hover:shadow-[0_0_30px_hsl(var(--primary)/0.4)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                        </svg>
-                        Sending...
-                      </>
-                    ) : (
-                      <>Send Message <Send size={15} /></>
-                    )}
-                  </motion.button>
-                </div>
-              </form>
+                </form>
               </div>
             </motion.div>
           </div>

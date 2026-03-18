@@ -169,9 +169,7 @@ const TiltCard = ({ project, index }: { project: Project; index: number }) => {
 };
 
 const Projects = () => {
-  const [active, setActive] = useState<Category>('All');
 
-  const filtered = active === 'All' ? projects : projects.filter((p) => p.category.includes(active));
 
   return (
     <PageTransition>
@@ -179,30 +177,9 @@ const Projects = () => {
         <div className="section-container">
           <SectionHeader title="Projects" subtitle="Things I've built" />
 
-          {/* Filter tabs */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex items-center justify-center gap-2 mb-10 flex-wrap"
-          >
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActive(cat)}
-                className={`px-5 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${active === cat
-                    ? 'bg-primary text-primary-foreground shadow-[0_0_20px_hsl(199_89%_48%/0.3)]'
-                    : 'glass-card text-muted-foreground hover:text-foreground hover:border-primary/30'
-                  }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </motion.div>
-
           {/* Project grid */}
           <motion.div layout className="grid md:grid-cols-2 gap-6" style={{ perspective: 1000 }}>
-            {filtered.map((project, i) => (
+            {projects.map((project, i) => (
               <TiltCard key={project.id} project={project} index={i} />
             ))}
           </motion.div>

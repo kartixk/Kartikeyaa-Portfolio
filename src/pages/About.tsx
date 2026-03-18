@@ -8,6 +8,7 @@ import PageTransition from '@/components/PageTransition';
 import { GlowingEffect } from '@/components/ui/glowing-effect';
 
 const timeline = [
+  { year: 'Dec 2025 - Present', title: 'Software Developer Intern · Spotmies LLP', description: 'Currently working as a Software Developer Intern at Spotmies LLP.', icon: Briefcase },
   { year: '2025', title: 'Software Engineer Intern', description: 'Interned at NTPC Limited & Zenith-Zap — shipped features used by real users.', icon: Briefcase },
   { year: '2025', title: 'AI-ML Virtual Internship', description: 'Explored ML foundations & NLP through EduSkills virtual internship.', icon: Code2 },
   { year: '2024', title: 'MERN Full Stack Training', description: 'Intensive training at XceedIQ Innovate360 — built production-ready apps end to end.', icon: Code2 },
@@ -59,7 +60,7 @@ const About = () => {
               <span className="text-xs font-semibold tracking-[0.2em] uppercase text-primary">About Me</span>
             </motion.div>
 
-            <div className="grid lg:grid-cols-[1fr_auto] gap-10 items-end">
+            <div>
               <div>
                 <motion.h1
                   variants={fadeUp} custom={1} initial="hidden" animate="show"
@@ -79,25 +80,6 @@ const About = () => {
                   production-ready applications — MERN stack first, clean architecture always.
                 </motion.p>
               </div>
-
-              <motion.div
-                variants={fadeUp} custom={3} initial="hidden" animate="show"
-                className="flex flex-row lg:flex-col gap-3"
-              >
-                {[
-                  { value: '2+', label: 'Internships' },
-                  { value: '4+', label: 'Projects' },
-                  { value: '82%', label: 'ML Accuracy' },
-                ].map((s) => (
-                  <div key={s.label} className="relative rounded-2xl border-[0.75px] border-border p-1">
-                    <GlowingEffect spread={30} glow proximity={50} inactiveZone={0.01} borderWidth={2} />
-                    <div className="glass-card px-5 py-3 text-center min-w-[96px] hover:border-primary/30 transition-colors duration-300 rounded-xl">
-                      <p className="text-2xl font-heading font-bold gradient-text leading-none mb-0.5">{s.value}</p>
-                      <p className="text-[11px] text-muted-foreground tracking-wider uppercase">{s.label}</p>
-                    </div>
-                  </div>
-                ))}
-              </motion.div>
             </div>
           </div>
         </div>
@@ -113,40 +95,40 @@ const About = () => {
             >
               <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
               <div className="relative glass-card glow-border p-8 group relative overflow-hidden rounded-xl">
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg" />
-              <div className="relative z-10">
-                <div className="flex items-center gap-4 mb-7">
-                  <div className="w-12 h-12 rounded-2xl bg-primary/15 border border-primary/25 flex items-center justify-center shrink-0">
-                    <User className="text-primary" size={22} />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg" />
+                <div className="relative z-10">
+                  <div className="flex items-center gap-4 mb-7">
+                    <div className="w-12 h-12 rounded-2xl bg-primary/15 border border-primary/25 flex items-center justify-center shrink-0">
+                      <User className="text-primary" size={22} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-heading font-bold text-foreground leading-tight">B Venkata Sai Kartikeya</h3>
+                      <p className="text-xs text-primary font-medium tracking-wide mt-0.5">Full Stack MERN Developer · IoT Enthusiast</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-heading font-bold text-foreground leading-tight">B Venkata Sai Kartikeya</h3>
-                    <p className="text-xs text-primary font-medium tracking-wide mt-0.5">Full Stack MERN Developer · IoT Enthusiast</p>
+                  <p className="text-muted-foreground leading-relaxed mb-3 text-[15px]">
+                    I enjoy taking ideas from a simple sketch to a reliable, production-ready application.
+                    My recent work lives in the MERN stack and real-time IoT monitoring systems.
+                  </p>
+                  <p className="text-muted-foreground leading-relaxed mb-7 text-[15px]">
+                    I care about clear architecture, maintainable code, and smooth user experiences
+                    more than chasing every new buzzword.
+                  </p>
+                  <div className="flex gap-3 flex-wrap">
+                    <a href="https://github.com/kartikeya" target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl glass-card border border-border/50 text-sm font-medium text-foreground hover:border-primary/50 hover:text-primary transition-all duration-300">
+                      <Github size={15} /> GitHub
+                    </a>
+                    <a href="https://linkedin.com/in/kartikeya" target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 border border-primary/30 text-sm font-medium text-primary hover:bg-primary/20 transition-all duration-300">
+                      <Linkedin size={15} /> LinkedIn
+                    </a>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=kartikeyaa15@gmail.com" target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl glass-card border border-border/50 text-sm font-medium text-foreground hover:border-accent/50 hover:text-accent transition-all duration-300">
+                      <Mail size={15} /> Email
+                    </a>
                   </div>
                 </div>
-                <p className="text-muted-foreground leading-relaxed mb-3 text-[15px]">
-                  I enjoy taking ideas from a simple sketch to a reliable, production-ready application.
-                  My recent work lives in the MERN stack and real-time IoT monitoring systems.
-                </p>
-                <p className="text-muted-foreground leading-relaxed mb-7 text-[15px]">
-                  I care about clear architecture, maintainable code, and smooth user experiences
-                  more than chasing every new buzzword.
-                </p>
-                <div className="flex gap-3 flex-wrap">
-                  <a href="https://github.com" target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl glass-card border border-border/50 text-sm font-medium text-foreground hover:border-primary/50 hover:text-primary transition-all duration-300">
-                    <Github size={15} /> GitHub
-                  </a>
-                  <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 border border-primary/30 text-sm font-medium text-primary hover:bg-primary/20 transition-all duration-300">
-                    <Linkedin size={15} /> LinkedIn
-                  </a>
-                  <a href="mailto:kartikeyaa15@gmail.com"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl glass-card border border-border/50 text-sm font-medium text-foreground hover:border-accent/50 hover:text-accent transition-all duration-300">
-                    <Mail size={15} /> Email
-                  </a>
-                </div>
-              </div>
               </div>
             </motion.div>
 
@@ -158,35 +140,35 @@ const About = () => {
               <div className="relative rounded-2xl border-[0.75px] border-border p-2">
                 <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
                 <div className="relative glass-card glow-border p-6 flex-1 rounded-xl">
-                <h3 className="text-xs font-semibold tracking-[0.18em] uppercase text-muted-foreground mb-5">Quick Info</h3>
-                <div className="space-y-3.5">
-                  {[
-                    { Icon: MapPin, text: 'Visakhapatnam, India' },
-                    { Icon: Mail, text: 'kartikeyaa15@gmail.com' },
-                    { Icon: Phone, text: '+91-8250977949' },
-                    { Icon: GraduationCap, text: 'GITAM University · B.Tech CSE' },
-                  ].map(({ Icon, text }) => (
-                    <div key={text} className="flex items-start gap-3">
-                      <div className="mt-0.5 w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                        <Icon className="text-primary" size={13} />
+                  <h3 className="text-xs font-semibold tracking-[0.18em] uppercase text-muted-foreground mb-5">Quick Info</h3>
+                  <div className="space-y-3.5">
+                    {[
+                      { Icon: MapPin, text: 'Visakhapatnam, India' },
+                      { Icon: Mail, text: 'kartikeyaa15@gmail.com' },
+                      { Icon: Phone, text: '+91-8250977949' },
+                      { Icon: GraduationCap, text: 'GITAM University · B.Tech CSE' },
+                    ].map(({ Icon, text }) => (
+                      <div key={text} className="flex items-start gap-3">
+                        <div className="mt-0.5 w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                          <Icon className="text-primary" size={13} />
+                        </div>
+                        <span className="text-sm text-muted-foreground leading-snug">{text}</span>
                       </div>
-                      <span className="text-sm text-muted-foreground leading-snug">{text}</span>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
                 </div>
               </div>
               <div className="relative rounded-2xl border-[0.75px] border-border p-2">
                 <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
                 <div className="relative glass-card p-6 rounded-xl">
-                <h3 className="text-xs font-semibold tracking-[0.18em] uppercase text-muted-foreground mb-4">Soft Skills</h3>
-                <div className="flex flex-wrap gap-2">
-                  {softSkills.map((s) => (
-                    <span key={s} className="px-3 py-1.5 rounded-full text-xs font-medium bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors cursor-default">
-                      {s}
-                    </span>
-                  ))}
-                </div>
+                  <h3 className="text-xs font-semibold tracking-[0.18em] uppercase text-muted-foreground mb-4">Soft Skills</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {softSkills.map((s) => (
+                      <span key={s} className="px-3 py-1.5 rounded-full text-xs font-medium bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors cursor-default">
+                        {s}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -318,16 +300,16 @@ const About = () => {
           >
             <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
             <div className="relative glass-card glow-border p-8 flex flex-col sm:flex-row items-center justify-between gap-6 rounded-xl">
-            <div>
-              <p className="text-lg font-heading font-semibold text-foreground mb-1">Want to build something together?</p>
-              <p className="text-sm text-muted-foreground">I'm open to full-time roles and interesting collaborations.</p>
-            </div>
-            <a
-              href="/contact"
-              className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:shadow-[0_0_28px_hsl(var(--primary)/0.4)] transition-all duration-300 hover:scale-105 shrink-0"
-            >
-              Get In Touch <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </a>
+              <div>
+                <p className="text-lg font-heading font-semibold text-foreground mb-1">Want to build something together?</p>
+                <p className="text-sm text-muted-foreground">I'm open to full-time roles and interesting collaborations.</p>
+              </div>
+              <a
+                href="/contact"
+                className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:shadow-[0_0_28px_hsl(var(--primary)/0.4)] transition-all duration-300 hover:scale-105 shrink-0"
+              >
+                Get In Touch <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              </a>
             </div>
           </motion.div>
         </section>

@@ -74,7 +74,7 @@ const TypewriterRole = () => {
       setTick((t) => t + 1);
     }, deleting ? 45 : 80);
     return () => clearTimeout(timeout);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tick, roleIdx]);
   return (
     <span className="inline-flex items-center font-bold text-sm" style={{ color: '#38bdf8' }}>
@@ -148,7 +148,7 @@ const CodeCard = () => {
       setBuildStep((s) => (s < buildLines.length ? s + 1 : s));
     }, buildStep < buildLines.length ? 900 + buildStep * 400 : 99999);
     return () => clearTimeout(t);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [buildStep]);
 
   // ─── Typewriter engine ───
@@ -183,7 +183,7 @@ const CodeCard = () => {
     if (raw.includes('location'))
       return <span className="pl-4 block"><span className="text-sky-300">location</span><span className="text-muted-foreground/40">: </span><span className="text-emerald-300">&quot;India 🇮🇳&quot;</span><span className="text-muted-foreground/40">,</span></span>;
     if (raw.includes('status'))
-      return <span className="pl-4 block flex items-center gap-0.5"><span className="text-sky-300">status</span><span className="text-muted-foreground/40">: </span><span className="text-emerald-300">&quot;Building great things&quot;</span><motion.span animate={{ opacity: [1,0,1] }} transition={{ duration: 1, repeat: Infinity }} className="inline-block w-[2px] h-[13px] ml-0.5 rounded-sm bg-sky-400" /></span>;
+      return <span className="pl-4 block flex items-center gap-0.5"><span className="text-sky-300">status</span><span className="text-muted-foreground/40">: </span><span className="text-emerald-300">&quot;Building great things&quot;</span><motion.span animate={{ opacity: [1, 0, 1] }} transition={{ duration: 1, repeat: Infinity }} className="inline-block w-[2px] h-[13px] ml-0.5 rounded-sm bg-sky-400" /></span>;
     if (raw === '}')
       return <span className="text-muted-foreground/40">{'}'}</span>;
     return <span className="text-foreground">{raw}</span>;
@@ -239,94 +239,94 @@ const CodeCard = () => {
 
       {/* Card body */}
       <div className="relative rounded-xl overflow-hidden"
-          style={{
-            background: 'rgba(6, 6, 18, 0.92)',
-            backdropFilter: 'blur(28px)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            boxShadow: hovered
-              ? '0 0 0 1px rgba(99,102,241,0.3), 0 32px 64px rgba(0,0,0,0.6)'
-              : '0 20px 40px rgba(0,0,0,0.4)',
-          }}>
+        style={{
+          background: 'rgba(6, 6, 18, 0.92)',
+          backdropFilter: 'blur(28px)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          boxShadow: hovered
+            ? '0 0 0 1px rgba(99,102,241,0.3), 0 32px 64px rgba(0,0,0,0.6)'
+            : '0 20px 40px rgba(0,0,0,0.4)',
+        }}>
 
-          {/* Top rainbow-gradient accent */}
-          <div className="absolute top-0 left-0 right-0 h-[1px]"
-            style={{ background: 'linear-gradient(90deg, transparent 0%, hsl(199 89% 48% / 0.8) 30%, hsl(270 70% 65% / 0.8) 70%, transparent 100%)' }} />
+        {/* Top rainbow-gradient accent */}
+        <div className="absolute top-0 left-0 right-0 h-[1px]"
+          style={{ background: 'linear-gradient(90deg, transparent 0%, hsl(199 89% 48% / 0.8) 30%, hsl(270 70% 65% / 0.8) 70%, transparent 100%)' }} />
 
-          {/* macOS title bar */}
-          <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.06]"
-            style={{ background: 'rgba(255,255,255,0.02)' }}>
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full transition-all duration-200 hover:brightness-125" style={{ backgroundColor: 'hsl(0 75% 56%)' }} />
-              <div className="w-3 h-3 rounded-full transition-all duration-200 hover:brightness-125" style={{ backgroundColor: 'hsl(38 92% 55%)' }} />
-              <div className="w-3 h-3 rounded-full transition-all duration-200 hover:brightness-125" style={{ backgroundColor: 'hsl(135 55% 45%)' }} />
-            </div>
-            <span className="text-[10px] text-muted-foreground/35 font-mono tracking-wide">kartikeya.profile.ts</span>
-            <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: '#4ade80' }} />
-              <span className="text-[9px] text-muted-foreground/30 font-mono">LIVE</span>
-            </div>
+        {/* macOS title bar */}
+        <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.06]"
+          style={{ background: 'rgba(255,255,255,0.02)' }}>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-full transition-all duration-200 hover:brightness-125" style={{ backgroundColor: 'hsl(0 75% 56%)' }} />
+            <div className="w-3 h-3 rounded-full transition-all duration-200 hover:brightness-125" style={{ backgroundColor: 'hsl(38 92% 55%)' }} />
+            <div className="w-3 h-3 rounded-full transition-all duration-200 hover:brightness-125" style={{ backgroundColor: 'hsl(135 55% 45%)' }} />
           </div>
-
-          {/* Code body with line numbers — typewriter */}
-          <div className="flex font-mono text-xs leading-7">
-            {/* Line numbers */}
-            <div className="flex flex-col items-end px-3 py-4 border-r border-white/[0.05] select-none shrink-0"
-              style={{ background: 'rgba(0,0,0,0.2)', minWidth: '36px' }}>
-              {CODE_LINES.map((_, i) => (
-                <span key={i} className="text-muted-foreground/20 text-[10px] leading-7">{i + 1}</span>
-              ))}
-            </div>
-            {/* Code content — typewriter */}
-            <div className="flex flex-col py-4 px-4 flex-1 overflow-hidden">
-              {typedLines.map((raw, i) => (
-                <div key={i} className="leading-7">{highlight(raw)}</div>
-              ))}
-              {currentLine < CODE_LINES.length && (
-                <div className="leading-7 flex items-center">
-                  <span className="text-muted-foreground/70 whitespace-pre">
-                    {CODE_LINES[currentLine].raw.slice(0, currentChar)}
-                  </span>
-                  <motion.span
-                    animate={{ opacity: [1, 0, 1] }}
-                    transition={{ duration: 0.55, repeat: Infinity }}
-                    className="inline-block w-[2px] h-[13px] rounded-sm bg-sky-400 ml-[1px] shrink-0"
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Build terminal output */}
-          <div className="border-t border-white/[0.05] px-4 py-3"
-            style={{ background: 'rgba(0,0,0,0.3)' }}>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-emerald-400 text-xs">▶</span>
-              <span className="text-muted-foreground/40 text-[11px] font-mono">npm run</span>
-              <span className="text-cyan-300 text-[11px] font-mono">build-future</span>
-            </div>
-            <div className="flex flex-col gap-0.5">
-              {buildLines.slice(0, buildStep).map((line, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-[10px] font-mono"
-                  style={{ color: line.color }}
-                >
-                  {line.text}
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
-          {/* Status bar */}
-          <div className="px-4 py-1.5 border-t border-white/[0.04] flex items-center justify-between"
-            style={{ background: 'rgba(255,255,255,0.01)' }}>
-            <span className="text-[9px] text-muted-foreground/25 font-mono">TypeScript</span>
-            <span className="text-[9px] text-muted-foreground/25 font-mono">UTF-8 · 42 lines</span>
+          <span className="text-[10px] text-muted-foreground/35 font-mono tracking-wide">kartikeya.profile.ts</span>
+          <div className="flex items-center gap-1.5">
+            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: '#4ade80' }} />
+            <span className="text-[9px] text-muted-foreground/30 font-mono">LIVE</span>
           </div>
         </div>
+
+        {/* Code body with line numbers — typewriter */}
+        <div className="flex font-mono text-xs leading-7">
+          {/* Line numbers */}
+          <div className="flex flex-col items-end px-3 py-4 border-r border-white/[0.05] select-none shrink-0"
+            style={{ background: 'rgba(0,0,0,0.2)', minWidth: '36px' }}>
+            {CODE_LINES.map((_, i) => (
+              <span key={i} className="text-muted-foreground/20 text-[10px] leading-7">{i + 1}</span>
+            ))}
+          </div>
+          {/* Code content — typewriter */}
+          <div className="flex flex-col py-4 px-4 flex-1 overflow-hidden">
+            {typedLines.map((raw, i) => (
+              <div key={i} className="leading-7">{highlight(raw)}</div>
+            ))}
+            {currentLine < CODE_LINES.length && (
+              <div className="leading-7 flex items-center">
+                <span className="text-muted-foreground/70 whitespace-pre">
+                  {CODE_LINES[currentLine].raw.slice(0, currentChar)}
+                </span>
+                <motion.span
+                  animate={{ opacity: [1, 0, 1] }}
+                  transition={{ duration: 0.55, repeat: Infinity }}
+                  className="inline-block w-[2px] h-[13px] rounded-sm bg-sky-400 ml-[1px] shrink-0"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Build terminal output */}
+        <div className="border-t border-white/[0.05] px-4 py-3"
+          style={{ background: 'rgba(0,0,0,0.3)' }}>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-emerald-400 text-xs">▶</span>
+            <span className="text-muted-foreground/40 text-[11px] font-mono">npm run</span>
+            <span className="text-cyan-300 text-[11px] font-mono">build-future</span>
+          </div>
+          <div className="flex flex-col gap-0.5">
+            {buildLines.slice(0, buildStep).map((line, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+                className="text-[10px] font-mono"
+                style={{ color: line.color }}
+              >
+                {line.text}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Status bar */}
+        <div className="px-4 py-1.5 border-t border-white/[0.04] flex items-center justify-between"
+          style={{ background: 'rgba(255,255,255,0.01)' }}>
+          <span className="text-[9px] text-muted-foreground/25 font-mono">TypeScript</span>
+          <span className="text-[9px] text-muted-foreground/25 font-mono">UTF-8 · 42 lines</span>
+        </div>
+      </div>
 
       {/* Floating badges */}
       {floatingBadges.map((b) => (
@@ -350,13 +350,14 @@ const Home = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const skillsPreview = [
-    { category: 'Frontend', skills: ['React', 'TypeScript', 'Tailwind CSS'] },
-    { category: 'Backend', skills: ['Node.js', 'Express', 'MongoDB'] },
-    { category: 'AI/ML', skills: ['Python', 'TensorFlow', 'NLP'] },
-    { category: 'DevOps', skills: ['Docker', 'Git', 'CI/CD'] },
+    { category: 'Frontend', skills: ['React', 'JavaScript', 'Tailwind CSS', 'HTML5', 'CSS3'] },
+    { category: 'Backend', skills: ['Node.js', 'Express', 'MongoDB', 'Supabase', 'REST APIs'] },
+    { category: 'AI/ML', skills: ['Python', 'TensorFlow', 'NLP', 'Scikit-learn'] },
+    { category: 'DevOps', skills: ['Docker', 'Git', 'GitHub', 'CI/CD'] },
   ];
 
   const experiences = [
+    { company: 'Spotmies LLP', role: 'Software Developer Intern', highlight: 'Currently working as a Software Developer Intern' },
     { company: 'NTPC Limited', role: 'Software Engineer Intern', highlight: 'Reduced user interaction time by 35%' },
     { company: 'Zenith-Zap', role: 'Software Engineer Intern', highlight: 'Improved page load performance by 25%' },
   ];
@@ -387,9 +388,9 @@ const Home = () => {
             className="absolute left-6 top-1/2 -translate-y-1/2 z-20 hidden lg:flex flex-col items-center gap-4"
           >
             {[
-              { href: 'mailto:kartikeyaa15@gmail.com', icon: Mail, label: 'Email' },
-              { href: 'https://linkedin.com', icon: Linkedin, label: 'LinkedIn' },
-              { href: 'https://github.com', icon: Github, label: 'GitHub' },
+              { href: 'https://mail.google.com/mail/?view=cm&fs=1&to=kartikeyaa15@gmail.com', icon: Mail, label: 'Email' },
+              { href: 'https://linkedin.com/in/b-venkata-sai-kartikeya-28a99b357', icon: Linkedin, label: 'LinkedIn' },
+              { href: 'https://github.com/kartixk', icon: Github, label: 'GitHub' },
             ].map(({ href, icon: Icon, label }) => (
               <motion.a
                 key={label}
@@ -449,13 +450,25 @@ const Home = () => {
                     transition={{ delay: 0.25, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                     className="text-5xl md:text-6xl lg:text-7xl font-heading font-black leading-tight tracking-tight pb-4"
                   >
-                    <span 
-                      className="block transition-all duration-300 group-hover:drop-shadow-[0_0_24px_rgba(56,189,248,0.7)] group-hover:text-shadow-[0_0_60px_rgba(56,189,248,0.35),0_0_120px_rgba(56,189,248,0.15)] pb-2" 
+                    <span
+                      className="block pb-2"
                       style={{ color: '#38bdf8' }}
                     >
                       B Venkata Sai
                     </span>
-                    <span className="text-foreground block">Kartikeya</span>
+                    <span className="text-foreground flex overflow-hidden pt-2">
+                      {"Kartikeya".split("").map((char, index) => (
+                        <motion.span
+                          key={index}
+                          initial={{ opacity: 0, y: 50 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.6 + index * 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                          className="inline-block"
+                        >
+                          {char}
+                        </motion.span>
+                      ))}
+                    </span>
                   </motion.h1>
                 </div>
 
@@ -685,10 +698,6 @@ const Home = () => {
                           </div>
                         </div>
                       </div>
-
-                      {/* Bottom progress line — fills on hover */}
-                      <div className="absolute bottom-0 left-0 h-[2px] w-0 group-hover:w-full transition-all duration-700 rounded-b-2xl"
-                        style={{ background: 'linear-gradient(90deg, hsl(195 90% 55%), hsl(195 80% 46%))' }} />
                     </div>
                   </motion.div>
                 );
@@ -699,24 +708,24 @@ const Home = () => {
             <div className="mt-12 relative rounded-2xl border-[0.75px] border-border p-2">
               <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
               <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="relative flex items-center justify-between gap-4 p-5 rounded-xl border border-white/5"
-              style={{ background: 'rgba(255,255,255,0.02)' }}
-            >
-              <div>
-                <p className="text-sm font-semibold text-foreground">Want to see more?</p>
-                <p className="text-xs text-muted-foreground">Explore the full project archive including IoT, research, and open-source work.</p>
-              </div>
-              <Link
-                to="/projects"
-                className="group shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary/10 border border-primary/20 text-primary text-sm font-semibold hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="relative flex items-center justify-between gap-4 p-5 rounded-xl border border-white/5"
+                style={{ background: 'rgba(255,255,255,0.02)' }}
               >
-                View All Projects <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </motion.div>
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Want to see more?</p>
+                  <p className="text-xs text-muted-foreground">Explore the full project archive including IoT, research, and open-source work.</p>
+                </div>
+                <Link
+                  to="/projects"
+                  className="group shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary/10 border border-primary/20 text-primary text-sm font-semibold hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                >
+                  View All Projects <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -724,13 +733,12 @@ const Home = () => {
 
         {/* ─── SKILLS PREVIEW ─── */}
         <section className="py-20 md:py-32 relative overflow-hidden">
-          {/* Ambient background glow */}
+          {/* Ambient glow blobs */}
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute inset-0 bg-card/10" />
-            <div className="absolute top-1/2 right-1/4 w-96 h-96 rounded-full opacity-8 blur-3xl"
-              style={{ background: 'radial-gradient(circle, hsl(187 100% 55% / 0.12) 0%, transparent 70%)' }} />
-            <div className="absolute bottom-0 left-1/3 w-72 h-72 rounded-full opacity-8 blur-3xl"
-              style={{ background: 'radial-gradient(circle, hsl(195 90% 55% / 0.1) 0%, transparent 70%)' }} />
+            <div className="absolute top-1/3 left-0 w-[500px] h-[500px] rounded-full blur-[120px] opacity-[0.06]"
+              style={{ background: 'radial-gradient(circle, hsl(199 89% 48%) 0%, transparent 70%)' }} />
+            <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full blur-[100px] opacity-[0.07]"
+              style={{ background: 'radial-gradient(circle, hsl(270 70% 60%) 0%, transparent 70%)' }} />
           </div>
 
           <div className="section-container !py-0 relative z-10">
@@ -740,7 +748,7 @@ const Home = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="mb-16"
+              className="mb-14"
             >
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-px w-8 bg-primary/60" />
@@ -755,80 +763,150 @@ const Home = () => {
               </p>
             </motion.div>
 
-            {/* Category cards — 2-col on md, 4-col on lg */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {/* Premium horizontal cards — 2-col grid */}
+            <div className="grid md:grid-cols-2 gap-5">
               {(() => {
-                const categoryMeta: Record<string, { icon: string; color: string; skillColors: Record<string, string> }> = {
+                const categoryMeta: Record<string, {
+                  icon: string;
+                  label: string;
+                  color: string;
+                  bg: string;
+                  skillColors: Record<string, string>;
+                }> = {
                   Frontend: {
                     icon: '⬡',
-                    color: 'hsl(199 89% 48%)',
-                    skillColors: { React: 'hsl(199,89%,48%)', TypeScript: 'hsl(220,90%,60%)', 'Tailwind CSS': 'hsl(187,100%,42%)' },
+                    label: 'Frontend',
+                    color: 'hsl(199 89% 55%)',
+                    bg: 'hsl(199 89% 48% / 0.08)',
+                    skillColors: {
+                      React: 'hsl(199,89%,55%)',
+                      JavaScript: 'hsl(48,96%,53%)',
+                      'Tailwind CSS': 'hsl(187,100%,46%)',
+                      HTML5: 'hsl(20,90%,55%)',
+                      CSS3: 'hsl(220,80%,60%)',
+                    },
                   },
                   Backend: {
                     icon: '⚙',
-                    color: 'hsl(120 50% 45%)',
-                    skillColors: { 'Node.js': 'hsl(120,50%,45%)', Express: 'hsl(50,10%,55%)', MongoDB: 'hsl(120,60%,35%)' },
+                    label: 'Backend',
+                    color: 'hsl(142 50% 48%)',
+                    bg: 'hsl(142 50% 45% / 0.08)',
+                    skillColors: {
+                      'Node.js': 'hsl(142,50%,48%)',
+                      Express: 'hsl(50,10%,60%)',
+                      MongoDB: 'hsl(120,60%,38%)',
+                      Supabase: 'hsl(154,70%,48%)',
+                      'REST APIs': 'hsl(195,90%,55%)',
+                    },
                   },
                   'AI/ML': {
                     icon: '◈',
-                    color: 'hsl(270 70% 60%)',
-                    skillColors: { Python: 'hsl(210,60%,50%)', TensorFlow: 'hsl(30,90%,50%)', NLP: 'hsl(300,60%,55%)' },
+                    label: 'AI / ML',
+                    color: 'hsl(270 65% 65%)',
+                    bg: 'hsl(270 65% 60% / 0.08)',
+                    skillColors: {
+                      Python: 'hsl(210,60%,55%)',
+                      TensorFlow: 'hsl(25,90%,55%)',
+                      NLP: 'hsl(300,60%,58%)',
+                      'Scikit-learn': 'hsl(14,90%,55%)',
+                    },
                   },
                   DevOps: {
                     icon: '▲',
-                    color: 'hsl(187 100% 55%)',
-                    skillColors: { Docker: 'hsl(210,80%,55%)', Git: 'hsl(14,90%,55%)', 'CI/CD': 'hsl(187,100%,42%)' },
+                    label: 'DevOps',
+                    color: 'hsl(187 100% 52%)',
+                    bg: 'hsl(187 100% 52% / 0.08)',
+                    skillColors: {
+                      Docker: 'hsl(210,80%,58%)',
+                      Git: 'hsl(14,90%,55%)',
+                      GitHub: 'hsl(0,0%,70%)',
+                      'CI/CD': 'hsl(187,100%,46%)',
+                    },
                   },
                 };
+
                 return skillsPreview.map((cat, i) => {
-                  const meta = categoryMeta[cat.category] ?? { icon: '◉', color: 'hsl(195 90% 55%)', skillColors: {} };
+                  const meta = categoryMeta[cat.category] ?? {
+                    icon: '◉',
+                    label: cat.category,
+                    color: 'hsl(195 90% 55%)',
+                    bg: 'hsl(195 90% 55% / 0.08)',
+                    skillColors: {},
+                  };
                   return (
                     <motion.div
                       key={cat.category}
-                      initial={{ opacity: 0, y: 30 }}
+                      initial={{ opacity: 0, y: 28 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
-                      transition={{ duration: 0.45, delay: i * 0.1 }}
-                      className="relative rounded-2xl border-[0.75px] border-border p-2"
+                      transition={{ duration: 0.5, delay: i * 0.1 }}
+                      className="relative rounded-2xl border-[0.75px] border-border p-[3px]"
                     >
-                      <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
-                      <div className="group relative glass-card rounded-xl overflow-hidden border border-white/5
-                        hover:border-primary/25 transition-all duration-500
-                        hover:shadow-[0_0_30px_-8px_hsl(250_84%_66%/0.25)]">
-                        {/* Hover gradient overlay */}
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-xl"
-                          style={{ background: `linear-gradient(135deg, ${meta.color}08 0%, transparent 100%)` }} />
+                      <GlowingEffect spread={45} glow={true} disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
+                      <div
+                        className="group relative rounded-xl overflow-hidden border border-white/[0.06] transition-all duration-500
+                          hover:border-white/[0.12] hover:shadow-2xl"
+                        style={{ background: 'rgba(8, 10, 22, 0.75)', backdropFilter: 'blur(20px)' }}
+                      >
+                        {/* Left coloured accent bar */}
+                        <div
+                          className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-xl transition-all duration-500 group-hover:w-[4px]"
+                          style={{ background: `linear-gradient(180deg, ${meta.color}, ${meta.color}44)` }}
+                        />
 
-                        <div className="relative z-10 p-5">
-                          {/* Icon + category */}
-                          <div className="flex items-center gap-2.5 mb-4">
-                            <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold shrink-0"
-                              style={{ background: `${meta.color}18`, color: meta.color }}>
-                              {meta.icon}
-                            </div>
-                            <span className="text-[10px] font-bold tracking-[0.18em] uppercase"
-                              style={{ color: meta.color }}>
-                              {cat.category}
-                            </span>
+                        {/* Subtle ambient glow behind card */}
+                        <div
+                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                          style={{ background: `radial-gradient(ellipse at 10% 50%, ${meta.color}10 0%, transparent 65%)` }}
+                        />
+
+                        <div className="relative z-10 flex items-start gap-5 pl-7 pr-6 py-6">
+                          {/* Icon column */}
+                          <div
+                            className="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center text-lg font-bold transition-transform duration-300 group-hover:scale-110 mt-0.5"
+                            style={{ background: meta.bg, color: meta.color }}
+                          >
+                            {meta.icon}
                           </div>
 
-                          {/* Skill tags with colored dots */}
-                          <div className="flex flex-wrap gap-2">
-                            {cat.skills.map((skill) => (
-                              <span key={skill}
-                                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border border-white/6"
-                                style={{ background: 'rgba(255,255,255,0.04)' }}>
-                                <span className="w-1.5 h-1.5 rounded-full shrink-0"
-                                  style={{ backgroundColor: meta.skillColors[skill] ?? meta.color }} />
-                                <span className="text-muted-foreground">{skill}</span>
-                              </span>
-                            ))}
+                          {/* Content */}
+                          <div className="flex-1 min-w-0">
+                            <span
+                              className="block text-[11px] font-black tracking-[0.2em] uppercase mb-3"
+                              style={{ color: meta.color }}
+                            >
+                              {meta.label}
+                            </span>
+
+                            {/* Skill chips */}
+                            <div className="flex flex-wrap gap-2">
+                              {cat.skills.map((skill) => (
+                                <motion.span
+                                  key={skill}
+                                  whileHover={{ scale: 1.06, y: -1 }}
+                                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-default select-none transition-colors duration-200"
+                                  style={{
+                                    background: `${meta.skillColors[skill] ?? meta.color}12`,
+                                    border: `1px solid ${meta.skillColors[skill] ?? meta.color}30`,
+                                    color: 'hsl(210 15% 72%)',
+                                  }}
+                                >
+                                  <span
+                                    className="w-1.5 h-1.5 rounded-full shrink-0"
+                                    style={{ backgroundColor: meta.skillColors[skill] ?? meta.color }}
+                                  />
+                                  {skill}
+                                </motion.span>
+                              ))}
+                            </div>
                           </div>
                         </div>
 
-                        {/* Bottom accent bar */}
-                        <div className="absolute bottom-0 left-0 h-[2px] w-0 group-hover:w-full transition-all duration-700 rounded-b-xl"
-                          style={{ background: `linear-gradient(90deg, ${meta.color}, transparent)` }} />
+                        {/* Bottom shimmer on hover */}
+                        <div
+                          className="absolute bottom-0 left-0 h-[1.5px] w-0 group-hover:w-full transition-all duration-700"
+                          style={{ background: `linear-gradient(90deg, ${meta.color}80, transparent)` }}
+                        />
                       </div>
                     </motion.div>
                   );
@@ -841,20 +919,33 @@ const Home = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="mt-10 flex items-center justify-between gap-4 p-5 rounded-2xl border border-white/5"
-              style={{ background: 'rgba(255,255,255,0.02)' }}
+              transition={{ duration: 0.5, delay: 0.45 }}
+              className="mt-8 relative rounded-2xl border-[0.75px] border-border p-[3px]"
             >
-              <div>
-                <p className="text-sm font-semibold text-foreground">Curious about the full stack?</p>
-                <p className="text-xs text-muted-foreground">Dive into detailed proficiency levels and tooling across every domain.</p>
-              </div>
-              <Link
-                to="/skills"
-                className="group shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary/10 border border-primary/20 text-primary text-sm font-semibold hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+              <GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
+              <div
+                className="relative flex items-center justify-between gap-4 px-6 py-5 rounded-xl border border-white/[0.06]"
+                style={{ background: 'rgba(255,255,255,0.02)', backdropFilter: 'blur(12px)' }}
               >
-                See All Skills <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
+                {/* Left: text + subtle icon strip */}
+                <div className="flex items-center gap-4">
+                  <div className="hidden sm:flex items-center gap-1.5">
+                    {['hsl(199 89% 55%)', 'hsl(142 50% 48%)', 'hsl(270 65% 65%)', 'hsl(187 100% 52%)'].map((c, idx) => (
+                      <div key={idx} className="w-2 h-2 rounded-full opacity-70" style={{ backgroundColor: c }} />
+                    ))}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Curious about the full stack?</p>
+                    <p className="text-xs text-muted-foreground/70 mt-0.5">Dive into detailed proficiency levels and tooling across every domain.</p>
+                  </div>
+                </div>
+                <Link
+                  to="/skills"
+                  className="group shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary/10 border border-primary/20 text-primary text-sm font-semibold hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                >
+                  See All Skills <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
             </motion.div>
           </div>
         </section>
@@ -906,54 +997,51 @@ const Home = () => {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.55, delay: i * 0.12 }}
-                  className="relative rounded-2xl border-[0.75px] border-border p-2"
+                    className="relative rounded-2xl border-[0.75px] border-border p-2"
                   >
                     <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
                     <div className="group relative glass-card rounded-xl overflow-hidden border border-white/5
                       hover:border-primary/25 transition-all duration-500
                       hover:shadow-[0_0_35px_-8px_hsl(250_84%_66%/0.25)]">
-                    {/* Hover gradient overlay */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
-                      style={{ background: `linear-gradient(135deg, ${c.glow} 0%, transparent 100%)` }} />
+                      {/* Hover gradient overlay */}
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
+                        style={{ background: `linear-gradient(135deg, ${c.glow} 0%, transparent 100%)` }} />
 
-                    <div className="relative z-10 p-6 md:p-7 flex items-start gap-5">
-                      {/* Index + icon stack */}
-                      <div className="shrink-0 flex flex-col items-center gap-2">
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-                          style={{ background: `${c.accent}18` }}>
-                          <Briefcase size={18} style={{ color: c.accent }} />
+                      <div className="relative z-10 p-6 md:p-7 flex items-start gap-5">
+                        {/* Icon stack */}
+                        <div className="shrink-0 flex flex-col items-center gap-2">
+                          <div className="w-10 h-10 rounded-xl flex items-center justify-center"
+                            style={{ background: `${c.accent}18` }}>
+                            <Briefcase size={18} style={{ color: c.accent }} />
+                          </div>
                         </div>
-                        <span className="text-[10px] font-black font-heading text-muted-foreground/40 select-none">
-                          {String(i + 1).padStart(2, '0')}
-                        </span>
-                      </div>
 
-                      {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-4 mb-1">
-                          <h3 className="text-lg font-heading font-bold text-foreground group-hover:text-primary transition-colors duration-300">
-                            {exp.company}
-                          </h3>
-                          {/* Role badge */}
-                          <span className="shrink-0 text-[10px] font-bold tracking-[0.12em] uppercase px-2.5 py-1 rounded-full hidden sm:inline-block"
-                            style={{ background: `${c.accent}15`, color: c.accent }}>
-                            Intern
-                          </span>
-                        </div>
-                        <p className="text-sm text-muted-foreground mb-3">{exp.role}</p>
+                        {/* Content */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-4 mb-1">
+                            <h3 className="text-lg font-heading font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                              {exp.company}
+                            </h3>
+                            {/* Role badge */}
+                            <span className="shrink-0 text-[10px] font-bold tracking-[0.12em] uppercase px-2.5 py-1 rounded-full hidden sm:inline-block"
+                              style={{ background: `${c.accent}15`, color: c.accent }}>
+                              Intern
+                            </span>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-3">{exp.role}</p>
 
-                        {/* Impact highlight chip */}
-                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg"
-                          style={{ background: 'hsl(187 100% 55% / 0.08)', border: '1px solid hsl(187 100% 55% / 0.15)' }}>
-                          <span className="text-xs font-bold" style={{ color: 'hsl(187 100% 55%)' }}>↗</span>
-                          <span className="text-xs font-medium text-muted-foreground">{exp.highlight}</span>
+                          {/* Impact highlight chip */}
+                          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg"
+                            style={{ background: 'hsl(187 100% 55% / 0.08)', border: '1px solid hsl(187 100% 55% / 0.15)' }}>
+                            <span className="text-xs font-bold" style={{ color: 'hsl(187 100% 55%)' }}>↗</span>
+                            <span className="text-xs font-medium text-muted-foreground">{exp.highlight}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* Bottom accent line */}
-                    <div className="absolute bottom-0 left-0 h-[2px] w-0 group-hover:w-full transition-all duration-700 rounded-b-2xl"
-                      style={{ background: `linear-gradient(90deg, ${c.accent}, transparent)` }} />
+                      {/* Bottom accent line */}
+                      <div className="absolute bottom-0 left-0 h-[2px] w-0 group-hover:w-full transition-all duration-700 rounded-b-2xl"
+                        style={{ background: `linear-gradient(90deg, ${c.accent}, transparent)` }} />
                     </div>
                   </motion.div>
                 );
@@ -1052,7 +1140,9 @@ const Home = () => {
                       Get In Touch <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
                     </Link>
                     <a
-                      href="mailto:kartikeyaa15@gmail.com"
+                      href="https://mail.google.com/mail/?view=cm&fs=1&to=kartikeyaa15@gmail.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-muted-foreground border border-white/10 hover:border-primary/40 hover:text-primary transition-all duration-300"
                       style={{ background: 'rgba(255,255,255,0.03)' }}
                     >

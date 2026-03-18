@@ -6,6 +6,16 @@ import { GlowingEffect } from '@/components/ui/glowing-effect';
 
 const experiences = [
   {
+    company: 'Spotmies LLP',
+    role: 'Software Developer Intern',
+    period: 'Dec 2025 – Present',
+    location: 'Remote',
+    points: [
+      'Currently working as a Software Developer Intern, contributing to core development tasks.',
+      'Collaborating with the team to build and maintain scalable web applications.',
+    ],
+  },
+  {
     company: 'NTPC Limited',
     role: 'Software Engineer Intern',
     period: 'May 2025',
