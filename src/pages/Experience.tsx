@@ -2,8 +2,19 @@ import { motion } from 'framer-motion';
 import { Briefcase } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import SectionHeader from '@/components/SectionHeader';
+import { GlowingEffect } from '@/components/ui/glowing-effect';
 
 const experiences = [
+  {
+    company: 'Spotmies LLP',
+    role: 'Software Developer Intern',
+    period: 'Dec 2025 – Present',
+    location: 'Remote',
+    points: [
+      'Currently working as a Software Developer Intern, contributing to core development tasks.',
+      'Collaborating with the team to build and maintain scalable web applications.',
+    ],
+  },
   {
     company: 'NTPC Limited',
     role: 'Software Engineer Intern',
@@ -46,25 +57,28 @@ const Experience = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="glass-card glow-border p-6"
+                className="relative h-full rounded-2xl border-[0.75px] border-border p-2 md:p-3"
               >
-                <div className="flex items-start gap-4">
-                  <div className="p-2 rounded-lg bg-primary/10 mt-1">
-                    <Briefcase className="text-primary" size={20} />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-1">
-                      <h3 className="text-lg font-heading font-semibold text-foreground">{exp.company}</h3>
-                      <span className="text-sm text-primary">{exp.period}</span>
+                <GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
+                <div className="relative h-full glass-card glow-border p-6 overflow-hidden rounded-xl">
+                  <div className="flex items-start gap-4">
+                    <div className="p-2 rounded-lg bg-primary/10 mt-1">
+                      <Briefcase className="text-primary" size={20} />
                     </div>
-                    <p className="text-sm text-muted-foreground mb-3">{exp.role} · {exp.location}</p>
-                    <ul className="space-y-2">
-                      {exp.points.map((p, j) => (
-                        <li key={j} className="text-sm text-muted-foreground flex gap-2">
-                          <span className="text-primary mt-0.5">▹</span>{p}
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="flex-1">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-1">
+                        <h3 className="text-lg font-heading font-semibold text-foreground">{exp.company}</h3>
+                        <span className="text-sm text-primary">{exp.period}</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-3">{exp.role} · {exp.location}</p>
+                      <ul className="space-y-2">
+                        {exp.points.map((p, j) => (
+                          <li key={j} className="text-sm text-muted-foreground flex gap-2">
+                            <span className="text-primary mt-0.5">▹</span>{p}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </motion.div>

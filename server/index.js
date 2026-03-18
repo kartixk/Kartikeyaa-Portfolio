@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import contactRoutes from './routes/contactRoutes.js';
 import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
 
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -16,6 +17,7 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const app = express();
+app.use(helmet());
 const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [

@@ -6,19 +6,20 @@
 
 @layer base {
   :root {
-    /* Black background + white text + cyan accents (Spotmies‑style) */
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
+    /* Deep Professional Slate */
+    --background: 222 47% 1%;
+    --foreground: 210 40% 98%;
 
-    --card: 210 12% 6%;
-    --card-foreground: 0 0% 100%;
+    /* Subtle Card background */
+    --card: 222 47% 4%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 210 12% 6%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 222 47% 4%;
+    --popover-foreground: 210 40% 98%;
 
-    /* Primary cyan accent */
-    --primary: 187 100% 50%;
-    --primary-foreground: 0 0% 0%;
+    /* Sophisticated Primary (Indigo-Violet) */
+    --primary: 195 90% 55%;
+    --primary-foreground: 210 40% 98%;
 
     /* Subtle desaturated cyan/blue for secondary accents */
     --secondary: 195 80% 46%;
@@ -34,24 +35,27 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 222 30% 18%;
-    --input: 222 30% 18%;
-    --ring: 199 89% 48%;
+    /* Thin, elegant borders */
+    --border: 217 32% 12%;
+    --input: 217 32% 12%;
+    --ring: 195 90% 55%;
 
-    --radius: 0.75rem;
+    /* Tighter radius looks more "pro" */
+    --radius: 0.5rem;
 
-    --glow-primary: 199 89% 48%;
+    /* Soft glowing accents */
+    --glow-primary: 195 90% 55%;
     --glow-secondary: 270 60% 55%;
     --glow-accent: 160 84% 39%;
 
     --sidebar-background: 222 41% 10%;
     --sidebar-foreground: 210 40% 92%;
-    --sidebar-primary: 199 89% 48%;
+    --sidebar-primary: 195 90% 55%;
     --sidebar-primary-foreground: 222 47% 7%;
     --sidebar-accent: 222 30% 14%;
     --sidebar-accent-foreground: 210 40% 92%;
-    --sidebar-border: 222 30% 18%;
-    --sidebar-ring: 199 89% 48%;
+    --sidebar-border: 217 32% 12%;
+    --sidebar-ring: 195 90% 55%;
   }
 }
 
@@ -64,29 +68,35 @@
     @apply bg-background text-foreground font-body antialiased;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-heading;
   }
 
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
   }
 }
 
 @layer components {
   .glass-card {
-    @apply bg-card/40 backdrop-blur-xl border border-border/50 rounded-xl;
+    /* Reduced opacity for a cleaner look */
+    @apply bg-white/[0.02] backdrop-blur-md border border-white/[0.05] rounded-lg shadow-2xl;
   }
 
   .glow-border {
     @apply relative;
     box-shadow: 0 0 15px -3px hsl(var(--glow-primary) / 0.3),
-                0 0 6px -4px hsl(var(--glow-primary) / 0.2);
+      0 0 6px -4px hsl(var(--glow-primary) / 0.2);
   }
 
   .glow-border:hover {
     box-shadow: 0 0 25px -3px hsl(var(--glow-primary) / 0.5),
-                0 0 10px -4px hsl(var(--glow-primary) / 0.3);
+      0 0 10px -4px hsl(var(--glow-primary) / 0.3);
   }
 
   .gradient-text {
@@ -177,11 +187,25 @@
 }
 
 @keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
