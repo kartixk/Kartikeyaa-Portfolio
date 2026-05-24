@@ -1,8 +1,8 @@
-import { motion } from 'framer-motion';
-import { Briefcase } from 'lucide-react';
+import { Briefcase, MapPin, ArrowUpRight, Award, BookOpen } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
-import SectionHeader from '@/components/SectionHeader';
+import PageHeader from '@/components/PageHeader';
 import { GlowingEffect } from '@/components/ui/glowing-effect';
+import { Reveal, TiltCard } from '@/components/fx';
 
 const experiences = [
   {
@@ -10,8 +10,9 @@ const experiences = [
     role: 'Software Developer Intern',
     period: 'Dec 2025 – Present',
     location: 'Remote',
+    accent: 'hsl(186 100% 52%)',
     points: [
-      'Currently working as a Software Developer Intern, contributing to core development tasks.',
+      'Contributing to core development tasks across the product.',
       'Collaborating with the team to build and maintain scalable web applications.',
     ],
   },
@@ -20,6 +21,7 @@ const experiences = [
     role: 'Software Engineer Intern',
     period: 'May 2025',
     location: 'Visakhapatnam, India',
+    accent: 'hsl(220 90% 62%)',
     points: [
       'Improved frontend usability of internal web tools, reducing user interaction time by 35%.',
       'Resolved UI defects through cross-team collaboration, decreasing reported issues by 20%.',
@@ -30,6 +32,7 @@ const experiences = [
     role: 'Software Engineer Intern',
     period: 'May 2025 – Jun 2025',
     location: 'Remote',
+    accent: 'hsl(315 90% 62%)',
     points: [
       'Built responsive React interfaces, improving page load performance by 25%.',
       'Optimized API integration and state handling, reducing request latency by 15%.',
@@ -38,71 +41,87 @@ const experiences = [
 ];
 
 const certifications = [
-  { title: 'AI-ML Virtual Internship', org: 'EduSkills', period: 'Apr 2025 – Jun 2025' },
-  { title: 'MERN Full Stack Training', org: 'XceedIQ Innovate360', period: 'Jan 2024 – Jul 2024' },
+  { title: 'AI-ML Virtual Internship', org: 'EduSkills', period: 'Apr 2025 – Jun 2025', icon: Award },
+  { title: 'MERN Full Stack Training', org: 'XceedIQ Innovate360', period: 'Jan 2024 – Jul 2024', icon: BookOpen },
 ];
 
 const Experience = () => {
   return (
     <PageTransition>
-      <div className="min-h-screen pt-24 gradient-bg">
-        <div className="section-container">
-          <SectionHeader title="Experience" subtitle="Where I've worked" />
+      <div className="gradient-bg">
+        <PageHeader
+          eyebrow="Professional Journey"
+          title={<><span className="text-foreground">Where I've</span> <span className="aurora-text">worked.</span></>}
+          subtitle="Internships where I shipped real features, collaborated across teams, and drove measurable impact."
+        />
 
-          <div className="space-y-6 mb-16">
+        <section className="section-container !pt-4">
+          {/* Timeline */}
+          <div className="relative mx-auto max-w-3xl">
+            <div className="absolute left-[19px] top-2 bottom-2 w-px bg-gradient-to-b from-brand-2/60 via-brand-1/40 to-transparent" />
             {experiences.map((exp, i) => (
-              <motion.div
-                key={exp.company}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="relative h-full rounded-2xl border-[0.75px] border-border p-2 md:p-3"
-              >
-                <GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
-                <div className="relative h-full glass-card glow-border p-6 overflow-hidden rounded-xl">
-                  <div className="flex items-start gap-4">
-                    <div className="p-2 rounded-lg bg-primary/10 mt-1">
-                      <Briefcase className="text-primary" size={20} />
+              <Reveal key={exp.company} delay={i * 0.08} direction="left" className="relative mb-7 pl-14">
+                {/* node */}
+                <span className="absolute left-0 top-1.5 grid h-10 w-10 place-items-center rounded-full border bg-background"
+                  style={{ borderColor: `${exp.accent.replace(')', ' / 0.5)')}`, boxShadow: `0 0 16px ${exp.accent.replace(')', ' / 0.4)')}` }}>
+                  <Briefcase size={16} style={{ color: exp.accent }} />
+                </span>
+                <div className="group relative rounded-3xl border-[0.75px] border-border p-2">
+                  <GlowingEffect spread={44} glow disabled={false} proximity={70} inactiveZone={0.01} borderWidth={3} />
+                  <TiltCard intensity={3} className="overflow-hidden rounded-2xl glass-panel p-7">
+                    <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                      <h3 className="font-display text-xl font-bold tracking-tight transition-colors group-hover:text-brand-2">{exp.company}</h3>
+                      <span className="font-mono text-xs" style={{ color: exp.accent }}>{exp.period}</span>
                     </div>
-                    <div className="flex-1">
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-1">
-                        <h3 className="text-lg font-heading font-semibold text-foreground">{exp.company}</h3>
-                        <span className="text-sm text-primary">{exp.period}</span>
+                    <div className="mb-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                      <span className="font-medium text-foreground/80">{exp.role}</span>
+                      <span className="inline-flex items-center gap-1"><MapPin size={12} className="text-brand-2/70" />{exp.location}</span>
+                    </div>
+                    <ul className="space-y-2">
+                      {exp.points.map((p, j) => (
+                        <li key={j} className="flex gap-2.5 text-sm leading-relaxed text-muted-foreground">
+                          <ArrowUpRight size={14} className="mt-0.5 shrink-0" style={{ color: exp.accent }} />
+                          {p}
+                        </li>
+                      ))}
+                    </ul>
+                  </TiltCard>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          {/* Certifications */}
+          <Reveal className="mt-16 mb-8 flex items-center gap-4">
+            <span className="h-px flex-1 bg-border" />
+            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Certifications & Training</h2>
+            <span className="h-px flex-1 bg-border" />
+          </Reveal>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {certifications.map((cert, i) => {
+              const Icon = cert.icon;
+              return (
+                <Reveal key={cert.title} delay={i * 0.08}>
+                  <div className="group relative h-full rounded-3xl border-[0.75px] border-border p-2">
+                    <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
+                    <div className="relative flex h-full items-start gap-4 rounded-2xl glass-panel p-6">
+                      <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-brand-1/20 bg-brand-1/10 transition-transform group-hover:scale-110">
+                        <Icon className="text-brand-1" size={18} />
                       </div>
-                      <p className="text-sm text-muted-foreground mb-3">{exp.role} · {exp.location}</p>
-                      <ul className="space-y-2">
-                        {exp.points.map((p, j) => (
-                          <li key={j} className="text-sm text-muted-foreground flex gap-2">
-                            <span className="text-primary mt-0.5">▹</span>{p}
-                          </li>
-                        ))}
-                      </ul>
+                      <div>
+                        <h4 className="font-display font-bold leading-snug transition-colors group-hover:text-brand-2">{cert.title}</h4>
+                        <p className="mt-1 text-sm text-muted-foreground">{cert.org}</p>
+                        <span className="mt-2 inline-flex rounded-full border border-brand-2/20 bg-brand-2/10 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest text-brand-2">
+                          {cert.period}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </Reveal>
+              );
+            })}
           </div>
-
-          <SectionHeader title="Certifications" />
-          <div className="grid sm:grid-cols-2 gap-4">
-            {certifications.map((cert, i) => (
-              <motion.div
-                key={cert.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="glass-card p-5 hover:border-primary/30 transition-colors"
-              >
-                <h4 className="font-heading font-medium text-foreground">{cert.title}</h4>
-                <p className="text-sm text-muted-foreground">{cert.org}</p>
-                <p className="text-xs text-primary mt-1">{cert.period}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+        </section>
       </div>
     </PageTransition>
   );
