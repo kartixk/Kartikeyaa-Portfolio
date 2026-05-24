@@ -111,6 +111,8 @@ const techColors: Record<string, string> = {
   ThingSpeak: 'hsl(220 90% 62%)', Sensors: 'hsl(142 60% 50%)', Arduino: 'hsl(180 70% 45%)',
 };
 
+const PHOTO = 'https://res.cloudinary.com/dvf0ugwrr/image/upload/v1779630443/My_o9qgpi.jpg';
+
 const Home = () => {
   const reduce = useReducedMotion();
   const { projects } = useProjectsStore();
@@ -455,6 +457,82 @@ const Home = () => {
               </Link>
             </Magnetic>
           </Reveal>
+        </section>
+
+        {/* ─────────── PROFILE / PORTRAIT ─────────── */}
+        <section className="section-container !pt-4">
+          <SectionIntro eyebrow="Identity Module" titleA="The human" titleB="behind the build"
+            blurb="Logic-driven, detail-obsessed, and always shipping. Here's the person operating the console." />
+
+          <div className="mt-14 grid items-center gap-10 lg:grid-cols-[0.82fr_1.18fr]">
+            {/* Portrait */}
+            <Reveal>
+              <div className="relative mx-auto w-full max-w-sm">
+                <GlowingEffect spread={44} glow disabled={false} proximity={70} inactiveZone={0.01} borderWidth={3} />
+                <div className="relative overflow-hidden rounded-md hud-panel p-1.5">
+                  <div className="relative overflow-hidden rounded-sm">
+                    <HudCorners className="z-20" size="h-6 w-6" color="border-primary/50" />
+                    <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+                      <img
+                        src={PHOTO}
+                        alt="B Venkata Sai Kartikeya"
+                        loading="lazy"
+                        className="h-full w-full object-cover object-center"
+                      />
+                      {/* name label — always visible */}
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-background via-background/75 to-transparent p-5 pt-20">
+                        <p className="font-hero text-xl font-black uppercase tracking-tight text-foreground">Kartikeya</p>
+                        <p className="mt-1 font-mono text-xs uppercase tracking-[0.2em] text-primary">Full-Stack Developer</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Bio + facts */}
+            <Reveal delay={0.1}>
+              <p className="eyebrow mb-4"><span className="h-px w-8 bg-primary/60" /> Who I am</p>
+              <h3 className="font-display text-3xl font-extrabold leading-tight tracking-tight md:text-4xl">
+                Engineer by <span className="gradient-text">logic</span>,<br className="hidden sm:block" /> builder by <span className="gradient-text">obsession</span>.
+              </h3>
+              <p className="mt-5 max-w-xl leading-relaxed text-muted-foreground">
+                I'm Kartikeya — a Computer Science undergrad from Visakhapatnam who turns ideas into
+                production-ready software. I live in the MERN stack, explore ML &amp; IoT, and sweat the
+                details that make an interface feel <span className="font-semibold text-foreground">fast, smart, and alive</span>.
+              </p>
+
+              <div className="mt-7 grid max-w-md grid-cols-2 gap-3">
+                {[
+                  { k: 'Location', v: 'Visakhapatnam, IN' },
+                  { k: 'Focus', v: 'Full-Stack · ML · IoT' },
+                  { k: 'Experience', v: '3+ Internships' },
+                  { k: 'Status', v: 'Open to work', dot: true },
+                ].map((f) => (
+                  <div key={f.k} className="rounded-md border border-primary/15 bg-line/[0.02] px-4 py-3">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">{f.k}</p>
+                    <p className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-foreground">
+                      {f.dot && <span className="h-1.5 w-1.5 rounded-full bg-brand-4 shadow-[0_0_8px_hsl(var(--brand-4))]" />}
+                      {f.v}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Magnetic strength={0.3}>
+                  <Link to="/about" className="btn-gradient group inline-flex items-center gap-2 px-6 py-3.5 font-mono text-xs font-bold uppercase tracking-widest">
+                    More About Me <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </Magnetic>
+                <Magnetic strength={0.3}>
+                  <Link to="/contact" className="btn-hud inline-flex items-center gap-2 px-6 py-3.5 font-mono text-xs font-bold uppercase tracking-widest">
+                    Get In Touch
+                  </Link>
+                </Magnetic>
+              </div>
+            </Reveal>
+          </div>
         </section>
       </div>
     </PageTransition>
