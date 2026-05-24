@@ -185,7 +185,7 @@ const Home = () => {
                   B Venkata Sai
                 </span>
                 <Reveal as="span" immediate delay={0.15} className="mt-3 block">
-                  <span className="font-hero text-5xl font-black uppercase tracking-tight text-foreground sm:text-6xl lg:text-7xl xl:text-[7rem]">
+                  <span className="block font-hero font-black uppercase tracking-tight text-foreground leading-[0.95] text-[clamp(2.25rem,11.5vw,7rem)]">
                     <span className="neon-text">KART</span>IKEYA
                   </span>
                 </Reveal>
