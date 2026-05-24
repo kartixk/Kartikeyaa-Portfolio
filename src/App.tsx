@@ -1,13 +1,16 @@
 import { lazy, Suspense, useState, useCallback } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThemeProvider } from 'next-themes';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import Backdrop from '@/components/Backdrop';
+import { ScrollProgress } from '@/components/fx';
 import Preloader from '@/components/ui/preloader';
 import { AnimatePresence } from 'framer-motion';
 import SmoothScrolling from '@/components/SmoothScrolling';
-import { AuroraBackground } from '@/components/ui/starfall-portfolio-landing';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -21,28 +24,29 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 
 const queryClient = new QueryClient();
 
+const KNOWN_ROUTES = ['/', '/about', '/projects', '/skills', '/experience', '/education', '/contact'];
+
 const Loading = () => (
-  <div className="min-h-screen flex items-center justify-center bg-background">
-    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+  <div className="flex min-h-screen items-center justify-center">
+    <div className="h-10 w-10 animate-spin rounded-full border-2 border-brand-2 border-t-transparent" />
   </div>
 );
 
 const AppContent = ({ showPreloader }: { showPreloader: boolean }) => {
   const location = useLocation();
-  const showGlobalAurora = location.pathname !== '/';
+  const showFooter = KNOWN_ROUTES.includes(location.pathname);
 
   return (
     <>
-      {showGlobalAurora && (
-        <div className="fixed inset-0 z-0 pointer-events-none">
-          <AuroraBackground />
-        </div>
-      )}
+      <Backdrop />
+      <div className="noise-overlay" />
+
+      {!showPreloader && <ScrollProgress />}
       {!showPreloader && <Navbar />}
       <Suspense fallback={<Loading />}>
         <AnimatePresence mode="wait">
           {!showPreloader && (
-            <Routes>
+            <Routes location={location} key={location.pathname}>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
               <Route path="/projects" element={<Projects />} />
@@ -56,23 +60,24 @@ const AppContent = ({ showPreloader }: { showPreloader: boolean }) => {
           )}
         </AnimatePresence>
       </Suspense>
+      {!showPreloader && showFooter && <Footer />}
     </>
   );
 };
 
 import { ErrorBoundary } from 'react-error-boundary';
 
-const ErrorFallback = ({ error, resetErrorBoundary }: { error: Error, resetErrorBoundary: () => void }) => (
-  <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4">
-    <div className="max-w-md text-center space-y-4">
+const ErrorFallback = ({ error, resetErrorBoundary }: { error: Error; resetErrorBoundary: () => void }) => (
+  <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 text-foreground">
+    <div className="max-w-md space-y-4 text-center">
       <h2 className="text-2xl font-bold text-destructive">Oops, something went wrong</h2>
-      <p className="text-muted-foreground text-sm">We're sorry, but an unexpected error occurred.</p>
-      <div className="bg-destructive/10 text-destructive p-4 rounded-md text-left overflow-auto text-xs font-mono">
+      <p className="text-sm text-muted-foreground">We're sorry, but an unexpected error occurred.</p>
+      <div className="overflow-auto rounded-md bg-destructive/10 p-4 text-left font-mono text-xs text-destructive">
         {error.message}
       </div>
-      <button 
+      <button
         onClick={resetErrorBoundary}
-        className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:opacity-90 transition-opacity"
+        className="mt-4 rounded-md bg-primary px-4 py-2 text-primary-foreground transition-opacity hover:opacity-90"
       >
         Try again
       </button>
@@ -85,19 +90,21 @@ const App = () => {
   const handlePreloaderComplete = useCallback(() => setShowPreloader(false), []);
 
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
-      {showPreloader && <Preloader onComplete={handlePreloaderComplete} />}
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <SmoothScrolling>
-            <Sonner />
-            <BrowserRouter>
-              <AppContent showPreloader={showPreloader} />
-            </BrowserRouter>
-          </SmoothScrolling>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </ErrorBoundary>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="kartikeya-theme">
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        {showPreloader && <Preloader onComplete={handlePreloaderComplete} />}
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <SmoothScrolling>
+              <Sonner />
+              <BrowserRouter>
+                <AppContent showPreloader={showPreloader} />
+              </BrowserRouter>
+            </SmoothScrolling>
+          </TooltipProvider>
+        </QueryClientProvider>
+      </ErrorBoundary>
+    </ThemeProvider>
   );
 };
 

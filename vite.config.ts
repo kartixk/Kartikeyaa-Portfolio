@@ -27,7 +27,9 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks: {
             vendor: ['react', 'react-dom', 'react-router-dom'],
-            ui: ['framer-motion', 'lucide-react', 'three'],
+            ui: ['framer-motion', 'lucide-react'],
+            // 3D libs are only used by lazy-loaded components — keep them off the critical path.
+            three: ['three', '@react-three/fiber', '@react-three/drei'],
           }
         }
       }
