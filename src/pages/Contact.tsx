@@ -14,7 +14,7 @@ const normalizeBaseUrl = (value?: string) => {
   return value.replace(/\/+$/, '');
 };
 
-const fetchWithTimeout = async (url: string, options: RequestInit, timeoutMs = 12000) => {
+const fetchWithTimeout = async (url: string, options: RequestInit, timeoutMs = 20000) => {
   const controller = new AbortController();
   const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
   try {
