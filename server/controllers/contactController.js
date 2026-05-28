@@ -283,27 +283,21 @@ export const handleContact = async (req, res) => {
 </html>`,
       });
 
-      const emailResults = await Promise.allSettled([
-        withTimeout(mailToOwner, 12000, 'Owner email send (Resend)'),
-        withTimeout(autoReply, 12000, 'Auto-reply send (Resend)'),
-      ]);
-
-      const hasEmailFailure = emailResults.some((result) => result.status === 'rejected');
-
-      emailResults.forEach((result, index) => {
-        if (result.status === 'rejected') {
-          const target = index === 0 ? 'owner notification' : 'auto-reply';
-          console.warn(`Contact email warning (${target}):`, result.reason?.message || result.reason);
-        }
-      });
-
-      if (hasEmailFailure) {
-        return res.status(502).json({
-          success: false,
-          error: 'Message received but email delivery failed. Please try again later.',
-          data: { id: docId },
+      // Fire-and-forget: respond immediately, deliver emails in the background.
+      // Avoids a race between the client's fetch timeout and Resend's send latency
+      // (Render cold starts + retries can push send time past the browser timeout
+      // even though the emails do go out successfully).
+      Promise.allSettled([
+        withTimeout(mailToOwner, 20000, 'Owner email send (Resend)'),
+        withTimeout(autoReply, 20000, 'Auto-reply send (Resend)'),
+      ]).then((emailResults) => {
+        emailResults.forEach((result, index) => {
+          if (result.status === 'rejected') {
+            const target = index === 0 ? 'owner notification' : 'auto-reply';
+            console.warn(`Contact email warning (${target}):`, result.reason?.message || result.reason);
+          }
         });
-      }
+      });
 
       return res.status(201).json({ success: true, data: { id: docId } });
     }
