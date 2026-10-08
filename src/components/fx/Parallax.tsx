@@ -1,3 +1,5 @@
+'use client';
+
 import { motion, useScroll, useTransform, useReducedMotion, type MotionStyle } from 'framer-motion';
 import { ElementType, ReactNode, useRef, useMemo } from 'react';
 

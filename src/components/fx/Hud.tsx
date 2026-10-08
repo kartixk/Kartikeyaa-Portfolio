@@ -1,3 +1,5 @@
+'use client';
+
 import { cn } from '@/lib/utils';
 
 /** Four sci-fi corner brackets that frame a relative-positioned parent. */

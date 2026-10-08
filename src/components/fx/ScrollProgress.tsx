@@ -1,3 +1,5 @@
+'use client';
+
 import { motion, useScroll, useSpring } from 'framer-motion';
 
 /** Thin gradient bar at the very top that tracks page scroll progress. */

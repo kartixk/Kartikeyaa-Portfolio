@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: ["./src/**/*.{ts,tsx}"],
   prefix: "",
   theme: {
     container: {
@@ -14,11 +14,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        hero: ['"Orbitron"', '"Space Grotesk"', 'sans-serif'],
-        display: ['"Space Grotesk"', 'sans-serif'],
-        heading: ['"Space Grotesk"', 'sans-serif'],
-        body: ['"Inter"', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        hero: ['var(--font-hero)', 'var(--font-display)', 'sans-serif'],
+        display: ['var(--font-display)', 'sans-serif'],
+        heading: ['var(--font-display)', 'sans-serif'],
+        body: ['var(--font-body)', 'sans-serif'],
+        mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
       },
       boxShadow: {
         'pro-glow': '0 0 20px -5px rgba(120, 119, 198, 0.3)',

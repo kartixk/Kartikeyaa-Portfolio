@@ -1,5 +1,8 @@
+'use client';
+
 import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -19,7 +22,7 @@ const navItems = [
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const location = useLocation();
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -28,7 +31,7 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => setOpen(false), [location.pathname]);
+  useEffect(() => setOpen(false), [pathname]);
 
   return (
     <>
@@ -48,7 +51,7 @@ const Navbar = () => {
         >
           {/* Logo */}
           <Magnetic strength={0.3}>
-            <Link to="/" className="group flex items-center gap-2.5">
+            <Link href="/" className="group flex items-center gap-2.5">
               <span className="relative grid h-8 w-8 place-items-center rounded-sm font-hero text-sm font-black text-background"
                 style={{ background: 'hsl(var(--primary))' }}>
                 K
@@ -64,11 +67,11 @@ const Navbar = () => {
           {/* Desktop links */}
           <ul className="hidden items-center gap-1 md:flex">
             {navItems.map(({ label, path }) => {
-              const active = location.pathname === path;
+              const active = pathname === path;
               return (
                 <li key={path} className="relative">
                   <Link
-                    to={path}
+                    href={path}
                     className={cn(
                       'relative z-10 block px-3.5 py-1.5 font-mono text-xs font-medium uppercase tracking-wider transition-colors duration-300',
                       active ? 'text-background' : 'text-muted-foreground hover:text-primary'
@@ -114,7 +117,7 @@ const Navbar = () => {
             className="fixed inset-0 z-40 flex flex-col justify-center gap-1 bg-background/95 px-8 backdrop-blur-2xl md:hidden"
           >
             {navItems.map(({ label, path }, i) => {
-              const active = location.pathname === path;
+              const active = pathname === path;
               return (
                 <motion.div
                   key={path}
@@ -124,7 +127,7 @@ const Navbar = () => {
                   transition={{ delay: 0.06 * i, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <Link
-                    to={path}
+                    href={path}
                     className={cn(
                       'flex items-baseline gap-3 py-2 font-display text-4xl font-extrabold tracking-tight',
                       active ? 'gradient-text' : 'text-foreground/80'
