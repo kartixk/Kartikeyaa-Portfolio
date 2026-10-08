@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import { Github, Linkedin, Mail, ArrowUpRight, ArrowUp } from 'lucide-react';
 import { Magnetic } from '@/components/fx';
 
@@ -27,7 +29,7 @@ const Footer = () => {
             <span className="h-px w-8 bg-brand-2/60" /> Let's connect
           </p>
           <Link
-            to="/contact"
+            href="/contact"
             className="group inline-flex flex-wrap items-baseline gap-x-4 font-display text-5xl font-extrabold leading-none tracking-tight sm:text-7xl"
           >
             <span className="aurora-text">Got a project?</span>
@@ -54,7 +56,7 @@ const Footer = () => {
             <ul className="space-y-2.5">
               {links.map((l) => (
                 <li key={l.path}>
-                  <Link to={l.path} className="text-sm text-foreground/70 transition-colors hover:text-brand-2">
+                  <Link href={l.path} className="text-sm text-foreground/70 transition-colors hover:text-brand-2">
                     {l.label}
                   </Link>
                 </li>
@@ -86,7 +88,7 @@ const Footer = () => {
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-line/[0.06] pt-6 sm:flex-row">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} B V S Kartikeya. Built with React, Three.js & Framer Motion.
+            © {new Date().getFullYear()} B V S Kartikeya. Built with Next.js, Three.js & Framer Motion.
           </p>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

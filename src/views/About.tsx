@@ -1,3 +1,5 @@
+'use client';
+
 import {
   User, MapPin, Mail, Phone, Github, Linkedin,
   Globe, Cpu, Server, GraduationCap, Briefcase, Code2, Rocket,

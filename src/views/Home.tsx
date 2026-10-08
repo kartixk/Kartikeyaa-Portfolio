@@ -1,14 +1,17 @@
+'use client';
+
 import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ArrowRight, ArrowUpRight, Github, Linkedin, Mail, Download, ExternalLink } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { lazy, Suspense, useEffect, useState, useRef } from 'react';
+import Link from 'next/link';
+import dynamic from 'next/dynamic';
+import { useEffect, useState, useRef } from 'react';
 import PageTransition from '@/components/PageTransition';
 import { useProjectsStore } from '@/stores/projectsStore';
 import { GlowingEffect } from '@/components/ui/glowing-effect';
 import { Reveal, Magnetic, Marquee, TiltCard, HudCorners } from '@/components/fx';
 
 // 3D hero is heavy (three + drei) — load it after the text hero paints.
-const Hero3D = lazy(() => import('@/components/fx/Hero3D').then((m) => ({ default: m.Hero3D })));
+const Hero3D = dynamic(() => import('@/components/fx/Hero3D').then((m) => m.Hero3D), { ssr: false });
 
 /* ─── data ─── */
 const techStack = [
@@ -149,9 +152,7 @@ const Home = () => {
             style={{ y: heroThreeY, scale: heroThreeScale }}
             className="pointer-events-none absolute inset-0"
           >
-            <Suspense fallback={null}>
               <Hero3D className="h-full w-full" />
-            </Suspense>
           </motion.div>
 
           {/* legibility fades (theme-aware) */}
@@ -211,7 +212,7 @@ const Home = () => {
               {/* CTAs */}
               <Reveal delay={0.65} className="mt-9 flex flex-wrap items-center gap-4">
                 <Magnetic strength={0.4}>
-                  <Link to="/projects" className="btn-gradient group inline-flex items-center gap-2 px-7 py-4 font-mono text-xs font-bold uppercase tracking-widest">
+                  <Link href="/projects" className="btn-gradient group inline-flex items-center gap-2 px-7 py-4 font-mono text-xs font-bold uppercase tracking-widest">
                     View Projects
                     <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
                   </Link>
@@ -378,7 +379,7 @@ const Home = () => {
 
           <Reveal delay={0.1} className="mt-10 flex justify-center">
             <Magnetic strength={0.3}>
-              <Link to="/projects" className="group inline-flex items-center gap-2 rounded-full border border-line/12 bg-line/[0.04] px-6 py-3 text-sm font-semibold transition-colors hover:border-brand-2/40 hover:text-brand-2">
+              <Link href="/projects" className="group inline-flex items-center gap-2 rounded-full border border-line/12 bg-line/[0.04] px-6 py-3 text-sm font-semibold transition-colors hover:border-brand-2/40 hover:text-brand-2">
                 Explore all projects
                 <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
               </Link>
@@ -417,7 +418,7 @@ const Home = () => {
 
           <Reveal delay={0.1} className="mt-10 flex justify-center">
             <Magnetic strength={0.3}>
-              <Link to="/skills" className="group inline-flex items-center gap-2 rounded-full border border-line/12 bg-line/[0.04] px-6 py-3 text-sm font-semibold transition-colors hover:border-brand-2/40 hover:text-brand-2">
+              <Link href="/skills" className="group inline-flex items-center gap-2 rounded-full border border-line/12 bg-line/[0.04] px-6 py-3 text-sm font-semibold transition-colors hover:border-brand-2/40 hover:text-brand-2">
                 See full skillset <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
               </Link>
             </Magnetic>
@@ -452,7 +453,7 @@ const Home = () => {
 
           <Reveal delay={0.1} className="mt-10 flex justify-center">
             <Magnetic strength={0.3}>
-              <Link to="/experience" className="group inline-flex items-center gap-2 rounded-full border border-line/12 bg-line/[0.04] px-6 py-3 text-sm font-semibold transition-colors hover:border-brand-2/40 hover:text-brand-2">
+              <Link href="/experience" className="group inline-flex items-center gap-2 rounded-full border border-line/12 bg-line/[0.04] px-6 py-3 text-sm font-semibold transition-colors hover:border-brand-2/40 hover:text-brand-2">
                 View full experience <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
               </Link>
             </Magnetic>
@@ -521,12 +522,12 @@ const Home = () => {
 
               <div className="mt-8 flex flex-wrap gap-4">
                 <Magnetic strength={0.3}>
-                  <Link to="/about" className="btn-gradient group inline-flex items-center gap-2 px-6 py-3.5 font-mono text-xs font-bold uppercase tracking-widest">
+                  <Link href="/about" className="btn-gradient group inline-flex items-center gap-2 px-6 py-3.5 font-mono text-xs font-bold uppercase tracking-widest">
                     More About Me <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
                   </Link>
                 </Magnetic>
                 <Magnetic strength={0.3}>
-                  <Link to="/contact" className="btn-hud inline-flex items-center gap-2 px-6 py-3.5 font-mono text-xs font-bold uppercase tracking-widest">
+                  <Link href="/contact" className="btn-hud inline-flex items-center gap-2 px-6 py-3.5 font-mono text-xs font-bold uppercase tracking-widest">
                     Get In Touch
                   </Link>
                 </Magnetic>

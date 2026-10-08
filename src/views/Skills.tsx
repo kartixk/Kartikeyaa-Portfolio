@@ -1,3 +1,5 @@
+'use client';
+
 import { motion } from 'framer-motion';
 import { Code, Globe, Database, Brain } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';

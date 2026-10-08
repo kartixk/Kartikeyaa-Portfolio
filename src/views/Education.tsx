@@ -1,3 +1,5 @@
+'use client';
+
 import { GraduationCap, MapPin, Calendar, Award, BookOpen, ArrowUpRight } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import PageHeader from '@/components/PageHeader';

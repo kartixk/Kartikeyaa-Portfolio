@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Mail, Phone, MapPin, Github, Linkedin, ArrowUpRight } from 'lucide-react';
@@ -6,13 +8,6 @@ import PageTransition from '@/components/PageTransition';
 import PageHeader from '@/components/PageHeader';
 import { GlowingEffect } from '@/components/ui/glowing-effect';
 import { Reveal } from '@/components/fx';
-
-const DEFAULT_API_BASE_URL = 'https://kartikeyaa-portfolio.onrender.com';
-
-const normalizeBaseUrl = (value?: string) => {
-  if (!value) return null;
-  return value.replace(/\/+$/, '');
-};
 
 const fetchWithTimeout = async (url: string, options: RequestInit, timeoutMs = 20000) => {
   const controller = new AbortController();
@@ -24,13 +19,7 @@ const fetchWithTimeout = async (url: string, options: RequestInit, timeoutMs = 2
   }
 };
 
-const buildApiCandidates = (path: string) => {
-  const envBase = normalizeBaseUrl(import.meta.env.VITE_API_BASE_URL);
-  const candidates = import.meta.env.DEV
-    ? [`/api/${path}`, envBase ? `${envBase}/api/${path}` : null, `${DEFAULT_API_BASE_URL}/api/${path}`]
-    : [envBase ? `${envBase}/api/${path}` : null, `${DEFAULT_API_BASE_URL}/api/${path}`];
-  return [...new Set(candidates.filter((value): value is string => Boolean(value)))];
-};
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const contactLinks = [
   { icon: Mail, label: 'Email', value: 'kartikeyaa15@gmail.com', href: 'https://mail.google.com/mail/?view=cm&fs=1&to=kartikeyaa15@gmail.com', external: true },
@@ -49,6 +38,7 @@ const Contact = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  const [website, setWebsite] = useState(''); // honeypot — real users never see or fill this
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,41 +47,29 @@ const Contact = () => {
       toast.error('Please fill in all required fields.');
       return;
     }
+    if (!EMAIL_RE.test(email.trim())) {
+      toast.error('Please enter a valid email address.');
+      return;
+    }
     setIsSubmitting(true);
     try {
-      const payload = { name, email, phone: phone || undefined, message };
-      const apiCandidates = buildApiCandidates('contact');
-      let submitError: Error | null = null;
-      let delivered = false;
-
-      for (const endpoint of apiCandidates) {
-        try {
-          const response = await fetchWithTimeout(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-          });
-          if (!response.ok) {
-            const data = await response.json().catch(() => null);
-            const msg = data?.error || `Failed (${response.status})`;
-            if ([404, 503, 504].includes(response.status)) { submitError = new Error(msg); continue; }
-            throw new Error(msg);
-          }
-          delivered = true;
-          break;
-        } catch (error) {
-          submitError = error instanceof DOMException && error.name === 'AbortError'
-            ? new Error('Request timed out.')
-            : error instanceof Error ? error : new Error('Network request failed');
-          continue;
-        }
+      const response = await fetchWithTimeout('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name.trim(), email: email.trim(), phone: phone.trim() || undefined, message: message.trim(), website }),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.error || `Failed to send (${response.status})`);
       }
-
-      if (!delivered) throw submitError || new Error('Failed to send message');
       toast.success("Message sent! I'll get back to you soon.");
       setName(''); setEmail(''); setPhone(''); setMessage('');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Something went wrong. Please try again.');
+      toast.error(
+        error instanceof DOMException && error.name === 'AbortError'
+          ? 'Request timed out. Please try again.'
+          : error instanceof Error ? error.message : 'Something went wrong. Please try again.'
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -164,26 +142,27 @@ const Contact = () => {
             <Reveal delay={0.1}>
               <div className="relative rounded-3xl border-[0.75px] border-border p-2">
                 <GlowingEffect spread={44} glow disabled={false} proximity={70} inactiveZone={0.01} borderWidth={3} />
-                <form onSubmit={handleSubmit} className="relative space-y-5 overflow-hidden rounded-2xl glass-panel p-7 md:p-9">
+                <form onSubmit={handleSubmit} noValidate className="relative space-y-5 overflow-hidden rounded-2xl glass-panel p-7 md:p-9">
                   <div className="pointer-events-none absolute right-0 top-0 h-40 w-40 rounded-full bg-brand-1/10 blur-3xl" />
                   <div className="relative z-10 space-y-5">
+                    <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" value={website} onChange={(e) => setWebsite(e.target.value)} className="absolute -left-[9999px] h-0 w-0 opacity-0" />
                     <div>
-                      <label className={labelClass}>Name <span className="text-brand-2">*</span></label>
-                      <input type="text" value={name} onChange={(e) => setName(e.target.value)} className={inputClass} placeholder="Your full name" />
+                      <label htmlFor="contact-name" className={labelClass}>Name <span className="text-brand-2">*</span></label>
+                      <input id="contact-name" name="name" autoComplete="name" maxLength={120} type="text" value={name} onChange={(e) => setName(e.target.value)} className={inputClass} placeholder="Your full name" />
                     </div>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <div>
-                        <label className={labelClass}>Email <span className="text-brand-2">*</span></label>
-                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} placeholder="your@email.com" />
+                        <label htmlFor="contact-email" className={labelClass}>Email <span className="text-brand-2">*</span></label>
+                        <input id="contact-email" name="email" autoComplete="email" maxLength={200} type="email" value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} placeholder="your@email.com" />
                       </div>
                       <div>
-                        <label className={labelClass}>Phone <span className="font-normal normal-case tracking-normal text-muted-foreground/40">(optional)</span></label>
-                        <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className={inputClass} placeholder="+91 XXXXX XXXXX" />
+                        <label htmlFor="contact-phone" className={labelClass}>Phone <span className="font-normal normal-case tracking-normal text-muted-foreground/40">(optional)</span></label>
+                        <input id="contact-phone" name="phone" autoComplete="tel" maxLength={40} type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className={inputClass} placeholder="+91 XXXXX XXXXX" />
                       </div>
                     </div>
                     <div>
-                      <label className={labelClass}>Message <span className="text-brand-2">*</span></label>
-                      <textarea rows={5} value={message} onChange={(e) => setMessage(e.target.value)} className={`${inputClass} resize-none`} placeholder="Tell me about your project, idea, or just say hello..." />
+                      <label htmlFor="contact-message" className={labelClass}>Message <span className="text-brand-2">*</span></label>
+                      <textarea id="contact-message" name="message" maxLength={5000} rows={5} value={message} onChange={(e) => setMessage(e.target.value)} className={`${inputClass} resize-none`} placeholder="Tell me about your project, idea, or just say hello..." />
                     </div>
                     <motion.button
                       type="submit"

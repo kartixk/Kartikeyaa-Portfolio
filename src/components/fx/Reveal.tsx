@@ -1,3 +1,5 @@
+'use client';
+
 import { motion, useReducedMotion, type Variants } from 'framer-motion';
 import { ElementType, ReactNode, useMemo } from 'react';
 

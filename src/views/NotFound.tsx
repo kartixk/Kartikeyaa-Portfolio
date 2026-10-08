@@ -1,15 +1,11 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+'use client';
+
+import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import { Magnetic, AnimatedText } from '@/components/fx';
 
 const NotFound = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    console.error('404 Error: User attempted to access non-existent route:', location.pathname);
-  }, [location.pathname]);
 
   return (
     <PageTransition>
@@ -27,7 +23,7 @@ const NotFound = () => {
           </p>
           <div className="mt-9 flex justify-center">
             <Magnetic strength={0.4}>
-              <Link to="/" className="btn-gradient group inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-bold">
+              <Link href="/" className="btn-gradient group inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-bold">
                 <ArrowLeft size={16} className="transition-transform group-hover:-translate-x-1" />
                 Back to Home
               </Link>

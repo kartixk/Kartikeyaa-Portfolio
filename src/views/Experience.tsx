@@ -1,3 +1,5 @@
+'use client';
+
 import { Briefcase, MapPin, ArrowUpRight, Award, BookOpen } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import PageHeader from '@/components/PageHeader';
