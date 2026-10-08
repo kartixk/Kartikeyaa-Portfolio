@@ -3,6 +3,7 @@ import { Resend } from 'resend';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import {
   autoReplyHtml,
+  autoReplyText,
   formatIstTimestamp,
   ownerEmailHtml,
   ownerEmailText,
@@ -148,7 +149,7 @@ export async function POST(request: NextRequest) {
         'Owner notification'
       ),
       sendWithRetry(
-        () => send({ from, to: payload.email, subject: 'Thanks for reaching out', html: autoReplyHtml(payload) }),
+        () => send({ from, to: payload.email, subject: 'Thanks for reaching out', text: autoReplyText(payload), html: autoReplyHtml(payload) }),
         'Auto-reply'
       ),
     ]);
