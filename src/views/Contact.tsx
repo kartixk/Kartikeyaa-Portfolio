@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Mail, Phone, MapPin, Github, Linkedin, ArrowUpRight } from 'lucide-react';
 import { toast } from 'sonner';
@@ -38,7 +38,7 @@ const Contact = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
-  const [website, setWebsite] = useState(''); // honeypot — real users never see or fill this
+  const openedAt = useRef(Date.now()); // bot check: humans take more than a moment to fill the form
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,7 +56,7 @@ const Contact = () => {
       const response = await fetchWithTimeout('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), email: email.trim(), phone: phone.trim() || undefined, message: message.trim(), website }),
+        body: JSON.stringify({ name: name.trim(), email: email.trim(), phone: phone.trim() || undefined, message: message.trim(), elapsedMs: Date.now() - openedAt.current }),
       });
       if (!response.ok) {
         const data = await response.json().catch(() => null);
@@ -145,7 +145,6 @@ const Contact = () => {
                 <form onSubmit={handleSubmit} noValidate className="relative space-y-5 overflow-hidden rounded-2xl glass-panel p-7 md:p-9">
                   <div className="pointer-events-none absolute right-0 top-0 h-40 w-40 rounded-full bg-brand-1/10 blur-3xl" />
                   <div className="relative z-10 space-y-5">
-                    <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" value={website} onChange={(e) => setWebsite(e.target.value)} className="absolute -left-[9999px] h-0 w-0 opacity-0" />
                     <div>
                       <label htmlFor="contact-name" className={labelClass}>Name <span className="text-brand-2">*</span></label>
                       <input id="contact-name" name="name" autoComplete="name" maxLength={120} type="text" value={name} onChange={(e) => setName(e.target.value)} className={inputClass} placeholder="Your full name" />
