@@ -28,31 +28,43 @@ const Footer = () => {
     <footer className="relative z-10 mt-12 border-t border-line/15">
       {!onContact && (
         <section className="wrap section">
-          <Reveal>
-            <p className="eyebrow mb-8">What&apos;s next?</p>
-          </Reveal>
-          <TextReveal
-            as="h2"
-            className="display text-[clamp(3.4rem,12.5vw,12rem)]"
-            lines={[
-              <span key="a">Let&apos;s make</span>,
-              <span key="b">
-                something <span className="serif text-primary">great.</span>
-              </span>,
-            ]}
-          />
-          <Reveal delay={0.2} className="mt-14 flex flex-wrap items-center gap-4">
-            <Magnetic strength={0.25}>
-              <TransitionLink href="/contact" className="btn btn-solid !px-8 !py-5 !text-base" data-cursor="Go">
-                Start a conversation <ArrowUpRight size={18} />
-              </TransitionLink>
-            </Magnetic>
-            <Magnetic strength={0.25}>
-              <button onClick={copyEmail} className="btn btn-ghost !px-8 !py-5 !text-base">
-                {SITE.email} <Copy size={16} />
-              </button>
-            </Magnetic>
-          </Reveal>
+          <div className="relative overflow-hidden rounded-[1.75rem] bg-grad-pan p-6 text-[#120d24] sm:rounded-[2.5rem] sm:p-10 md:p-16">
+            <span aria-hidden className="pointer-events-none absolute -right-8 -top-10 animate-spin-slow text-[9rem] leading-none opacity-20 sm:text-[16rem]">
+              ✺
+            </span>
+            <Reveal>
+              <p className="eyebrow mb-6 !text-[#120d24]/70 md:mb-8">What&apos;s next?</p>
+            </Reveal>
+            <TextReveal
+              as="h2"
+              className="display relative text-[clamp(2.6rem,11.5vw,12rem)]"
+              lines={[
+                <span key="a">Let&apos;s make</span>,
+                <span key="b">
+                  something <span className="serif text-white">great.</span>
+                </span>,
+              ]}
+            />
+            <Reveal delay={0.2} className="relative mt-10 flex flex-wrap items-center gap-3 md:mt-14 md:gap-4">
+              <Magnetic strength={0.25}>
+                <TransitionLink
+                  href="/contact"
+                  className="btn !bg-[#120d24] !px-7 !py-4 !text-base !text-white [--btn-fill:#fff] hover:!text-[#120d24] md:!px-8 md:!py-5"
+                  data-cursor="Go"
+                >
+                  Start a conversation <ArrowUpRight size={18} />
+                </TransitionLink>
+              </Magnetic>
+              <Magnetic strength={0.25}>
+                <button
+                  onClick={copyEmail}
+                  className="btn border border-[#120d24]/40 !px-6 !py-4 !text-sm text-[#120d24] [--btn-fill:#120d24] hover:!border-transparent hover:!text-white md:!px-8 md:!py-5 md:!text-base"
+                >
+                  {SITE.email} <Copy size={16} />
+                </button>
+              </Magnetic>
+            </Reveal>
+          </div>
         </section>
       )}
 
@@ -60,7 +72,7 @@ const Footer = () => {
         <Marquee duration={50} pauseOnHover={false}>
           {['Full-Stack', 'Machine Learning', 'IoT', 'Scalable APIs', 'Clean Interfaces'].map((w) => (
             <span key={w} className="mx-6 flex items-center gap-12 font-display text-xl font-semibold tracking-tight text-muted-foreground md:text-2xl">
-              {w} <span className="text-primary">✺</span>
+              {w} <span className="text-gradient">✺</span>
             </span>
           ))}
         </Marquee>
@@ -69,7 +81,7 @@ const Footer = () => {
       <div className="wrap grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
           <p className="display max-w-xs text-3xl">
-            Full-stack developer crafting fast, <span className="serif text-primary">purposeful</span> products.
+            Full-stack developer crafting fast, <span className="serif text-gradient">purposeful</span> products.
           </p>
         </div>
         <div>

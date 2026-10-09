@@ -90,7 +90,7 @@ const Contact = () => {
       <PageHeader
         index="06"
         eyebrow="Contact"
-        lines={[<span key="a">Let&apos;s build</span>, <span key="b" className="serif text-primary">something great</span>]}
+        lines={[<span key="a">Let&apos;s build</span>, <span key="b" className="serif text-gradient">something great</span>]}
         subtitle="Always open to new opportunities, collaborations and interesting conversations. Drop me a message — I'll get back within 24 hours."
         meta={<span className="inline-flex items-center gap-2"><span className="h-1.5 w-1.5 animate-blink rounded-full bg-primary" /> Available now</span>}
       />
@@ -151,14 +151,14 @@ const Contact = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                  className="flex min-h-[420px] flex-col justify-between rounded-3xl bg-primary p-8 text-primary-foreground md:p-12"
+                  className="flex min-h-[420px] flex-col justify-between rounded-3xl bg-grad-pan p-8 text-[#120d24] md:p-12"
                   role="status"
                 >
                   <motion.span
                     initial={{ scale: 0, rotate: -90 }}
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ type: 'spring', stiffness: 220, damping: 14, delay: 0.2 }}
-                    className="grid h-16 w-16 place-items-center rounded-full bg-primary-foreground text-primary"
+                    className="grid h-16 w-16 place-items-center rounded-full bg-[#120d24] text-white"
                   >
                     <Check size={30} strokeWidth={2.5} />
                   </motion.span>

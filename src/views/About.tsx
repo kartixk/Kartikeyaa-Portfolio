@@ -7,6 +7,7 @@ import PageTransition from '@/components/PageTransition';
 import PageHeader from '@/components/PageHeader';
 import TransitionLink from '@/components/TransitionLink';
 import FloodRow from '@/components/FloodRow';
+import WorkList from '@/components/WorkList';
 import { Magnetic, Marquee, Reveal, ScrollText, TextReveal } from '@/components/fx';
 import { interests, PHONE, PHOTO, softSkills, specializations, timeline } from '@/lib/data';
 import { SITE } from '@/lib/site';
@@ -81,7 +82,7 @@ const About = () => (
     <PageHeader
       index="01"
       eyebrow="About me"
-      lines={[<span key="a">Crafting</span>, <span key="b" className="serif text-primary">reliable</span>, <span key="c">software.</span>]}
+      lines={[<span key="a">Crafting</span>, <span key="b" className="serif text-gradient">reliable</span>, <span key="c">software.</span>]}
       subtitle="Computer Science undergraduate at GITAM University. I turn ideas into production-ready applications — MERN stack first, clean architecture always."
     />
 
@@ -148,7 +149,7 @@ const About = () => (
               <div className="flex items-baseline justify-between gap-6 py-7 md:py-9 md:pl-4 md:pr-6">
                 <div className="flex items-baseline gap-6 md:gap-12">
                   <span className="font-mono text-xs tracking-widest opacity-60">0{i + 1}</span>
-                  <h3 className="display text-[clamp(1.8rem,4.6vw,4.2rem)]">{s}</h3>
+                  <h3 className="display text-[clamp(1.6rem,4.6vw,4.2rem)]">{s}</h3>
                 </div>
                 <ArrowUpRight className="hidden shrink-0 md:block" />
               </div>
@@ -164,7 +165,7 @@ const About = () => (
         <Reveal>
           <p className="eyebrow mb-6">The journey</p>
         </Reveal>
-        <TextReveal as="h2" className="display text-[clamp(2.8rem,8.5vw,8.5rem)]" lines={[<span key="a">How I got</span>, <span key="b" className="serif text-primary">here</span>]} />
+        <TextReveal as="h2" className="display text-[clamp(2.8rem,8.5vw,8.5rem)]" lines={[<span key="a">How I got</span>, <span key="b" className="serif text-gradient">here</span>]} />
       </div>
       <Journey />
     </section>
@@ -185,13 +186,37 @@ const About = () => (
       </div>
     </section>
 
+    {/* projects — easy to reach from the About page, with a hover image preview */}
+    <section className="wrap pb-16 sm:pb-24 md:pb-40">
+      <div className="mb-10 flex flex-col justify-between gap-6 md:mb-16 md:flex-row md:items-end">
+        <div>
+          <Reveal>
+            <p className="eyebrow mb-5 md:mb-6">Selected work</p>
+          </Reveal>
+          <TextReveal
+            as="h2"
+            className="display text-[clamp(2.5rem,8.5vw,8.5rem)]"
+            lines={[<span key="a">Things I&apos;ve</span>, <span key="b" className="serif text-gradient">built</span>]}
+          />
+        </div>
+        <Reveal delay={0.1}>
+          <Magnetic strength={0.25}>
+            <TransitionLink href="/projects" className="btn btn-ghost">
+              All projects <ArrowUpRight size={16} />
+            </TransitionLink>
+          </Magnetic>
+        </Reveal>
+      </div>
+      <WorkList />
+    </section>
+
     {/* soft skills */}
     <section className="border-y border-line/15 py-8" aria-label="Soft skills">
       <Marquee duration={40}>
         {softSkills.map((s) => (
           <span key={s} className="mx-6 flex items-center gap-12">
             <span className="display text-[clamp(2.2rem,6vw,5rem)]">{s}</span>
-            <span className="text-3xl text-primary">✺</span>
+            <span className="text-3xl text-gradient">✺</span>
           </span>
         ))}
       </Marquee>

@@ -18,7 +18,7 @@ const NotFound = () => {
           <TextReveal as="h1" immediate delay={0.1} className="display text-[clamp(8rem,34vw,34rem)] leading-[0.8]" lines={[<span key="a">404</span>]} />
           <Reveal immediate delay={0.5} className="mt-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
             <p className="max-w-md text-xl leading-snug text-muted-foreground">
-              This page <span className="serif text-primary">drifted away.</span> It doesn&apos;t exist or has moved — let&apos;s get you back on track.
+              This page <span className="serif text-gradient">drifted away.</span> It doesn&apos;t exist or has moved — let&apos;s get you back on track.
             </p>
             <Magnetic strength={0.25}>
               <TransitionLink href="/" className="btn btn-solid !px-8 !py-5 !text-base">

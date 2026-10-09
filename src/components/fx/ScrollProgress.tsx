@@ -7,7 +7,7 @@ export const ScrollProgress = () => {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.3 });
 
-  return <motion.div style={{ scaleX }} className="fixed inset-x-0 top-0 z-[75] h-[2px] origin-left bg-primary" />;
+  return <motion.div style={{ scaleX }} className="fixed inset-x-0 top-0 z-[75] h-[2px] origin-left bg-grad" />;
 };
 
 export default ScrollProgress;

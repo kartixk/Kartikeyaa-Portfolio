@@ -16,8 +16,11 @@ export interface Project {
   link?: string;
   github?: string;
   cover: CoverKind;
-  /** flat cover colour, hsl triple */
+  /** cover gradient colours, hsl triples */
   hue: string;
+  hue2: string;
+  /** optional real screenshot (served from /public) */
+  image?: string;
 }
 
 export const projects: Project[] = [
@@ -37,7 +40,8 @@ export const projects: Project[] = [
     category: ['Web'],
     github: '#',
     cover: 'plate',
-    hue: '16 100% 58%',
+    hue: '22 100% 60%',
+    hue2: '340 100% 63%',
   },
   {
     slug: 'zenith-zap',
@@ -54,7 +58,9 @@ export const projects: Project[] = [
     category: ['Web'],
     link: 'https://zenithzap.vercel.app',
     cover: 'bolt',
-    hue: '74 85% 58%',
+    hue: '76 96% 58%',
+    hue2: '186 96% 56%',
+    image: '/projects/zenith-zap.jpg',
   },
   {
     slug: 'sentiment-analysis',
@@ -71,7 +77,8 @@ export const projects: Project[] = [
     category: ['ML'],
     github: '#',
     cover: 'wave',
-    hue: '262 85% 78%',
+    hue: '264 95% 72%',
+    hue2: '340 100% 63%',
   },
   {
     slug: 'environmental-iot',
@@ -87,7 +94,8 @@ export const projects: Project[] = [
     tech: ['IoT', 'ThingSpeak', 'Sensors', 'Arduino'],
     category: ['IoT'],
     cover: 'signal',
-    hue: '195 90% 62%',
+    hue: '186 96% 56%',
+    hue2: '264 95% 72%',
   },
 ];
 

@@ -48,7 +48,7 @@ const ProjectDetail = ({ project }: { project: Project }) => {
           delay={0.1}
           className="display text-[clamp(3rem,10.5vw,11rem)]"
           lines={titleLines(project.title).map((l, i, all) => (
-            <span key={l} className={i === all.length - 1 && all.length > 1 ? 'serif text-primary' : ''}>
+            <span key={l} className={i === all.length - 1 && all.length > 1 ? 'serif text-gradient' : ''}>
               {l}
             </span>
           ))}
@@ -63,7 +63,7 @@ const ProjectDetail = ({ project }: { project: Project }) => {
       <section className="wrap">
         <div ref={coverRef} className="group relative aspect-[16/9] overflow-hidden rounded-3xl md:aspect-[21/9]">
           <motion.div style={{ scale }} className="h-full w-full">
-            <ProjectCover kind={project.cover} hue={project.hue} />
+            <ProjectCover kind={project.cover} hue={project.hue} hue2={project.hue2} image={project.image} alt={`${project.title} preview`} />
           </motion.div>
         </div>
       </section>
@@ -135,9 +135,9 @@ const ProjectDetail = ({ project }: { project: Project }) => {
         <TransitionLink href={`/projects/${next.slug}`} data-cursor="Next" className="group wrap block py-20 md:py-32">
           <p className="eyebrow mb-8">Next project</p>
           <div className="flex items-end justify-between gap-6">
-            <h2 className="display text-[clamp(2.6rem,9vw,9rem)] transition-all duration-500 group-hover:translate-x-4 group-hover:text-primary">{next.title}</h2>
+            <h2 className="display text-[clamp(2.6rem,9vw,9rem)] transition-all duration-500 group-hover:translate-x-4 group-hover:text-gradient">{next.title}</h2>
             <Magnetic strength={0.3}>
-              <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full border border-line/25 transition-all duration-500 group-hover:rotate-45 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground md:h-24 md:w-24">
+              <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full border border-line/25 transition-all duration-500 group-hover:rotate-45 group-hover:border-primary group-hover:bg-primary group-hover:text-gradient-foreground md:h-24 md:w-24">
                 <ArrowUpRight className="h-7 w-7 md:h-10 md:w-10" />
               </span>
             </Magnetic>

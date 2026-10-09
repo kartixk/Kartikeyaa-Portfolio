@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Cursor, ScrollProgress } from '@/components/fx';
+import Aurora from '@/components/Aurora';
 import Preloader from '@/components/ui/preloader';
 import { ReadyProvider } from '@/components/ready';
 import { RouteTransitionProvider } from '@/components/RouteTransition';
@@ -49,8 +50,9 @@ const AppShell = ({ children }: { children: ReactNode }) => {
     <ReadyProvider value={ready}>
       <RouteTransitionProvider>
         {/* hides first paint until we know whether to play the intro */}
-        {intro === 'checking' && <div className="fixed inset-0 z-[100] bg-[#0f0e0d]" />}
+        {intro === 'checking' && <div className="fixed inset-0 z-[100] bg-[#0d0a1a]" />}
         {intro === 'show' && <Preloader onExit={handleExit} onComplete={handleComplete} />}
+        <Aurora />
         <div className="grain" aria-hidden />
         <Cursor />
         <ScrollProgress />

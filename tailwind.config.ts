@@ -20,6 +20,11 @@ export default {
         foreground: "hsl(var(--foreground))",
         // adaptive hairline / surface tint — bone in dark, ink in light
         line: "rgb(var(--line) / <alpha-value>)",
+        orange: "hsl(var(--c-orange))",
+        pink: "hsl(var(--c-pink))",
+        violet: "hsl(var(--c-violet))",
+        cyan: "hsl(var(--c-cyan))",
+        lime: "hsl(var(--c-lime))",
         primary: { DEFAULT: "hsl(var(--primary))", foreground: "hsl(var(--primary-foreground))" },
         secondary: { DEFAULT: "hsl(var(--secondary))", foreground: "hsl(var(--secondary-foreground))" },
         destructive: { DEFAULT: "hsl(var(--destructive))", foreground: "hsl(var(--destructive-foreground))" },
@@ -53,6 +58,15 @@ export default {
           "100%": { transform: "scale(1.15)", opacity: "0" },
         },
         blink: { "0%, 100%": { opacity: "1" }, "50%": { opacity: "0.25" } },
+        drift: {
+          "0%, 100%": { transform: "translate3d(0,0,0) scale(1)" },
+          "33%": { transform: "translate3d(6vw,-5vh,0) scale(1.12)" },
+          "66%": { transform: "translate3d(-5vw,6vh,0) scale(0.94)" },
+        },
+        wobble: {
+          "0%, 100%": { transform: "rotate(var(--r, 0deg)) translateY(0)" },
+          "50%": { transform: "rotate(calc(var(--r, 0deg) + 3deg)) translateY(-8px)" },
+        },
       },
       animation: {
         marquee: "marquee 32s linear infinite",
@@ -61,6 +75,8 @@ export default {
         float: "float 6s ease-in-out infinite",
         ripple: "ripple 3.2s ease-out infinite",
         blink: "blink 1.6s ease-in-out infinite",
+        drift: "drift 22s ease-in-out infinite",
+        wobble: "wobble 5s ease-in-out infinite",
       },
     },
   },

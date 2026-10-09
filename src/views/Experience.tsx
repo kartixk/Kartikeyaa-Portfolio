@@ -12,7 +12,7 @@ const Experience = () => (
     <PageHeader
       index="04"
       eyebrow="Professional journey"
-      lines={[<span key="a">Where I&apos;ve</span>, <span key="b" className="serif text-primary">worked.</span>]}
+      lines={[<span key="a">Where I&apos;ve</span>, <span key="b" className="serif text-gradient">worked.</span>]}
       subtitle="Internships where I shipped real features, collaborated across teams and drove measurable impact."
       meta={`${String(experiences.length).padStart(2, '0')} roles`}
     />

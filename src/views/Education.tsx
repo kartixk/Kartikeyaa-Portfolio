@@ -12,7 +12,7 @@ const Education = () => (
     <PageHeader
       index="05"
       eyebrow="Education"
-      lines={[<span key="a">Academic</span>, <span key="b" className="serif text-primary">journey.</span>]}
+      lines={[<span key="a">Academic</span>, <span key="b" className="serif text-gradient">journey.</span>]}
       subtitle="Building a strong foundation in Computer Science — from core fundamentals to specialised IoT systems."
     />
 

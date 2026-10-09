@@ -15,7 +15,7 @@ const Word = ({ word, range, progress, em, reduce }: { word: string; range: [num
   const opacity = useTransform(progress, range, [0.14, 1]);
   return (
     <span className="relative mr-[0.28em] inline-block">
-      <motion.span style={{ opacity: reduce ? 1 : opacity }} className={cn(em && 'serif text-primary')}>
+      <motion.span style={{ opacity: reduce ? 1 : opacity }} className={cn(em && 'serif text-gradient')}>
         {word}
       </motion.span>
     </span>
