@@ -79,8 +79,8 @@ export const Cursor = () => {
               width: size,
               height: size,
               scale: down ? 0.85 : 1,
-              backgroundColor: labelled ? 'hsl(340 100% 63%)' : hover ? 'rgb(255 255 255)' : 'rgb(255 255 255 / 0)',
-              borderColor: labelled ? 'hsl(340 100% 63%)' : 'rgb(255 255 255)',
+              backgroundColor: labelled ? 'hsl(76 96% 58%)' : hover ? 'rgb(255 255 255)' : 'rgb(255 255 255 / 0)',
+              borderColor: labelled ? 'hsl(76 96% 58%)' : 'rgb(255 255 255)',
             }}
             transition={{ type: 'spring', stiffness: 320, damping: 26 }}
             className="grid place-items-center rounded-full border"
@@ -89,7 +89,7 @@ export const Cursor = () => {
             <motion.span
               animate={{ opacity: labelled ? 1 : 0, scale: labelled ? 1 : 0.6 }}
               transition={{ duration: 0.2 }}
-              className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-[#120d24]"
+              className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-[#0c0f0a]"
             >
               {label}
             </motion.span>

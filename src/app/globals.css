@@ -3,86 +3,86 @@
 @tailwind utilities;
 
 /*
- * Design tokens — "Aurora Editorial"
- * Deep midnight violet canvas, a hot orange→pink→violet signature gradient,
- * plus cyan and lime as supporting colours. Dark is default; `.light` swaps to warm paper.
+ * Design tokens — "Terminal Editorial"
+ * Charcoal canvas, bone type and a single solid acid-lime accent. Dark is default;
+ * `.light` swaps to warm paper with a deep green accent.
  */
 @layer base {
   :root {
-    --background: 256 38% 6%;
-    --foreground: 42 40% 96%;
+    --background: 100 7% 6%;
+    --foreground: 60 22% 94%;
 
-    --card: 256 32% 10%;
-    --card-foreground: 42 40% 96%;
-    --popover: 256 32% 10%;
-    --popover-foreground: 42 40% 96%;
+    --card: 100 6% 9%;
+    --card-foreground: 60 22% 94%;
+    --popover: 100 6% 9%;
+    --popover-foreground: 60 22% 94%;
 
-    --primary: 340 100% 63%;
-    --primary-foreground: 256 45% 7%;
+    --primary: 76 96% 58%;
+    --primary-foreground: 100 25% 6%;
 
-    --secondary: 256 28% 13%;
-    --secondary-foreground: 42 40% 96%;
+    --secondary: 100 5% 12%;
+    --secondary-foreground: 60 22% 94%;
 
-    --muted: 256 24% 14%;
-    --muted-foreground: 250 14% 70%;
+    --muted: 100 4% 13%;
+    --muted-foreground: 90 5% 66%;
 
     --accent: 76 96% 58%;
-    --accent-foreground: 256 45% 7%;
+    --accent-foreground: 100 25% 6%;
 
     --destructive: 0 84% 62%;
-    --destructive-foreground: 42 40% 96%;
+    --destructive-foreground: 60 22% 94%;
 
-    --border: 256 20% 22%;
-    --input: 256 20% 22%;
-    --ring: 340 100% 63%;
+    --border: 100 4% 20%;
+    --input: 100 4% 20%;
+    --ring: 76 96% 58%;
     --radius: 1rem;
 
     /* signature palette */
-    --c-orange: 22 100% 60%;
-    --c-pink: 340 100% 63%;
-    --c-violet: 264 95% 72%;
-    --c-cyan: 186 96% 56%;
+    --c-orange: 76 96% 58%;
+    --c-pink: 76 96% 58%;
+    --c-violet: 76 96% 58%;
+    --c-cyan: 76 96% 58%;
     --c-lime: 76 96% 58%;
 
-    --line: 236 230 255;
+    --line: 232 236 224;
     --grain-opacity: 0.05;
-    --blob: 0.5;
+    --blob: 0.14;
   }
 
   .light {
-    --background: 40 45% 95%;
-    --foreground: 256 45% 9%;
+    --background: 60 25% 95%;
+    --foreground: 100 20% 8%;
 
-    --card: 40 40% 98%;
-    --card-foreground: 256 45% 9%;
-    --popover: 40 40% 98%;
-    --popover-foreground: 256 45% 9%;
+    --card: 60 25% 98%;
+    --card-foreground: 100 20% 8%;
+    --popover: 60 25% 98%;
+    --popover-foreground: 100 20% 8%;
 
-    --primary: 338 92% 52%;
+    --primary: 86 80% 28%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 40 30% 89%;
-    --secondary-foreground: 256 45% 9%;
+    --secondary: 60 15% 90%;
+    --secondary-foreground: 100 20% 8%;
 
-    --muted: 40 25% 88%;
-    --muted-foreground: 256 14% 36%;
+    --muted: 60 12% 89%;
+    --muted-foreground: 100 8% 34%;
 
-    --accent: 76 80% 44%;
-    --accent-foreground: 256 45% 9%;
+    --accent: 76 92% 52%;
+    --accent-foreground: 100 25% 6%;
 
-    --border: 256 14% 82%;
-    --input: 256 14% 82%;
-    --ring: 338 92% 52%;
+    --border: 70 10% 80%;
+    --input: 70 10% 80%;
+    --ring: 86 80% 28%;
 
-    --c-orange: 20 100% 55%;
-    --c-pink: 338 92% 55%;
-    --c-violet: 262 85% 60%;
-    --c-cyan: 188 90% 42%;
-    --c-lime: 76 85% 46%;
+    --c-orange: 86 80% 28%;
+    --c-pink: 86 80% 28%;
+    --c-violet: 86 80% 28%;
+    --c-cyan: 86 80% 28%;
+    --c-lime: 76 92% 52%;
 
-    --line: 40 25 90;
+    --line: 20 24 12;
     --grain-opacity: 0.07;
-    --blob: 0.32;
+    --blob: 0.1;
   }
 }
 
@@ -105,13 +105,13 @@
 
   h1, h2, h3, h4, h5, h6 { @apply font-display; }
 
-  ::selection { background: hsl(var(--c-pink)); color: #fff; }
+  ::selection { background: hsl(var(--c-lime)); color: #0c0f0a; }
 
   :focus-visible { outline: 2px solid hsl(var(--c-cyan)); outline-offset: 3px; border-radius: 4px; }
 
   ::-webkit-scrollbar { width: 8px; height: 8px; }
   ::-webkit-scrollbar-track { background: hsl(var(--background)); }
-  ::-webkit-scrollbar-thumb { background: linear-gradient(hsl(var(--c-orange)), hsl(var(--c-violet))); border-radius: 99px; }
+  ::-webkit-scrollbar-thumb { background: hsl(var(--c-lime) / 0.6); border-radius: 99px; }
 
   /* Lenis */
   html.lenis, html.lenis body { height: auto; }
@@ -153,18 +153,9 @@
   }
 
   /* signature gradient */
-  .text-gradient {
-    background: var(--grad);
-    background-size: 220% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-    padding-right: 0.08em;
-    animation: gradient-pan 7s ease-in-out infinite alternate;
-  }
-  .bg-grad { background: var(--grad); }
-  .bg-grad-pan { background: var(--grad); background-size: 220% 100%; animation: gradient-pan 8s ease-in-out infinite alternate; }
+  /* one solid accent — these names are kept so existing markup stays valid */
+  .text-gradient { color: hsl(var(--c-pink)); }
+  .bg-grad, .bg-grad-pan { background: hsl(var(--c-lime)); }
 
   /* ghost fill — a stroke would expose the variable font's overlapping contours */
   .text-outline { color: hsl(var(--foreground) / 0.14); }
@@ -214,11 +205,11 @@
     background: hsl(var(--foreground));
     color: hsl(var(--background));
   }
-  .btn-solid:hover { color: #fff; }
+  .btn-solid:hover { color: #0c0f0a; }
   .btn-grad {
     --btn-fill: hsl(var(--foreground));
     background: var(--grad);
-    color: #0d0a1a;
+    color: #0b0d0a;
   }
   .btn-grad:hover { color: hsl(var(--background)); }
   .btn-ghost {
@@ -226,7 +217,7 @@
     border: 1px solid rgb(var(--line) / 0.28);
     color: hsl(var(--foreground));
   }
-  .btn-ghost:hover { color: #fff; border-color: transparent; }
+  .btn-ghost:hover { color: #0c0f0a; border-color: transparent; }
 
   /* animated underline link */
   .link-u {
@@ -270,7 +261,7 @@
   }
 }
 
-:root { --grad: linear-gradient(110deg, hsl(var(--c-orange)), hsl(var(--c-pink)) 45%, hsl(var(--c-violet))); }
+:root { --grad: hsl(var(--c-lime)); }
 
 @keyframes gradient-pan { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
 

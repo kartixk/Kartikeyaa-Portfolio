@@ -41,7 +41,7 @@ export default function Preloader({ onExit, onComplete }: PreloaderProps) {
       animate={leaving ? { clipPath: 'inset(0% 0% 100% 0% round 0 0 50% 50%)' } : undefined}
       transition={{ duration: 0.95, ease: [0.76, 0, 0.24, 1] }}
       onAnimationComplete={() => leaving && onComplete?.()}
-      className="fixed inset-0 z-[100] flex flex-col justify-between bg-[#0d0a1a] p-6 text-[#f1ecdc] md:p-12"
+      className="fixed inset-0 z-[100] flex flex-col justify-between bg-[#0b0d0a] p-6 text-[#f1ecdc] md:p-12"
     >
       <div className="flex items-start justify-between font-mono text-[11px] uppercase tracking-[0.22em]">
         <span>Kartikeya ®</span>

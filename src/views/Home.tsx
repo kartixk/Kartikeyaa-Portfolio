@@ -8,10 +8,11 @@ import TransitionLink from '@/components/TransitionLink';
 import FloodRow from '@/components/FloodRow';
 import LocalTime from '@/components/LocalTime';
 import WorkList from '@/components/WorkList';
+import AsciiPortrait from '@/components/AsciiPortrait';
 import { Counter, Draggable, Magnetic, Reveal, ScrollText, SplitChars, TextReveal, Tilt, VelocityMarquee } from '@/components/fx';
 import { experiences, PHOTO, projects, RESUME_URL, skillGroups, stats } from '@/lib/data';
 
-/* ───────────────────────── HERO ───────────────────────── */
+/* ───────────────────────── HERO (ASCII portrait + headline) ───────────────────────── */
 
 const Hero = () => {
   const ref = useRef<HTMLElement>(null);
@@ -22,6 +23,7 @@ const Hero = () => {
 
   return (
     <section ref={ref} className="relative flex min-h-svh flex-col justify-end overflow-hidden md:min-h-[min(100svh,58rem)] pb-8 pt-28 sm:pb-10 md:pb-14 md:pt-32">
+      <AsciiPortrait className="absolute right-0 top-20 z-0 opacity-40 [--w:min(100vw,32rem)] sm:opacity-70 md:right-[2vw] md:top-24 md:opacity-100 md:[--w:min(52vw,34rem)] lg:top-28 lg:[--w:min(42vw,40rem)]" />
       <motion.div style={{ y, opacity: fade }} className="wrap relative z-10 w-full">
         {/* status row */}
         <Reveal immediate delay={0.1} className="mb-6 flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:text-[11px] md:mb-12">
@@ -49,7 +51,7 @@ const Hero = () => {
               <span className="serif text-gradient">reliable</span>
               <span
                 data-cursor="Hello"
-                className="group relative inline-block h-[0.66em] w-[1.5em] shrink-0 overflow-hidden rounded-full ring-2 ring-pink/60 transition-shadow duration-500 hover:ring-4 hover:ring-lime"
+                className="group relative inline-block h-[0.66em] w-[1.5em] shrink-0 overflow-hidden rounded-full ring-2 ring-line/30 transition-shadow duration-500 hover:ring-4 hover:ring-lime"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -75,8 +77,8 @@ const Hero = () => {
           <Reveal immediate delay={0.75}>
             <p className="max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg md:text-xl">
               I&apos;m <span className="font-semibold text-foreground">Kartikeya</span> — a CS undergrad who designs and ships full-stack products across{' '}
-              <span className="font-medium text-pink">MERN</span>, <span className="font-medium text-violet">machine learning</span> and{' '}
-              <span className="font-medium text-cyan">IoT</span>.
+              <span className="font-medium text-foreground underline decoration-[hsl(var(--c-lime))] decoration-2 underline-offset-4">MERN</span>, <span className="font-medium text-foreground underline decoration-[hsl(var(--c-lime))] decoration-2 underline-offset-4">machine learning</span> and{' '}
+              <span className="font-medium text-foreground underline decoration-[hsl(var(--c-lime))] decoration-2 underline-offset-4">IoT</span>.
             </p>
           </Reveal>
           <Reveal immediate delay={0.85} className="flex flex-wrap items-center gap-3 md:justify-end">
@@ -97,22 +99,19 @@ const Hero = () => {
       {/* draggable stickers — grab them */}
       <div className="pointer-events-none absolute inset-0 z-20">
         <div className="pointer-events-auto relative h-full w-full">
-          <Draggable constraintsRef={ref} rotate={-9} delay={1.5} className="right-[5%] top-[19%] sm:right-[8%] sm:top-[24%] md:right-[12%] md:top-[26%]">
-            <span className="block rounded-full bg-grad-pan px-4 py-2.5 font-display text-sm font-bold text-[#120d24] shadow-[0_14px_40px_-12px_hsl(var(--c-pink)/0.8)] sm:px-5 sm:py-3 sm:text-base md:px-7 md:py-4 md:text-xl">
+          <Draggable constraintsRef={ref} rotate={-9} delay={1.5} className="right-[5%] top-[19%] sm:right-[8%] sm:top-[24%] md:right-auto md:left-[40%] md:top-[11%]">
+            <span className="block rounded-full bg-grad-pan px-4 py-2.5 font-display text-sm font-bold text-[#0c0f0a] shadow-[0_14px_40px_-12px_hsl(var(--c-lime)/0.6)] sm:px-5 sm:py-3 sm:text-base md:px-7 md:py-4 md:text-xl">
               Drag me! ✋
             </span>
           </Draggable>
-          <Draggable constraintsRef={ref} rotate={7} delay={1.65} className="right-[21%] top-[43%] hidden md:block">
-            <span className="block rounded-full border-2 border-violet bg-background/60 px-6 py-3 font-display text-lg font-semibold text-violet backdrop-blur">MERN ✺</span>
+          <Draggable constraintsRef={ref} rotate={7} delay={1.65} className="left-[24%] top-[10%] hidden md:block">
+            <span className="block rounded-full border-2 border-foreground/70 bg-background/60 px-6 py-3 font-display text-lg font-semibold text-foreground backdrop-blur">MERN ✺</span>
           </Draggable>
-          <Draggable constraintsRef={ref} rotate={-5} delay={1.8} className="right-[4%] top-[40%] sm:top-[45%] md:top-[47%]">
-            <span className="grid h-16 w-16 animate-wobble place-items-center rounded-full bg-lime font-display text-base font-bold text-[#120d24] sm:h-24 sm:w-24 sm:text-2xl md:h-28 md:w-28" style={{ ['--r' as string]: '-5deg' }}>ML/AI</span>
+          <Draggable constraintsRef={ref} rotate={-5} delay={1.8} className="right-[4%] top-[40%] sm:top-[45%] md:top-[58%]">
+            <span className="grid h-16 w-16 animate-wobble place-items-center rounded-full bg-lime font-display text-base font-bold text-[#0c0f0a] sm:h-24 sm:w-24 sm:text-2xl md:h-28 md:w-28" style={{ ['--r' as string]: '-5deg' }}>ML/AI</span>
           </Draggable>
-          <Draggable constraintsRef={ref} rotate={12} delay={1.95} className="left-[67%] top-[16%] hidden lg:block">
-            <span className="block rounded-xl bg-cyan px-5 py-3 font-mono text-sm font-semibold uppercase tracking-widest text-[#120d24]">IoT</span>
-          </Draggable>
-          <Draggable constraintsRef={ref} rotate={-6} delay={2.1} className="left-[44%] top-[12%] hidden lg:block">
-            <span className="block rounded-full bg-orange px-5 py-2.5 font-display text-base font-bold text-[#120d24]">React ⚛</span>
+          <Draggable constraintsRef={ref} rotate={12} delay={1.95} className="left-[90%] top-[30%] hidden lg:block">
+            <span className="block rounded-xl bg-foreground px-5 py-3 font-mono text-sm font-semibold uppercase tracking-widest text-background">IoT</span>
           </Draggable>
         </div>
       </div>
@@ -152,7 +151,7 @@ const Band = ({ reverse }: { reverse?: boolean }) => (
 
 const Bands = () => (
   <section aria-hidden className="relative my-4 h-[9.5rem] overflow-hidden sm:h-[13rem] md:my-8 md:h-[17rem]">
-    <div className="absolute -left-[5%] top-3 w-[110%] -rotate-2 bg-grad-pan py-2.5 text-[#120d24] shadow-[0_20px_60px_-20px_hsl(var(--c-pink)/0.6)] sm:py-4">
+    <div className="absolute -left-[5%] top-3 w-[110%] -rotate-2 bg-grad-pan py-2.5 text-[#0c0f0a] shadow-[0_20px_60px_-20px_hsl(var(--c-lime)/0.4)] sm:py-4">
       <VelocityMarquee direction={-1} speed={3.2}>
         <Band />
       </VelocityMarquee>
@@ -167,7 +166,7 @@ const Bands = () => (
 
 /* ───────────────────────── PAGE ───────────────────────── */
 
-const tileColors = ['bg-pink', 'bg-violet', 'bg-cyan', 'bg-lime'];
+const tileColors = ['bg-lime text-[#0c0f0a]', 'bg-foreground text-background', 'bg-card text-foreground ring-1 ring-line/20', 'bg-lime text-[#0c0f0a]'];
 
 const SectionTitle = ({ eyebrow, lines }: { eyebrow: string; lines: React.ReactNode[] }) => (
   <div>
@@ -214,7 +213,7 @@ const Home = () => (
         {stats.map((s, i) => (
           <Reveal key={s.label} delay={i * 0.08}>
             <Tilt className="h-full" max={9}>
-              <div className={`${tileColors[i]} flex h-full min-h-[10.5rem] flex-col justify-between rounded-3xl p-5 text-[#120d24] sm:min-h-[14rem] sm:p-7`}>
+              <div className={`${tileColors[i]} flex h-full min-h-[10.5rem] flex-col justify-between rounded-3xl p-5 sm:min-h-[14rem] sm:p-7`}>
                 <p className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] opacity-70 sm:text-[11px]">0{i + 1}</p>
                 <div>
                   <div className="display text-[clamp(2.8rem,7vw,6.2rem)]">

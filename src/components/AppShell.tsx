@@ -50,7 +50,7 @@ const AppShell = ({ children }: { children: ReactNode }) => {
     <ReadyProvider value={ready}>
       <RouteTransitionProvider>
         {/* hides first paint until we know whether to play the intro */}
-        {intro === 'checking' && <div className="fixed inset-0 z-[100] bg-[#0d0a1a]" />}
+        {intro === 'checking' && <div className="fixed inset-0 z-[100] bg-[#0b0d0a]" />}
         {intro === 'show' && <Preloader onExit={handleExit} onComplete={handleComplete} />}
         <Aurora />
         <div className="grain" aria-hidden />

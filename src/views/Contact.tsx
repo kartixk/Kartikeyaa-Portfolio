@@ -151,14 +151,14 @@ const Contact = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                  className="flex min-h-[420px] flex-col justify-between rounded-3xl bg-grad-pan p-8 text-[#120d24] md:p-12"
+                  className="flex min-h-[420px] flex-col justify-between rounded-3xl bg-grad-pan p-8 text-[#0c0f0a] md:p-12"
                   role="status"
                 >
                   <motion.span
                     initial={{ scale: 0, rotate: -90 }}
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ type: 'spring', stiffness: 220, damping: 14, delay: 0.2 }}
-                    className="grid h-16 w-16 place-items-center rounded-full bg-[#120d24] text-white"
+                    className="grid h-16 w-16 place-items-center rounded-full bg-[#0c0f0a] text-[hsl(var(--c-lime))]"
                   >
                     <Check size={30} strokeWidth={2.5} />
                   </motion.span>

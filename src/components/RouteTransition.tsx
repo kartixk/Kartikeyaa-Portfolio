@@ -86,7 +86,7 @@ export const RouteTransitionProvider = ({ children }: { children: ReactNode }) =
             setPhase('idle');
           }
         }}
-        className={`fixed inset-0 z-[90] flex items-end justify-between bg-grad-pan p-6 text-[#120d24] md:p-12 ${phase === 'idle' ? 'pointer-events-none' : 'pointer-events-auto'}`}
+        className={`fixed inset-0 z-[90] flex items-end justify-between bg-grad-pan p-6 text-[#0c0f0a] md:p-12 ${phase === 'idle' ? 'pointer-events-none' : 'pointer-events-auto'}`}
       >
         <span className="font-mono text-xs font-medium uppercase tracking-[0.22em]">Kartikeya ®</span>
         <span className="display text-[clamp(3rem,13vw,11rem)]">{label}</span>

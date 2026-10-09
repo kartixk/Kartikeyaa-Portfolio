@@ -28,12 +28,12 @@ const Footer = () => {
     <footer className="relative z-10 mt-12 border-t border-line/15">
       {!onContact && (
         <section className="wrap section">
-          <div className="relative overflow-hidden rounded-[1.75rem] bg-grad-pan p-6 text-[#120d24] sm:rounded-[2.5rem] sm:p-10 md:p-16">
+          <div className="relative overflow-hidden rounded-[1.75rem] bg-grad-pan p-6 text-[#0c0f0a] sm:rounded-[2.5rem] sm:p-10 md:p-16">
             <span aria-hidden className="pointer-events-none absolute -right-8 -top-10 animate-spin-slow text-[9rem] leading-none opacity-20 sm:text-[16rem]">
               ✺
             </span>
             <Reveal>
-              <p className="eyebrow mb-6 !text-[#120d24]/70 md:mb-8">What&apos;s next?</p>
+              <p className="eyebrow mb-6 !text-[#0c0f0a]/70 md:mb-8">What&apos;s next?</p>
             </Reveal>
             <TextReveal
               as="h2"
@@ -41,7 +41,7 @@ const Footer = () => {
               lines={[
                 <span key="a">Let&apos;s make</span>,
                 <span key="b">
-                  something <span className="serif text-white">great.</span>
+                  something <span className="serif">great.</span>
                 </span>,
               ]}
             />
@@ -49,7 +49,7 @@ const Footer = () => {
               <Magnetic strength={0.25}>
                 <TransitionLink
                   href="/contact"
-                  className="btn !bg-[#120d24] !px-7 !py-4 !text-base !text-white [--btn-fill:#fff] hover:!text-[#120d24] md:!px-8 md:!py-5"
+                  className="btn !bg-[#0c0f0a] !px-7 !py-4 !text-base !text-white [--btn-fill:#fff] hover:!text-[#0c0f0a] md:!px-8 md:!py-5"
                   data-cursor="Go"
                 >
                   Start a conversation <ArrowUpRight size={18} />
@@ -58,7 +58,7 @@ const Footer = () => {
               <Magnetic strength={0.25}>
                 <button
                   onClick={copyEmail}
-                  className="btn border border-[#120d24]/40 !px-6 !py-4 !text-sm text-[#120d24] [--btn-fill:#120d24] hover:!border-transparent hover:!text-white md:!px-8 md:!py-5 md:!text-base"
+                  className="btn border border-[#0c0f0a]/40 !px-6 !py-4 !text-sm text-[#0c0f0a] [--btn-fill:#0c0f0a] hover:!border-transparent hover:!text-white md:!px-8 md:!py-5 md:!text-base"
                 >
                   {SITE.email} <Copy size={16} />
                 </button>

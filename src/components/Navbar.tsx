@@ -58,11 +58,11 @@ const Navbar = () => {
           className={cn(
             'wrap flex h-[76px] items-center justify-between transition-colors duration-500',
             scrolled && !open && 'bg-background/70 backdrop-blur-xl',
-            open && 'text-[#120d24]'
+            open && 'text-[#0c0f0a]'
           )}
         >
           <TransitionLink href="/" className="group flex items-center gap-2.5" aria-label="Home">
-            <span className={cn("grid h-10 w-10 place-items-center rounded-full font-display text-lg font-bold tracking-tighter transition-colors duration-300 group-hover:bg-primary group-hover:text-white-foreground", open ? "bg-[#120d24] text-white" : "bg-foreground text-background")}>
+            <span className={cn("grid h-10 w-10 place-items-center rounded-full font-display text-lg font-bold tracking-tighter transition-colors duration-300 group-hover:bg-primary group-hover:text-white-foreground", open ? "bg-[#0c0f0a] text-white" : "bg-foreground text-background")}>
               K
             </span>
             <span className="hidden font-display text-lg font-semibold tracking-tight sm:block">
@@ -92,7 +92,7 @@ const Navbar = () => {
           </nav>
 
           <div className="flex items-center gap-2.5">
-            <ThemeToggle className={open ? "!border-[#120d24]/30 !text-[#120d24] hover:!bg-[#120d24] hover:!text-white" : ""} />
+            <ThemeToggle className={open ? "!border-[#0c0f0a]/30 !text-[#0c0f0a] hover:!bg-[#0c0f0a] hover:!text-white" : ""} />
             <a
               href={RESUME_URL}
               download="Kartikeya_Resume.pdf"
@@ -104,7 +104,7 @@ const Navbar = () => {
               onClick={() => setOpen((v) => !v)}
               aria-expanded={open}
               aria-label={open ? 'Close menu' : 'Open menu'}
-              className={cn("group flex h-11 items-center gap-3 rounded-full pl-5 pr-4 transition-colors hover:bg-grad hover:text-[#120d24]", open ? "bg-[#120d24] text-white" : "bg-foreground text-background")}
+              className={cn("group flex h-11 items-center gap-3 rounded-full pl-5 pr-4 transition-colors hover:bg-grad hover:text-[#0c0f0a]", open ? "bg-[#0c0f0a] text-white" : "bg-foreground text-background")}
             >
               <span className="relative h-5 overflow-hidden text-sm font-semibold">
                 <motion.span animate={{ y: open ? '-100%' : '0%' }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="block leading-5">
@@ -131,13 +131,13 @@ const Navbar = () => {
             animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
             exit={{ clipPath: 'inset(0% 0% 100% 0%)' }}
             transition={{ duration: 0.8, ease }}
-            className="fixed inset-0 z-[65] flex flex-col bg-grad-pan text-[#120d24]"
+            className="fixed inset-0 z-[65] flex flex-col bg-grad-pan text-[#0c0f0a]"
             role="dialog"
             aria-modal="true"
             aria-label="Site menu"
           >
             <div className="wrap flex flex-1 flex-col justify-center gap-10 pb-10 pt-28 lg:grid lg:grid-cols-[1.6fr_1fr] lg:items-end lg:gap-16">
-              <ul className="space-y-0.5">
+              <ul className="group/menu space-y-0.5">
                 {menuRoutes.map((r, i) => {
                   const active = pathname === r.path;
                   return (
@@ -150,13 +150,13 @@ const Navbar = () => {
                         <TransitionLink
                           href={r.path}
                           onClick={() => setTimeout(() => setOpen(false), 120)}
-                          className="group flex items-baseline gap-4 py-1 md:gap-6"
+                          className="group flex items-baseline gap-4 py-1 transition-opacity duration-300 group-hover/menu:opacity-40 hover:!opacity-100 md:gap-6"
                         >
                           <span className="font-mono text-xs tracking-widest opacity-50">0{i + 1}</span>
                           <span
                             className={cn(
-                              'display relative text-[clamp(2.6rem,9vw,7.5rem)] transition-all duration-500 group-hover:translate-x-3 group-hover:text-white',
-                              active && "text-white"
+                              'display relative text-[clamp(2.6rem,9vw,7.5rem)] transition-all duration-500 group-hover:translate-x-3',
+                              active && 'underline decoration-[3px] underline-offset-[0.12em]'
                             )}
                           >
                             {r.label}

@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 
 /** Row that floods with the signal colour from the bottom on hover. */
 const FloodRow = ({ children, className }: { children: ReactNode; className?: string }) => (
-  <div className={cn('group relative overflow-hidden border-t border-line/15 transition-colors duration-500 hover:text-[#120d24]', className)}>
+  <div className={cn('group relative overflow-hidden border-t border-line/15 transition-colors duration-500 hover:text-[#0c0f0a]', className)}>
     <span
       aria-hidden
       className="absolute inset-0 origin-bottom scale-y-0 bg-grad-pan transition-transform [transition-duration:600ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] group-hover:scale-y-100"

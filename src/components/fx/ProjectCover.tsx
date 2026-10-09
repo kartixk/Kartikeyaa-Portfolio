@@ -12,7 +12,7 @@ interface ProjectCoverProps {
   className?: string;
 }
 
-const INK = '#120d24';
+const INK = '#0c0f0a';
 // round generated coordinates so server and client markup are byte-identical
 const r2 = (n: number) => Math.round(n * 100) / 100;
 

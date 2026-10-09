@@ -6,7 +6,7 @@ import PageHeader from '@/components/PageHeader';
 import { Counter, Reveal, TextReveal } from '@/components/fx';
 import { skillGroups, strengths } from '@/lib/data';
 
-const accents = ['--c-orange', '--c-violet', '--c-cyan', '--c-lime'];
+const accents = ['--c-lime', '--c-lime', '--c-lime', '--c-lime'];
 
 const Skills = () => (
   <PageTransition>
@@ -28,7 +28,7 @@ const Skills = () => (
             {g.skills.map((s, i) => (
               <Reveal key={s} as="li" delay={i * 0.04} duration={0.7}>
                 <span
-                  className="inline-block cursor-default rounded-full border border-[hsl(var(--h)/0.55)] px-4 py-2 font-display text-base font-semibold tracking-tight transition-all duration-300 hover:-translate-y-1 hover:border-[hsl(var(--h))] hover:bg-[hsl(var(--h))] hover:text-[#120d24] sm:px-6 sm:py-3 sm:text-xl md:px-8 md:py-4 md:text-2xl"
+                  className="inline-block cursor-default rounded-full border border-[hsl(var(--h)/0.55)] px-4 py-2 font-display text-base font-semibold tracking-tight transition-all duration-300 hover:-translate-y-1 hover:border-[hsl(var(--h))] hover:bg-[hsl(var(--h))] hover:text-[#0c0f0a] sm:px-6 sm:py-3 sm:text-xl md:px-8 md:py-4 md:text-2xl"
                 >
                   {s}
                 </span>

@@ -4,8 +4,8 @@ import { memo, useEffect, useRef } from 'react';
 import { useReducedMotion } from 'framer-motion';
 
 /**
- * Living background: three blurred colour blobs that drift on their own, plus a soft spotlight
- * that trails the pointer (via CSS vars — no React re-renders on mouse move).
+ * Calm backdrop: a fine dot grid, one faint accent glow that drifts, and a soft spotlight that trails
+ * the pointer (via CSS vars — no React re-renders on mouse move).
  */
 const Aurora = memo(() => {
   const spot = useRef<HTMLDivElement>(null);
@@ -31,22 +31,24 @@ const Aurora = memo(() => {
 
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-background">
+      {/* fine dot grid, faded toward the bottom */}
       <div
-        className="absolute -left-[12vw] -top-[18vh] h-[60vmax] w-[60vmax] animate-drift rounded-full blur-[110px] will-change-transform"
-        style={{ background: 'radial-gradient(circle, hsl(var(--c-violet)) 0%, transparent 62%)', opacity: 'var(--blob)' }}
+        className="absolute inset-0 opacity-[0.5]"
+        style={{
+          backgroundImage: 'radial-gradient(rgb(var(--line) / 0.16) 1px, transparent 1px)',
+          backgroundSize: '28px 28px',
+          WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, transparent 85%)',
+          maskImage: 'linear-gradient(to bottom, #000 0%, transparent 85%)',
+        }}
       />
       <div
-        className="absolute -right-[18vw] top-[10vh] h-[55vmax] w-[55vmax] animate-drift rounded-full blur-[120px] will-change-transform"
-        style={{ background: 'radial-gradient(circle, hsl(var(--c-pink)) 0%, transparent 62%)', opacity: 'calc(var(--blob) * 0.8)', animationDelay: '-8s', animationDuration: '28s' }}
-      />
-      <div
-        className="absolute -bottom-[25vh] left-[18vw] h-[50vmax] w-[50vmax] animate-drift rounded-full blur-[120px] will-change-transform"
-        style={{ background: 'radial-gradient(circle, hsl(var(--c-cyan)) 0%, transparent 62%)', opacity: 'calc(var(--blob) * 0.55)', animationDelay: '-15s', animationDuration: '32s' }}
+        className="absolute -right-[15vw] -top-[20vh] h-[55vmax] w-[55vmax] animate-drift rounded-full blur-[120px] will-change-transform"
+        style={{ background: 'radial-gradient(circle, hsl(var(--c-lime)) 0%, transparent 62%)', opacity: 'var(--blob)' }}
       />
       <div
         ref={spot}
         className="absolute inset-0"
-        style={{ background: 'radial-gradient(520px circle at var(--mx, 50%) var(--my, 30%), hsl(var(--c-orange) / 0.14), transparent 70%)' }}
+        style={{ background: 'radial-gradient(480px circle at var(--mx, 50%) var(--my, 30%), hsl(var(--c-lime) / 0.07), transparent 70%)' }}
       />
     </div>
   );

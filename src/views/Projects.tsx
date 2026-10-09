@@ -75,7 +75,7 @@ const Projects = () => {
                   key={f}
                   aria-pressed={on}
                   onClick={() => setActive(f)}
-                  className={`relative rounded-full border px-6 py-2.5 font-display text-sm font-semibold transition-colors duration-300 ${on ? 'border-transparent text-[#120d24]' : 'border-line/25 text-muted-foreground hover:text-foreground'}`}
+                  className={`relative rounded-full border px-6 py-2.5 font-display text-sm font-semibold transition-colors duration-300 ${on ? 'border-transparent text-[#0c0f0a]' : 'border-line/25 text-muted-foreground hover:text-foreground'}`}
                 >
                   {on && (
                     <motion.span layoutId="filter-pill" transition={{ type: 'spring', stiffness: 400, damping: 32 }} className="absolute inset-0 rounded-full bg-grad" />

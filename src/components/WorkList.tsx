@@ -52,7 +52,7 @@ const WorkList = () => {
                     </span>
                   ))}
                 </div>
-                <span className="grid h-11 w-11 place-items-center justify-self-end rounded-full border border-line/25 transition-all duration-500 group-hover/row:rotate-45 group-hover/row:border-transparent group-hover/row:bg-grad group-hover/row:text-[#120d24] md:h-14 md:w-14">
+                <span className="grid h-11 w-11 place-items-center justify-self-end rounded-full border border-line/25 transition-all duration-500 group-hover/row:rotate-45 group-hover/row:border-transparent group-hover/row:bg-grad group-hover/row:text-[#0c0f0a] md:h-14 md:w-14">
                   <ArrowUpRight size={20} />
                 </span>
               </div>
