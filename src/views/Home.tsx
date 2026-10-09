@@ -2,17 +2,17 @@
 
 import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { ArrowDown, ArrowUpRight, Download } from 'lucide-react';
+import { ArrowUpRight, Download } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import TransitionLink from '@/components/TransitionLink';
 import FloodRow from '@/components/FloodRow';
 import LocalTime from '@/components/LocalTime';
 import WorkList from '@/components/WorkList';
-import AsciiPortrait from '@/components/AsciiPortrait';
-import { Counter, Draggable, Magnetic, Reveal, ScrollText, SplitChars, TextReveal, Tilt, VelocityMarquee } from '@/components/fx';
+import AsciiArt from '@/components/AsciiArt';
+import { Counter, Magnetic, Reveal, ScrollText, SplitChars, TextReveal, Tilt, VelocityMarquee } from '@/components/fx';
 import { experiences, PHOTO, projects, RESUME_URL, skillGroups, stats } from '@/lib/data';
 
-/* ───────────────────────── HERO (ASCII portrait + headline) ───────────────────────── */
+/* ───────────────────────── HERO: code-tag ASCII art + headline ───────────────────────── */
 
 const Hero = () => {
   const ref = useRef<HTMLElement>(null);
@@ -23,7 +23,7 @@ const Hero = () => {
 
   return (
     <section ref={ref} className="relative flex min-h-svh flex-col justify-end overflow-hidden md:min-h-[min(100svh,58rem)] pb-8 pt-28 sm:pb-10 md:pb-14 md:pt-32">
-      <AsciiPortrait className="absolute right-0 top-20 z-0 opacity-40 [--w:min(100vw,32rem)] sm:opacity-70 md:right-[2vw] md:top-24 md:opacity-100 md:[--w:min(52vw,34rem)] lg:top-28 lg:[--w:min(42vw,40rem)]" />
+      <AsciiArt className="absolute right-[4vw] top-24 z-0 opacity-50 [--w:min(86vw,24rem)] sm:opacity-80 md:top-[31%] md:opacity-100 md:[--w:min(44vw,30rem)] lg:[--w:min(40vw,40rem)]" />
       <motion.div style={{ y, opacity: fade }} className="wrap relative z-10 w-full">
         {/* status row */}
         <Reveal immediate delay={0.1} className="mb-6 flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:text-[11px] md:mb-12">
@@ -34,7 +34,7 @@ const Hero = () => {
             </span>
             Available for work
           </span>
-          <span className="hidden sm:block">
+          <span className="hidden lg:block">
             Visakhapatnam, IN — <LocalTime />
           </span>
         </Reveal>
@@ -44,7 +44,7 @@ const Hero = () => {
           as="h1"
           immediate
           delay={0.15}
-          className="display text-[clamp(2.9rem,17vw,5.6rem)] uppercase sm:text-[clamp(3.1rem,14.2vw,15.5rem)]"
+          className="display text-[clamp(2.6rem,14.5vw,5rem)] uppercase sm:text-[clamp(3rem,10.5vw,10.5rem)]"
           lines={[
             <SplitChars key="1" text="Building" />,
             <span key="2" className="flex items-center gap-[0.12em] whitespace-nowrap normal-case">
@@ -96,40 +96,6 @@ const Hero = () => {
         </div>
       </motion.div>
 
-      {/* draggable stickers — grab them */}
-      <div className="pointer-events-none absolute inset-0 z-20">
-        <div className="pointer-events-auto relative h-full w-full">
-          <Draggable constraintsRef={ref} rotate={-9} delay={1.5} className="right-[5%] top-[19%] sm:right-[8%] sm:top-[24%] md:right-auto md:left-[40%] md:top-[11%]">
-            <span className="block rounded-full bg-grad-pan px-4 py-2.5 font-display text-sm font-bold text-[#0c0f0a] shadow-[0_14px_40px_-12px_hsl(var(--c-lime)/0.6)] sm:px-5 sm:py-3 sm:text-base md:px-7 md:py-4 md:text-xl">
-              Drag me! ✋
-            </span>
-          </Draggable>
-          <Draggable constraintsRef={ref} rotate={7} delay={1.65} className="left-[24%] top-[10%] hidden md:block">
-            <span className="block rounded-full border-2 border-foreground/70 bg-background/60 px-6 py-3 font-display text-lg font-semibold text-foreground backdrop-blur">MERN ✺</span>
-          </Draggable>
-          <Draggable constraintsRef={ref} rotate={-5} delay={1.8} className="right-[4%] top-[40%] sm:top-[45%] md:top-[58%]">
-            <span className="grid h-16 w-16 animate-wobble place-items-center rounded-full bg-lime font-display text-base font-bold text-[#0c0f0a] sm:h-24 sm:w-24 sm:text-2xl md:h-28 md:w-28" style={{ ['--r' as string]: '-5deg' }}>ML/AI</span>
-          </Draggable>
-          <Draggable constraintsRef={ref} rotate={12} delay={1.95} className="left-[90%] top-[30%] hidden lg:block">
-            <span className="block rounded-xl bg-foreground px-5 py-3 font-mono text-sm font-semibold uppercase tracking-widest text-background">IoT</span>
-          </Draggable>
-        </div>
-      </div>
-
-      {/* spinning scroll badge */}
-      <Reveal immediate delay={1.2} direction="none" className="absolute bottom-40 right-5 z-10 hidden lg:right-12 lg:block">
-        <div className="relative grid h-28 w-28 place-items-center">
-          <svg viewBox="0 0 100 100" className="absolute inset-0 animate-spin-slow" aria-hidden>
-            <defs>
-              <path id="circ" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" />
-            </defs>
-            <text className="fill-current font-mono text-[9.5px] uppercase tracking-[0.32em]">
-              <textPath href="#circ">Scroll down • Scroll down • </textPath>
-            </text>
-          </svg>
-          <ArrowDown size={22} className="text-pink" />
-        </div>
-      </Reveal>
     </section>
   );
 };

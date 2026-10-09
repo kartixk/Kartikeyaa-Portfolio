@@ -3,12 +3,12 @@
 import { useEffect, useRef } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import { useReady } from '@/components/ready';
-import { ASCII_COLS, ASCII_PORTRAIT } from '@/lib/ascii-portrait';
+import { ASCII_COLS, ASCII_ART } from '@/lib/ascii-code';
 import { cn } from '@/lib/utils';
 
 const RAMP = '.,:;-~=+*oxX#%@';
-const ROWS = ASCII_PORTRAIT.length;
-const FINAL = ASCII_PORTRAIT.join('\n');
+const ROWS = ASCII_ART.length;
+const FINAL = ASCII_ART.join('\n');
 // monospace advance is 0.6em, so width = 0.6 * cols * font-size
 const EM_PER_WIDTH = ASCII_COLS * 0.6;
 
@@ -21,7 +21,7 @@ const rand = () => RAMP[Math.floor(Math.random() * RAMP.length)];
 
 /** Render with every glyph whose `reveal(x,y)` is false replaced by noise. */
 const compose = (reveal: (x: number, y: number) => boolean) =>
-  ASCII_PORTRAIT.map((line, y) => {
+  ASCII_ART.map((line, y) => {
     let out = '';
     for (let x = 0; x < line.length; x++) {
       const c = line[x];
@@ -31,13 +31,13 @@ const compose = (reveal: (x: number, y: number) => boolean) =>
   }).join('\n');
 
 /**
- * Interactive ASCII portrait for the hero.
- * - types itself in as a diagonal wave of noise resolving into the face
+ * Interactive ASCII code-tag (</>) for the hero.
+ * - types itself in as a diagonal wave of noise resolving into the tag
  * - glyphs light up in a soft circle around the cursor
  * - every few seconds a band of rows glitches
  * Size is driven by the `--w` CSS variable on the element (set it via className).
  */
-export const AsciiPortrait = ({ className }: { className?: string }) => {
+export const AsciiArt = ({ className }: { className?: string }) => {
   const wrap = useRef<HTMLDivElement>(null);
   const base = useRef<HTMLPreElement>(null);
   const hi = useRef<HTMLPreElement>(null);
@@ -116,14 +116,14 @@ export const AsciiPortrait = ({ className }: { className?: string }) => {
     };
   }, [reduce]);
 
-  const mask = 'radial-gradient(circle 200px at var(--ax, 50%) var(--ay, 30%), #000 0%, rgba(0,0,0,0.55) 45%, transparent 100%)';
+  const mask = 'radial-gradient(circle 170px at var(--ax, 50%) var(--ay, 50%), #000 0%, rgba(0,0,0,0.55) 45%, transparent 100%)';
 
   return (
     <div ref={wrap} aria-hidden className={cn('pointer-events-none select-none', className)}>
       <div className="relative" style={{ width: 'var(--w)', height: `calc(var(--w) / ${EM_PER_WIDTH} * ${ROWS})`, fontSize: `calc(var(--w) / ${EM_PER_WIDTH})` }}>
         <pre
           ref={base}
-          className="absolute inset-0 m-0 whitespace-pre font-mono leading-none text-foreground/35 opacity-0 transition-opacity duration-700"
+          className="absolute inset-0 m-0 whitespace-pre font-mono leading-none text-foreground/25 opacity-0 transition-opacity duration-700"
         >
           {FINAL}
         </pre>
@@ -139,4 +139,4 @@ export const AsciiPortrait = ({ className }: { className?: string }) => {
   );
 };
 
-export default AsciiPortrait;
+export default AsciiArt;
