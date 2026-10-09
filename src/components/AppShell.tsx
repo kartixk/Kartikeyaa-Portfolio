@@ -4,49 +4,61 @@ import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import Backdrop from '@/components/Backdrop';
-import { ScrollProgress } from '@/components/fx';
+import { Cursor, ScrollProgress } from '@/components/fx';
 import Preloader from '@/components/ui/preloader';
+import { ReadyProvider } from '@/components/ready';
+import { RouteTransitionProvider } from '@/components/RouteTransition';
 import { ROUTES } from '@/lib/site';
 
 const SEEN_KEY = 'kartikeya-preloader-seen';
 const KNOWN_PATHS: string[] = ROUTES.map((r) => r.path);
 
-/** Persistent chrome around every route: backdrop, nav, footer and the one-time intro. */
+type Intro = 'checking' | 'show' | 'done';
+
+/** Persistent chrome around every route: intro, cursor, nav, page wipe and footer. */
 const AppShell = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
-  const [showPreloader, setShowPreloader] = useState(true);
+  const [intro, setIntro] = useState<Intro>('checking');
+  const [ready, setReady] = useState(false);
 
-  // Play the intro once per browser session; skip it on later visits / hard reloads of inner pages.
+  // Play the intro once per browser session.
   useEffect(() => {
+    let seen = false;
     try {
-      if (sessionStorage.getItem(SEEN_KEY)) setShowPreloader(false);
+      seen = !!sessionStorage.getItem(SEEN_KEY);
     } catch {
       /* storage unavailable — just show the intro */
     }
+    setIntro(seen ? 'done' : 'show');
+    if (seen) setReady(true);
   }, []);
 
-  const handlePreloaderComplete = useCallback(() => {
+  const handleExit = useCallback(() => setReady(true), []);
+  const handleComplete = useCallback(() => {
     try {
       sessionStorage.setItem(SEEN_KEY, '1');
     } catch {
       /* ignore */
     }
-    setShowPreloader(false);
+    setIntro('done');
   }, []);
 
-  const showFooter = KNOWN_PATHS.includes(pathname);
+  const showFooter = KNOWN_PATHS.includes(pathname) || pathname.startsWith('/projects/');
 
   return (
-    <>
-      {showPreloader && <Preloader onComplete={handlePreloaderComplete} />}
-      <Backdrop />
-      <div className="noise-overlay" />
-      <ScrollProgress />
-      <Navbar />
-      <main id="main">{children}</main>
-      {showFooter && <Footer />}
-    </>
+    <ReadyProvider value={ready}>
+      <RouteTransitionProvider>
+        {/* hides first paint until we know whether to play the intro */}
+        {intro === 'checking' && <div className="fixed inset-0 z-[100] bg-[#0f0e0d]" />}
+        {intro === 'show' && <Preloader onExit={handleExit} onComplete={handleComplete} />}
+        <div className="grain" aria-hidden />
+        <Cursor />
+        <ScrollProgress />
+        <Navbar />
+        <main id="main">{children}</main>
+        {showFooter && <Footer />}
+      </RouteTransitionProvider>
+    </ReadyProvider>
   );
 };
 

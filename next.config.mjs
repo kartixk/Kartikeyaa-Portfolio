@@ -2,10 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  // three ships ESM that Next should transpile for the client bundle
-  transpilePackages: ['three'],
   experimental: {
-    optimizePackageImports: ['lucide-react', 'framer-motion', '@react-three/drei'],
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
   async headers() {
     return [

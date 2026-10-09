@@ -1,9 +1,10 @@
 export { Reveal } from './Reveal';
-export { TiltCard } from './TiltCard';
+export { TextReveal } from './TextReveal';
+export { ScrollText } from './ScrollText';
+export { Counter } from './Counter';
 export { Magnetic } from './Magnetic';
-export { AnimatedText } from './AnimatedText';
 export { Marquee } from './Marquee';
-export { Hero3D } from './Hero3D';
 export { ScrollProgress } from './ScrollProgress';
-export { Parallax } from './Parallax';
-export { HudCorners } from './Hud';
+export { Draggable } from './Draggable';
+export { ProjectCover } from './ProjectCover';
+export { Cursor } from './Cursor';

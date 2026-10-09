@@ -1,243 +1,202 @@
 'use client';
 
-import {
-  User, MapPin, Mail, Phone, Github, Linkedin,
-  Globe, Cpu, Server, GraduationCap, Briefcase, Code2, Rocket,
-} from 'lucide-react';
+import { useRef } from 'react';
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import PageHeader from '@/components/PageHeader';
-import { GlowingEffect } from '@/components/ui/glowing-effect';
-import { Reveal, TiltCard, Magnetic } from '@/components/fx';
+import TransitionLink from '@/components/TransitionLink';
+import FloodRow from '@/components/FloodRow';
+import { Magnetic, Marquee, Reveal, ScrollText, TextReveal } from '@/components/fx';
+import { interests, PHONE, PHOTO, softSkills, specializations, timeline } from '@/lib/data';
+import { SITE } from '@/lib/site';
 
-const timeline = [
-  { year: 'Dec 2025 — Present', title: 'Software Developer Intern · Spotmies LLP', description: 'Building and maintaining scalable web applications with the core dev team.', icon: Briefcase },
-  { year: '2025', title: 'Software Engineer Intern', description: 'Interned at NTPC Limited & Zenith-Zap — shipped features used by real users.', icon: Briefcase },
-  { year: '2025', title: 'AI-ML Virtual Internship', description: 'Explored ML foundations & NLP through the EduSkills virtual internship.', icon: Code2 },
-  { year: '2024', title: 'MERN Full Stack Training', description: 'Intensive training at XceedIQ Innovate360 — built production-ready apps end to end.', icon: Code2 },
-  { year: '2022', title: 'Started B.Tech · GITAM University', description: 'Computer Science Engineering specializing in IoT.', icon: GraduationCap },
-  { year: '2020', title: 'Senior Secondary', description: 'Sri Chaitanya Junior College — PCM. Developed a strong interest in computing.', icon: GraduationCap },
+const facts = [
+  { k: 'Based in', v: 'Visakhapatnam, India' },
+  { k: 'Studying', v: 'B.Tech CSE (IoT) · GITAM University' },
+  { k: 'Focus', v: 'Full-Stack · ML · IoT' },
+  { k: 'Email', v: SITE.email, href: `mailto:${SITE.email}` },
+  { k: 'Phone', v: PHONE, href: 'tel:+918250977949' },
 ];
 
-const specializations = [
-  { label: 'MERN Stack Development', icon: Globe },
-  { label: 'API & Backend Engineering', icon: Server },
-  { label: 'IoT & Real-time Systems', icon: Cpu },
-  { label: 'Clean, Usable Interfaces', icon: Code2 },
-];
+const Portrait = () => {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+  const y = useTransform(scrollYProgress, [0, 1], reduce ? ['0%', '0%'] : ['-9%', '9%']);
 
-const interests = [
-  { title: 'Web Development', description: 'Building modern, responsive web applications with React and Node.js.', icon: Globe },
-  { title: 'IoT Systems', description: 'Developing real-time sensor monitoring and data acquisition systems.', icon: Cpu },
-  { title: 'Scalable Systems', description: 'Designing multi-tenant architectures and optimized backend services.', icon: Rocket },
-  { title: 'Learning AI / ML', description: 'Exploring ML concepts through internships and personal projects.', icon: Code2 },
-];
-
-const softSkills = ['Problem Solving', 'Team Collaboration', 'Time Management', 'Adaptability'];
-
-const About = () => {
   return (
-    <PageTransition>
-      <div className="gradient-bg">
-        <PageHeader
-          eyebrow="About Me"
-          title={
-            <>
-              <span className="gradient-text">Crafting</span> <span className="text-foreground">reliable</span>
-              <br />
-              <span className="text-outline">software</span> <span className="aurora-text italic">from scratch.</span>
-            </>
-          }
-          subtitle="Computer Science undergraduate at GITAM University. I turn ideas into production-ready applications — MERN stack first, clean architecture always."
-        />
-
-        {/* ── BIO BENTO ── */}
-        <section className="section-container !pt-4">
-          <div className="grid gap-5 md:grid-cols-5">
-            {/* Bio */}
-            <Reveal className="md:col-span-3">
-              <div className="group relative h-full rounded-3xl border-[0.75px] border-border p-2">
-                <GlowingEffect spread={44} glow disabled={false} proximity={70} inactiveZone={0.01} borderWidth={3} />
-                <TiltCard intensity={4} className="h-full overflow-hidden rounded-2xl glass-panel p-8">
-                  <div className="mb-7 flex items-center gap-4">
-                    <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-brand-1/25 bg-brand-1/15">
-                      <User className="text-brand-1" size={22} />
-                    </div>
-                    <div>
-                      <h3 className="font-display text-lg font-bold leading-tight">B Venkata Sai Kartikeya</h3>
-                      <p className="mt-0.5 text-xs font-medium tracking-wide text-brand-2">Full Stack MERN Developer · IoT Enthusiast</p>
-                    </div>
-                  </div>
-                  <p className="mb-3 leading-relaxed text-muted-foreground">
-                    I enjoy taking ideas from a simple sketch to a reliable, production-ready application.
-                    My recent work lives in the MERN stack and real-time IoT monitoring systems.
-                  </p>
-                  <p className="mb-7 leading-relaxed text-muted-foreground">
-                    I care about clear architecture, maintainable code, and smooth user experiences
-                    more than chasing every new buzzword.
-                  </p>
-                  <div className="flex flex-wrap gap-3">
-                    <Magnetic strength={0.3}>
-                      <a href="https://github.com/kartixk" target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-xl border border-line/10 bg-line/[0.03] px-4 py-2 text-sm font-medium transition-colors hover:border-brand-2/40 hover:text-brand-2">
-                        <Github size={15} /> GitHub
-                      </a>
-                    </Magnetic>
-                    <Magnetic strength={0.3}>
-                      <a href="https://linkedin.com/in/b-venkata-sai-kartikeya-28a99b357" target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-xl border border-brand-1/30 bg-brand-1/10 px-4 py-2 text-sm font-medium text-brand-1 transition-colors hover:bg-brand-1/20">
-                        <Linkedin size={15} /> LinkedIn
-                      </a>
-                    </Magnetic>
-                    <Magnetic strength={0.3}>
-                      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=kartikeyaa15@gmail.com" target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-xl border border-line/10 bg-line/[0.03] px-4 py-2 text-sm font-medium transition-colors hover:border-brand-3/40 hover:text-brand-3">
-                        <Mail size={15} /> Email
-                      </a>
-                    </Magnetic>
-                  </div>
-                </TiltCard>
-              </div>
-            </Reveal>
-
-            {/* Info + soft skills */}
-            <Reveal delay={0.1} className="md:col-span-2">
-              <div className="flex h-full flex-col gap-5">
-                <div className="relative rounded-3xl border-[0.75px] border-border p-2">
-                  <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
-                  <div className="relative rounded-2xl glass-panel p-6">
-                    <h3 className="mb-5 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Quick Info</h3>
-                    <div className="space-y-3.5">
-                      {[
-                        { Icon: MapPin, text: 'Visakhapatnam, India' },
-                        { Icon: Mail, text: 'kartikeyaa15@gmail.com' },
-                        { Icon: Phone, text: '+91-8250977949' },
-                        { Icon: GraduationCap, text: 'GITAM University · B.Tech CSE' },
-                      ].map(({ Icon, text }) => (
-                        <div key={text} className="flex items-start gap-3">
-                          <div className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-brand-2/10">
-                            <Icon className="text-brand-2" size={13} />
-                          </div>
-                          <span className="text-sm leading-snug text-muted-foreground">{text}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="relative flex-1 rounded-3xl border-[0.75px] border-border p-2">
-                  <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
-                  <div className="relative h-full rounded-2xl glass-panel p-6">
-                    <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Soft Skills</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {softSkills.map((s) => (
-                        <span key={s} className="rounded-full border border-brand-1/20 bg-brand-1/10 px-3 py-1.5 text-xs font-medium text-brand-1">
-                          {s}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ── SPECIALIZATIONS ── */}
-        <section className="section-container">
-          <Reveal className="mb-10 flex items-center gap-4">
-            <span className="h-px flex-1 bg-border" />
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">What I Specialize In</h2>
-            <span className="h-px flex-1 bg-border" />
-          </Reveal>
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-            {specializations.map(({ label, icon: Icon }, i) => (
-              <Reveal key={label} delay={i * 0.08}>
-                <div className="group relative h-full rounded-3xl border-[0.75px] border-border p-2">
-                  <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
-                  <TiltCard intensity={8} className="h-full rounded-2xl glass-panel p-6 text-center">
-                    <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl border border-brand-2/20 bg-brand-2/10 transition-all duration-300 group-hover:scale-110 group-hover:border-brand-2/40">
-                      <Icon className="text-brand-2" size={20} />
-                    </div>
-                    <p className="text-sm font-semibold leading-snug text-foreground">{label}</p>
-                  </TiltCard>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </section>
-
-        {/* ── TIMELINE ── */}
-        <section className="section-container">
-          <Reveal className="mb-14 flex items-center gap-4">
-            <span className="h-px flex-1 bg-border" />
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">My Journey</h2>
-            <span className="h-px flex-1 bg-border" />
-          </Reveal>
-
-          <div className="relative mx-auto max-w-3xl">
-            <div className="absolute left-3.5 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-border to-transparent md:left-1/2 md:-translate-x-1/2" />
-            {timeline.map((item, i) => {
-              const Icon = item.icon;
-              const isLeft = i % 2 === 0;
-              return (
-                <Reveal
-                  key={i}
-                  delay={i * 0.05}
-                  direction={isLeft ? 'right' : 'left'}
-                  className={`relative mb-10 flex items-start pl-12 md:mb-14 md:pl-0 ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'}`}
-                >
-                  <div className="absolute left-0 top-3 z-10 grid h-8 w-8 -translate-x-0 place-items-center rounded-full border-2 border-brand-1 bg-background shadow-[0_0_14px_hsl(var(--brand-1)/0.5)] md:left-1/2 md:-translate-x-1/2">
-                    <Icon className="text-brand-1" size={13} />
-                  </div>
-                  <div className={`md:w-[calc(50%-2.5rem)] ${isLeft ? 'md:mr-auto md:pr-6' : 'md:ml-auto md:pl-6'}`}>
-                    <div className="relative rounded-2xl border-[0.75px] border-border p-1.5">
-                      <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={2} />
-                      <div className="relative rounded-xl glass-panel p-5 transition-colors hover:border-brand-2/30">
-                        <span className="inline-flex items-center rounded-full border border-brand-1/20 bg-brand-1/10 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest text-brand-1">
-                          {item.year}
-                        </span>
-                        <h4 className="mt-2 font-display text-sm font-bold leading-snug">{item.title}</h4>
-                        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{item.description}</p>
-                      </div>
-                    </div>
-                  </div>
-                </Reveal>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* ── INTERESTS ── */}
-        <section className="section-container">
-          <Reveal className="mb-10 flex items-center gap-4">
-            <span className="h-px flex-1 bg-border" />
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Areas of Interest</h2>
-            <span className="h-px flex-1 bg-border" />
-          </Reveal>
-          <div className="grid gap-5 sm:grid-cols-2">
-            {interests.map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <Reveal key={item.title} delay={i * 0.08}>
-                  <div className="group relative h-full rounded-3xl border-[0.75px] border-border p-2">
-                    <GlowingEffect spread={44} glow disabled={false} proximity={70} inactiveZone={0.01} borderWidth={3} />
-                    <div className="relative flex h-full items-start gap-4 rounded-2xl glass-panel p-7">
-                      <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-brand-2/20 bg-brand-2/10 transition-all duration-300 group-hover:scale-110 group-hover:border-brand-2/40">
-                        <Icon className="text-brand-2" size={20} />
-                      </div>
-                      <div>
-                        <h4 className="font-display font-bold transition-colors group-hover:text-brand-2">{item.title}</h4>
-                        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
-                      </div>
-                    </div>
-                  </div>
-                </Reveal>
-              );
-            })}
-          </div>
-        </section>
+    <motion.div ref={ref} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-10% 0px' }} data-cursor="Hi!" className="group relative aspect-[4/5]">
+    <motion.div
+      variants={{
+        hidden: { clipPath: 'inset(100% 0% 0% 0% round 28px)' },
+        show: { clipPath: 'inset(0% 0% 0% 0% round 28px)', transition: { duration: 1.2, ease: [0.76, 0, 0.24, 1] } },
+      }}
+      className="absolute inset-0 overflow-hidden rounded-[28px] bg-muted"
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <motion.img
+        src={PHOTO}
+        alt="B Venkata Sai Kartikeya"
+        style={{ y, scale: 1.2 }}
+        className="h-full w-full object-cover object-[50%_30%] grayscale transition-[filter] duration-700 group-hover:grayscale-0"
+      />
+      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-black/70 to-transparent p-6 text-[#f1ecdc]">
+        <div>
+          <p className="display text-2xl">Kartikeya</p>
+          <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.2em] opacity-80">Full-Stack Developer</p>
+        </div>
+        <span className="font-mono text-[11px] uppercase tracking-widest opacity-70">Vizag, IN</span>
       </div>
-    </PageTransition>
+    </motion.div>
+    </motion.div>
   );
 };
+
+const Journey = () => {
+  const ref = useRef<HTMLOListElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.7', 'end 0.6'] });
+  const scaleY = useSpring(scrollYProgress, { stiffness: 90, damping: 24 });
+
+  return (
+    <ol ref={ref} className="relative">
+      <span aria-hidden className="absolute bottom-0 left-[7px] top-0 w-px bg-line/15 md:left-[11rem]" />
+      <motion.span aria-hidden style={{ scaleY }} className="absolute bottom-0 left-[7px] top-0 w-px origin-top bg-primary md:left-[11rem]" />
+      {timeline.map((t, i) => (
+        <Reveal key={i} as="li" delay={0.03} className="relative grid gap-2 pb-12 pl-8 md:grid-cols-[11rem_1fr] md:gap-12 md:pb-16 md:pl-0">
+          <span className="absolute left-0 top-1.5 h-[15px] w-[15px] rounded-full border border-primary bg-background md:left-[calc(11rem-7px)]" />
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground md:pt-1.5 md:text-right md:pr-8">{t.year}</p>
+          <div className="md:pl-8">
+            <h3 className="display text-2xl leading-[1.05] md:text-3xl">{t.title}</h3>
+            <p className="mt-3 max-w-xl text-base leading-relaxed text-muted-foreground">{t.description}</p>
+          </div>
+        </Reveal>
+      ))}
+    </ol>
+  );
+};
+
+const About = () => (
+  <PageTransition>
+    <PageHeader
+      index="01"
+      eyebrow="About me"
+      lines={[<span key="a">Crafting</span>, <span key="b" className="serif text-primary">reliable</span>, <span key="c">software.</span>]}
+      subtitle="Computer Science undergraduate at GITAM University. I turn ideas into production-ready applications — MERN stack first, clean architecture always."
+    />
+
+    {/* bio */}
+    <section className="wrap pb-24 md:pb-40">
+      <div className="grid gap-14 lg:grid-cols-[5fr_7fr] lg:gap-24">
+        <div className="lg:sticky lg:top-28 lg:self-start">
+          <Portrait />
+        </div>
+        <div>
+          <ScrollText
+            className="display text-[clamp(1.7rem,3.6vw,3.4rem)] leading-[1.12] tracking-[-0.03em]"
+            text="I enjoy taking ideas from a simple sketch to a reliable, production-ready application. My recent work lives in the MERN stack and real-time IoT monitoring systems. I care about clear architecture, maintainable code and smooth user experiences more than chasing every new buzzword."
+            highlight={['reliable', 'clear', 'maintainable']}
+          />
+
+          <dl className="mt-16 border-t border-line/15">
+            {facts.map((f) => (
+              <Reveal key={f.k} className="grid grid-cols-[7rem_1fr] gap-4 border-b border-line/15 py-5 md:grid-cols-[10rem_1fr]">
+                <dt className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">{f.k}</dt>
+                <dd className="text-lg font-medium">
+                  {f.href ? (
+                    <a href={f.href} className="link-u">
+                      {f.v}
+                    </a>
+                  ) : (
+                    f.v
+                  )}
+                </dd>
+              </Reveal>
+            ))}
+          </dl>
+
+          <Reveal className="mt-10 flex flex-wrap gap-3">
+            <Magnetic strength={0.25}>
+              <a href={SITE.github} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
+                GitHub <ArrowUpRight size={16} />
+              </a>
+            </Magnetic>
+            <Magnetic strength={0.25}>
+              <a href={SITE.linkedin} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
+                LinkedIn <ArrowUpRight size={16} />
+              </a>
+            </Magnetic>
+            <Magnetic strength={0.25}>
+              <TransitionLink href="/contact" className="btn btn-solid">
+                Let&apos;s talk <ArrowUpRight size={16} />
+              </TransitionLink>
+            </Magnetic>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+
+    {/* specializations */}
+    <section className="wrap pb-24 md:pb-40">
+      <Reveal>
+        <p className="eyebrow mb-10">What I specialise in</p>
+      </Reveal>
+      <div className="border-b border-line/15">
+        {specializations.map((s, i) => (
+          <Reveal key={s} delay={i * 0.05}>
+            <FloodRow>
+              <div className="flex items-baseline justify-between gap-6 py-7 md:py-9 md:pl-4 md:pr-6">
+                <div className="flex items-baseline gap-6 md:gap-12">
+                  <span className="font-mono text-xs tracking-widest opacity-60">0{i + 1}</span>
+                  <h3 className="display text-[clamp(1.8rem,4.6vw,4.2rem)]">{s}</h3>
+                </div>
+                <ArrowUpRight className="hidden shrink-0 md:block" />
+              </div>
+            </FloodRow>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+
+    {/* journey */}
+    <section className="wrap pb-24 md:pb-40">
+      <div className="mb-16 md:mb-24">
+        <Reveal>
+          <p className="eyebrow mb-6">The journey</p>
+        </Reveal>
+        <TextReveal as="h2" className="display text-[clamp(2.8rem,8.5vw,8.5rem)]" lines={[<span key="a">How I got</span>, <span key="b" className="serif text-primary">here</span>]} />
+      </div>
+      <Journey />
+    </section>
+
+    {/* interests */}
+    <section className="wrap pb-24 md:pb-40">
+      <Reveal>
+        <p className="eyebrow mb-10">Areas of interest</p>
+      </Reveal>
+      <div className="grid border-t border-line/15 md:grid-cols-2">
+        {interests.map((it, i) => (
+          <Reveal key={it.title} delay={i * 0.06} className={`border-b border-line/15 py-10 md:py-14 ${i % 2 === 0 ? 'md:border-r md:pr-12' : 'md:pl-12'}`}>
+            <span className="font-mono text-xs tracking-widest text-primary">0{i + 1}</span>
+            <h3 className="display mt-5 text-[clamp(1.9rem,3.6vw,3.2rem)]">{it.title}</h3>
+            <p className="mt-4 max-w-md text-lg leading-relaxed text-muted-foreground">{it.description}</p>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+
+    {/* soft skills */}
+    <section className="border-y border-line/15 py-8" aria-label="Soft skills">
+      <Marquee duration={40}>
+        {softSkills.map((s) => (
+          <span key={s} className="mx-6 flex items-center gap-12">
+            <span className="display text-[clamp(2.2rem,6vw,5rem)]">{s}</span>
+            <span className="text-3xl text-primary">✺</span>
+          </span>
+        ))}
+      </Marquee>
+    </section>
+  </PageTransition>
+);
 
 export default About;

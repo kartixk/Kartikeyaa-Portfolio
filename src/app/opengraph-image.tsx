@@ -11,7 +11,7 @@ export default function OpengraphImage() {
       <div
         style={{
           width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center',
-          padding: 80, background: '#05070d', color: '#eaffff', fontFamily: 'sans-serif',
+          padding: 80, background: '#0f0e0d', color: '#eaffff', fontFamily: 'sans-serif',
           backgroundImage: 'radial-gradient(circle at 80% 20%, rgba(34,227,255,0.28), transparent 55%)',
         }}
       >

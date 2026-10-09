@@ -1,42 +1,35 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { Reveal, Parallax } from '@/components/fx';
+import { Reveal, TextReveal } from '@/components/fx';
 
 interface PageHeaderProps {
+  /** e.g. "01" — rendered as a section index */
+  index?: string;
   eyebrow: string;
-  title: ReactNode;
+  /** one entry per masked headline line */
+  lines: ReactNode[];
   subtitle?: string;
-  align?: 'left' | 'center';
+  /** small right-aligned meta (count, status…) */
+  meta?: ReactNode;
 }
 
-/** Consistent oversized hero strip for inner pages. */
-const PageHeader = ({ eyebrow, title, subtitle, align = 'left' }: PageHeaderProps) => (
-  <header className={`relative overflow-hidden pt-36 pb-12 md:pt-44 md:pb-16 ${align === 'center' ? 'text-center' : ''}`}>
-    {/* parallax accent orbs */}
-    <Parallax amount={70} className="pointer-events-none absolute -right-16 -top-4 h-72 w-72 rounded-full blur-[100px]"
-      style={{ background: 'radial-gradient(circle, hsl(var(--brand-1) / 0.20), transparent 70%)' }} />
-    <Parallax amount={-50} className="pointer-events-none absolute left-1/4 top-24 h-56 w-56 rounded-full blur-[110px]"
-      style={{ background: 'radial-gradient(circle, hsl(var(--brand-2) / 0.14), transparent 70%)' }} />
-    <div className={`section-container !py-0 relative ${align === 'center' ? 'flex flex-col items-center' : ''}`}>
-      <Reveal direction="none" immediate>
-        <p className="eyebrow mb-5">
-          <span className="h-px w-8 bg-brand-2/60" /> {eyebrow}
-        </p>
+/** Oversized editorial opener shared by the inner pages. */
+const PageHeader = ({ index, eyebrow, lines, subtitle, meta }: PageHeaderProps) => (
+  <header className="wrap pb-14 pt-36 md:pb-20 md:pt-48">
+    <Reveal direction="none" immediate className="mb-8 flex items-center justify-between">
+      <p className="eyebrow">{eyebrow}</p>
+      {index && <span className="font-mono text-xs tracking-widest text-muted-foreground">({index})</span>}
+    </Reveal>
+
+    <TextReveal as="h1" immediate delay={0.1} className="display text-[clamp(3.3rem,12.2vw,12.5rem)]" lines={lines} />
+
+    {(subtitle || meta) && (
+      <Reveal immediate delay={0.45} className="mt-12 grid gap-8 border-t border-line/15 pt-8 md:grid-cols-[1fr_auto] md:items-end">
+        {subtitle && <p className="max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">{subtitle}</p>}
+        {meta && <div className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">{meta}</div>}
       </Reveal>
-      <Reveal delay={0.08} immediate>
-        <h1 className="font-display text-5xl font-extrabold leading-[0.95] tracking-tight md:text-6xl lg:text-7xl">
-          {title}
-        </h1>
-      </Reveal>
-      {subtitle && (
-        <Reveal delay={0.16} immediate>
-          <p className={`mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground ${align === 'center' ? 'mx-auto' : ''}`}>
-            {subtitle}
-          </p>
-        </Reveal>
-      )}
-    </div>
+    )}
   </header>
 );
 

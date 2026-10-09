@@ -1,206 +1,111 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Github, ArrowUpRight } from 'lucide-react';
 import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import PageHeader from '@/components/PageHeader';
-import { GlowingEffect } from '@/components/ui/glowing-effect';
-import { Reveal, TiltCard, Magnetic } from '@/components/fx';
+import TransitionLink from '@/components/TransitionLink';
+import { ProjectCover, Reveal } from '@/components/fx';
+import { projects, type Category, type Project } from '@/lib/data';
 
-type Category = 'All' | 'Web' | 'ML' | 'IoT';
+type Filter = 'All' | Category;
+const filters: Filter[] = ['All', 'Web', 'ML', 'IoT'];
 
-interface Project {
-  id: string;
-  title: string;
-  subtitle: string;
-  description: string[];
-  tech: string[];
-  link?: string;
-  github?: string;
-  category: Category[];
-  accent: string;
-}
-
-const projects: Project[] = [
-  {
-    id: '1',
-    title: 'Velvet Plate',
-    subtitle: 'Full-Stack SaaS Management System',
-    description: [
-      'Multi-tenant restaurant management platform with role-based access for Admins, Branch Managers, and Customers.',
-      'Dynamic menu and inventory management with branch-specific pricing and stock tracking.',
-      'Secure branch onboarding workflow with document verification.',
-      'Cloud-based media storage and scalable APIs.',
-    ],
-    tech: ['React', 'Node.js', 'MongoDB', 'Express', 'Cloud Storage'],
-    github: '#',
-    category: ['Web'],
-    accent: 'hsl(186 100% 52%)',
-  },
-  {
-    id: '2',
-    title: 'Zenith-Zap Platform',
-    subtitle: 'Mobile-First React Web Platform',
-    description: [
-      'Mobile-first React web platform supporting 50+ daily active users.',
-      'Cross-browser compatibility and consistent UI behavior.',
-      'Improved UI responsiveness by reducing unnecessary re-renders.',
-    ],
-    tech: ['React', 'Tailwind CSS', 'Vercel'],
-    link: 'https://zenithzap.vercel.app',
-    category: ['Web'],
-    accent: 'hsl(220 90% 62%)',
-  },
-  {
-    id: '3',
-    title: 'Sentiment Analysis System',
-    subtitle: 'NLP & Deep Learning',
-    description: [
-      'Bidirectional LSTM-based sentiment analysis system.',
-      'Achieved 82% accuracy on 200+ test samples through model tuning.',
-      'NLP preprocessing: tokenization, padding, and class imbalance handling.',
-    ],
-    tech: ['Python', 'TensorFlow', 'LSTM', 'NLP'],
-    github: '#',
-    category: ['ML'],
-    accent: 'hsl(315 90% 62%)',
-  },
-  {
-    id: '4',
-    title: 'Environmental Monitoring IoT',
-    subtitle: 'Real-Time Sensor Data System',
-    description: [
-      'IoT-based system for real-time environmental data acquisition.',
-      'Live sensor readings on ThingSpeak dashboards.',
-      'Stable Wi-Fi-based data transmission with minimal packet loss.',
-    ],
-    tech: ['IoT', 'ThingSpeak', 'Sensors', 'Arduino'],
-    category: ['IoT'],
-    accent: 'hsl(220 90% 62%)',
-  },
-];
-
-const categories: Category[] = ['All', 'Web', 'ML', 'IoT'];
-
-const ProjectCard = ({ project, index }: { project: Project; index: number }) => (
-  <Reveal delay={index * 0.06} className="h-full">
-    <div className="group relative h-full rounded-3xl border-[0.75px] border-border p-2">
-      <GlowingEffect spread={44} glow disabled={false} proximity={70} inactiveZone={0.01} borderWidth={3} />
-      <TiltCard intensity={7} glareColor={`${project.accent.replace(')', ' / 0.18)')}`}
-        className="h-full overflow-hidden rounded-2xl glass-panel">
-        {/* accent header band */}
-        <div className="relative flex items-start justify-between gap-4 border-b border-line/[0.06] p-7"
-          style={{ background: `linear-gradient(135deg, ${project.accent.replace(')', ' / 0.10)')}, transparent 70%)` }}>
-          <div>
-            <div className="mb-2 flex flex-wrap gap-1.5">
-              {project.category.map((c) => (
-                <span key={c} className="rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em]"
-                  style={{ background: `${project.accent.replace(')', ' / 0.15)')}`, color: project.accent }}>
-                  {c}
-                </span>
-              ))}
-            </div>
-            <h3 className="font-display text-2xl font-bold tracking-tight transition-colors group-hover:text-brand-2">{project.title}</h3>
-            <p className="mt-1 text-sm text-muted-foreground">{project.subtitle}</p>
-          </div>
-          <div className="flex shrink-0 gap-2">
-            {project.github && (
-              <Magnetic strength={0.4}>
-                <a href={project.github} aria-label="GitHub" className="grid h-9 w-9 place-items-center rounded-lg border border-line/10 bg-line/[0.03] text-muted-foreground transition-colors hover:border-brand-2/40 hover:text-brand-2">
-                  <Github size={15} />
-                </a>
-              </Magnetic>
-            )}
-            {project.link && (
-              <Magnetic strength={0.4}>
-                <a href={project.link} target="_blank" rel="noopener noreferrer" aria-label="Live demo" className="grid h-9 w-9 place-items-center rounded-lg border border-line/10 bg-line/[0.03] text-muted-foreground transition-colors hover:border-brand-2/40 hover:text-brand-2">
-                  <ExternalLink size={15} />
-                </a>
-              </Magnetic>
-            )}
-          </div>
+const Card = ({ project, n, offset }: { project: Project; n: number; offset: boolean }) => (
+  <TransitionLink href={`/projects/${project.slug}`} data-cursor="View" className={`group block ${offset ? 'md:mt-28' : ''}`}>
+    {/* the in-view trigger lives on this unclipped wrapper; a clipped-away element can't be observed reliably */}
+    <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: '-8% 0px' }} className="relative aspect-[4/3]">
+      <motion.div
+        variants={{
+          hidden: { clipPath: 'inset(100% 0% 0% 0% round 24px)' },
+          show: { clipPath: 'inset(0% 0% 0% 0% round 24px)', transition: { duration: 1.1, ease: [0.76, 0, 0.24, 1] } },
+        }}
+        className="absolute inset-0 overflow-hidden rounded-3xl"
+      >
+        <div className="h-full w-full transition-transform [transition-duration:1100ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]">
+          <ProjectCover kind={project.cover} hue={project.hue} />
         </div>
+        <span className="absolute left-5 top-5 rounded-full bg-[#0f0e0d]/90 px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-widest text-[#f1ecdc]">
+          0{n} / {project.category.join(' · ')}
+        </span>
+      </motion.div>
+    </motion.div>
 
-        <div className="p-7">
-          <ul className="space-y-2.5">
-            {project.description.map((d, j) => (
-              <li key={j} className="flex gap-2.5 text-sm leading-relaxed text-muted-foreground">
-                <ArrowUpRight size={14} className="mt-0.5 shrink-0" style={{ color: project.accent }} />
-                {d}
-              </li>
-            ))}
-          </ul>
-          <div className="mt-6 flex flex-wrap gap-2">
-            {project.tech.map((t) => (
-              <span key={t} className="rounded-lg border border-line/8 bg-line/[0.03] px-2.5 py-1 text-xs font-medium text-foreground/75">
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
-      </TiltCard>
+    <div className="mt-7 flex items-start justify-between gap-6">
+      <div>
+        <h3 className="display text-[clamp(2rem,4vw,3.6rem)] transition-colors duration-300 group-hover:text-primary">{project.title}</h3>
+        <p className="mt-4 max-w-md text-lg leading-snug text-muted-foreground">{project.outcome}</p>
+      </div>
+      <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-line/25 transition-all duration-500 group-hover:rotate-45 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground">
+        <ArrowUpRight size={20} />
+      </span>
     </div>
-  </Reveal>
+    <div className="mt-6 flex flex-wrap gap-2">
+      {project.tech.map((t) => (
+        <span key={t} className="rounded-full border border-line/20 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+          {t}
+        </span>
+      ))}
+    </div>
+  </TransitionLink>
 );
 
 const Projects = () => {
-  const [active, setActive] = useState<Category>('All');
-  const filtered = active === 'All' ? projects : projects.filter((p) => p.category.includes(active));
+  const [active, setActive] = useState<Filter>('All');
+  const list = active === 'All' ? projects : projects.filter((p) => p.category.includes(active));
 
   return (
     <PageTransition>
-      <div className="gradient-bg">
-        <PageHeader
-          eyebrow="Selected Work"
-          title={<><span className="text-foreground">Things I've</span> <span className="aurora-text">built.</span></>}
-          subtitle="A collection of projects spanning full-stack platforms, machine learning, and IoT systems."
-        />
+      <PageHeader
+        index="02"
+        eyebrow="Selected work"
+        lines={[<span key="a">Things I&apos;ve</span>, <span key="b" className="serif text-primary">built.</span>]}
+        subtitle="Full-stack platforms, machine learning and IoT systems — each one built end to end."
+        meta={`${String(projects.length).padStart(2, '0')} projects`}
+      />
 
-        <div className="section-container !pt-4">
-          {/* Filter */}
-          <Reveal className="mb-10 flex flex-wrap gap-2">
-            {categories.map((c) => {
-              const isActive = active === c;
+      <section className="wrap pb-24 md:pb-40">
+        <Reveal className="mb-14">
+          <div className="flex flex-wrap gap-2.5" role="group" aria-label="Filter projects">
+            {filters.map((f) => {
+              const on = active === f;
               return (
                 <button
-                  key={c}
-                  onClick={() => setActive(c)}
-                  className={`relative px-5 py-2 font-mono text-xs font-semibold uppercase tracking-widest transition-colors duration-300 ${isActive ? 'text-background' : 'border border-primary/20 text-muted-foreground hover:text-primary'}`}
+                  key={f}
+                  aria-pressed={on}
+                  onClick={() => setActive(f)}
+                  className={`relative rounded-full border px-6 py-2.5 font-display text-sm font-semibold transition-colors duration-300 ${on ? 'border-transparent text-background' : 'border-line/25 text-muted-foreground hover:text-foreground'}`}
                 >
-                  {isActive && (
-                    <motion.span
-                      layoutId="project-filter"
-                      transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                      className="absolute inset-0 -z-10 clip-tech"
-                      style={{ background: 'hsl(var(--primary))' }}
-                    />
+                  {on && (
+                    <motion.span layoutId="filter-pill" transition={{ type: 'spring', stiffness: 400, damping: 32 }} className="absolute inset-0 rounded-full bg-foreground" />
                   )}
-                  {c}
+                  <span className="relative z-10">{f}</span>
                 </button>
               );
             })}
-          </Reveal>
+          </div>
+        </Reveal>
 
-          {/* Grid */}
-          <motion.div layout className="grid gap-6 md:grid-cols-2">
-            <AnimatePresence mode="popLayout">
-              {filtered.map((project, i) => (
-                <motion.div
-                  key={project.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <ProjectCard project={project} index={i} />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
-        </div>
-      </div>
+        <motion.div layout className="grid gap-x-10 gap-y-16 md:grid-cols-2">
+          <AnimatePresence mode="popLayout">
+            {list.map((p, i) => (
+              <motion.div
+                key={p.slug}
+                layout
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.94 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <Card project={p} n={projects.indexOf(p) + 1} offset={i % 2 === 1} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+
+        {list.length === 0 && <p className="py-20 text-center text-muted-foreground">Nothing here yet.</p>}
+      </section>
     </PageTransition>
   );
 };

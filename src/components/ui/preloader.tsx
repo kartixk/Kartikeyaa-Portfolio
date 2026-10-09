@@ -1,93 +1,71 @@
 'use client';
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState } from 'react';
+import { animate, motion } from 'framer-motion';
 
-const words = [
-  "Hello",
-  "नमस्ते",
-  "నమస్తే",
-  "Bonjour",
-  "Ciao",
-  "Olà",
-  "やあ",
-  "Hallå",
-  "Guten tag",
-  "হ্য়াল্লো",
-];
+const greetings = ['Hello', 'నమస్తే', 'नमस्ते', 'Bonjour', 'こんにちは', 'Ciao', 'Hola', 'Hello'];
 
 interface PreloaderProps {
+  /** fired the moment the panel starts lifting, so the page can begin animating underneath */
+  onExit?: () => void;
   onComplete?: () => void;
 }
 
-export default function Preloader({ onComplete }: PreloaderProps) {
-  const [index, setIndex] = useState(0);
-  const [dimension, setDimension] = useState({ width: 0, height: 0 });
-  const [isActive, setIsActive] = useState(true);
+/** 000 → 100 counter over rotating greetings; lifts away with a curved edge. */
+export default function Preloader({ onExit, onComplete }: PreloaderProps) {
+  const [count, setCount] = useState(0);
+  const [greet, setGreet] = useState(0);
+  const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
-    setDimension({ width: window.innerWidth, height: window.innerHeight });
-  }, []);
-
-  useEffect(() => {
-    if (index === words.length - 1) {
-      setTimeout(() => {
-        setIsActive(false);
-        setTimeout(() => {
-          onComplete?.();
-        }, 1000);
-      }, 1000);
-      return;
-    }
-
-    const timer = setTimeout(
-      () => {
-        setIndex(index + 1);
+    const counter = animate(0, 100, {
+      duration: 2.2,
+      ease: [0.65, 0, 0.35, 1],
+      onUpdate: (v) => setCount(Math.round(v)),
+      onComplete: () => {
+        setLeaving(true);
+        onExit?.();
       },
-      index === 0 ? 1000 : 150
-    );
-
-    return () => clearTimeout(timer);
-  }, [index, onComplete]);
-
-  const initialPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height + 300} 0 ${dimension.height} L0 0`;
-  const targetPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height} 0 ${dimension.height} L0 0`;
-
-  const curveInitial = {
-    d: initialPath,
-    transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1] },
-  };
-
-  const curveExit = {
-    d: targetPath,
-    transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1], delay: 0.3 },
-  };
+    });
+    const g = window.setInterval(() => setGreet((i) => Math.min(i + 1, greetings.length - 1)), 280);
+    return () => {
+      counter.stop();
+      window.clearInterval(g);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <motion.div
-      initial={{ y: 0 } as any}
-      animate={isActive ? ({ y: 0 } as any) : ({ y: "-100vh", transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1], delay: 0.2 } } as any)}
-      className="fixed inset-0 w-screen h-screen flex items-center justify-center bg-[#141516] z-[99999999999]"
+      initial={{ clipPath: 'inset(0% 0% 0% 0% round 0 0 0 0)' }}
+      animate={leaving ? { clipPath: 'inset(0% 0% 100% 0% round 0 0 50% 50%)' } : undefined}
+      transition={{ duration: 0.95, ease: [0.76, 0, 0.24, 1] }}
+      onAnimationComplete={() => leaving && onComplete?.()}
+      className="fixed inset-0 z-[100] flex flex-col justify-between bg-[#0f0e0d] p-6 text-[#f1ecdc] md:p-12"
     >
-      {dimension.width > 0 && (
-        <>
-          <motion.p
-            initial={{ opacity: 0 } as any}
-            animate={{ opacity: 0.75, transition: { duration: 1, delay: 0.2 } } as any}
-            className="flex items-center text-white text-4xl md:text-5xl lg:text-6xl absolute z-10 font-medium"
-          >
-            <span className="block w-2.5 h-2.5 bg-white rounded-full mr-2.5" />
-            {words[index]}
-          </motion.p>
-          <svg className="absolute top-0 w-full h-[calc(100%+300px)]">
-            <motion.path
-              initial={curveInitial as any}
-              animate={(isActive ? curveInitial : curveExit) as any}
-              fill="#141516"
-            />
-          </svg>
-        </>
-      )}
+      <div className="flex items-start justify-between font-mono text-[11px] uppercase tracking-[0.22em]">
+        <span>Kartikeya ®</span>
+        <span className="text-[#f1ecdc]/60">Portfolio — 2026</span>
+      </div>
+
+      <div className="pointer-events-none absolute inset-0 grid place-items-center">
+        <motion.p
+          key={greet}
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="serif text-[clamp(2.5rem,8vw,6rem)] text-[#f1ecdc]/90"
+        >
+          {greetings[greet]}
+        </motion.p>
+      </div>
+
+      <div className="flex items-end justify-between">
+        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#f1ecdc]/60">Loading experience</span>
+        <span className="display text-[clamp(5rem,22vw,18rem)] tabular-nums leading-[0.8] text-[#ff6a33]">
+          {String(count).padStart(3, '0')}
+        </span>
+      </div>
     </motion.div>
   );
 }
