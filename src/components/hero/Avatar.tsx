@@ -4,31 +4,37 @@ import { useEffect, useRef } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-/** Exported canvas of every pose (see public/avatar/size.json). All poses share one body position. */
+/** Exported canvas of every pose (public/avatar). All poses share one body position. */
 const W = 900;
 const H = 1013;
 
 const POSES = ['center', 'left', 'right', 'up', 'down', 'blink'] as const;
 type Pose = (typeof POSES)[number];
 
-// head poses fade out below the collar; the front-facing body always sits underneath, so shoulders never jump or show edges
+// head poses end below the collar; the front-facing body always sits underneath, so shoulders never jump
 const HEAD_MASK = 'linear-gradient(to bottom, #000 60%, transparent 73%)';
 const BODY_MASK = 'linear-gradient(to bottom, transparent 54%, #000 66%)';
-
 // soften the sleeves where the artwork meets the frame
 const SIDE_MASK = 'linear-gradient(to right, transparent, #000 7%, #000 93%, transparent)';
 
 const clamp = (v: number, a = -1, b = 1) => Math.min(b, Math.max(a, v));
-const smooth = (t: number) => t * t * (3 - 2 * t);
-const ramp = (v: number, a: number, b: number) => smooth(clamp((v - a) / (b - a), 0, 1));
+
+/** thresholds with hysteresis, so the pose never flickers while the cursor hovers near a boundary */
+const ENTER = 0.3;
+const LEAVE = 0.17;
+const SWAP_MS = 110;
 
 /**
- * The illustrated portrait. Six hand-made poses are stacked and cross-faded by where the cursor is, so the head
- * turns to follow it (left / right / up / down), with a small body sway on top and an occasional blink.
- *  - mouse / pen: follows the pointer; after a few idle seconds he starts glancing around on his own
- *  - touch / no hover: idle glancing only
+ * The illustrated portrait.
+ *
+ * Faces are NEVER blended: blending two different faces looks like a double exposure. Instead the head snaps between
+ * the hand-made poses (the new one dissolves in over a fully opaque previous one in ~110 ms, so there is no
+ * see-through moment), and all the smoothness comes from continuous 3D motion applied to the whole figure
+ * (turn, tilt, lean) that tracks the cursor with easing. A dead-zone + hysteresis stops the pose from flickering.
+ *
+ *  - mouse / pen: follows the pointer; idle for ~3 s → glances around on its own
+ *  - touch: idle glancing only
  *  - prefers-reduced-motion: stays on the front-facing pose
- * Everything is written straight to the DOM from one rAF loop, which pauses while the hero is off-screen.
  */
 export const Avatar = ({ className }: { className?: string }) => {
   const reduce = useReducedMotion();
@@ -48,6 +54,40 @@ export const Avatar = ({ className }: { className?: string }) => {
     let blinkUntil = 0;
     let nextBlink = performance.now() + 2500;
 
+    let current: Pose = 'center';
+    let previous: Pose | null = null;
+    let cleanup = 0;
+
+    const layer = (p: Pose) => layers.current[p];
+
+    /** hard-swap to a pose: it fades in over the (still opaque) old one, then the old one is released */
+    const show = (next: Pose, ms = SWAP_MS) => {
+      if (next === current) return;
+      const incoming = layer(next);
+      const outgoing = layer(current);
+      if (!incoming || !outgoing) return;
+      window.clearTimeout(cleanup);
+      if (previous && previous !== next) {
+        const stale = layer(previous);
+        if (stale) { stale.style.transition = 'none'; stale.style.opacity = '0'; stale.style.zIndex = '0'; }
+      }
+      outgoing.style.zIndex = '1';
+      outgoing.style.opacity = '1';
+      incoming.style.transition = 'none';
+      incoming.style.opacity = '0';
+      incoming.style.zIndex = '2';
+      void incoming.offsetWidth; // commit the 0 so the next change animates
+      incoming.style.transition = `opacity ${ms}ms linear`;
+      incoming.style.opacity = '1';
+      previous = current;
+      current = next;
+      cleanup = window.setTimeout(() => {
+        const old = previous && layer(previous);
+        if (old) { old.style.transition = 'none'; old.style.opacity = '0'; old.style.zIndex = '0'; }
+        previous = null;
+      }, ms + 40);
+    };
+
     const move = (e: PointerEvent) => {
       const r = el.getBoundingClientRect();
       const cx = r.left + r.width / 2;
@@ -58,45 +98,47 @@ export const Avatar = ({ className }: { className?: string }) => {
     };
     const leave = () => { lastInput = -1e9; };
 
-    const set = (p: Pose, o: number) => {
-      const img = layers.current[p];
-      if (img) img.style.opacity = o <= 0.002 ? '0' : o.toFixed(3);
-    };
-
     const tick = (now: number) => {
       raf = requestAnimationFrame(tick);
       if (!visible) return;
 
-      // no input for a while (or on touch) → look around on his own
+      // no input for a while (or on touch) → look around on his own, dwelling on each look
       if (now - lastInput > 3200) {
         tx = clamp(Math.sin(now / 2300) * 2.6, -0.85, 0.85);
         ty = clamp(Math.sin(now / 3700 + 1.3) * 2.2, -0.7, 0.7) * 0.5;
       }
-      x += (tx - x) * 0.085;
-      y += (ty - y) * 0.085;
+      // critically-damped-ish easing, frame-rate independent
+      const k = 1 - Math.exp(-0.0075 * 16.7);
+      x += (tx - x) * k;
+      y += (ty - y) * k;
 
-      const l = x > 0 ? ramp(x, 0.06, 0.42) : 0; // Left.png faces the viewer's right
-      const r = x < 0 ? ramp(-x, 0.06, 0.42) : 0;
-      const u = y < 0 ? ramp(-y, 0.08, 0.46) : 0;
-      const d = y > 0 ? ramp(y, 0.08, 0.46) : 0;
-      const horiz = Math.max(l, r), vert = Math.max(u, d);
-      const useH = horiz >= vert;
-      const [L, R_, U, D] = useH ? [l, r, 0, 0] : [0, 0, u, d];
-      const strongest = Math.max(L, R_, U, D);
+      // which head pose? dominant axis wins, with hysteresis
+      const ax = Math.abs(x), ay = Math.abs(y * 1.25);
+      const axis: 'x' | 'y' = ax >= ay ? 'x' : 'y';
+      const mag = axis === 'x' ? ax : ay;
+      const wanted: Pose = axis === 'x' ? (x > 0 ? 'left' : 'right') : y < 0 ? 'up' : 'down';
+      let target: Pose;
+      if (current !== 'center' && current !== 'blink') {
+        // already turned: stay until clearly back near the middle (or switch to another direction past ENTER)
+        target = mag < LEAVE ? 'center' : mag > ENTER && wanted !== current ? wanted : current;
+      } else {
+        target = mag > ENTER ? wanted : 'center';
+      }
 
-      // blink only when looking roughly straight ahead
-      if (now > nextBlink) { blinkUntil = now + 130; nextBlink = now + 2800 + Math.random() * 3600; }
-      const blink = now < blinkUntil && strongest < 0.3 ? 1 : 0;
+      // blink, only while facing the camera
+      if (now > nextBlink) { blinkUntil = now + 140; nextBlink = now + 2800 + Math.random() * 3600; }
+      if (target === 'center' && now < blinkUntil) target = 'blink';
+      else if (current === 'blink' && target === 'center') target = 'center';
 
-      // the base pose fades out only once an overlay is (almost) fully in, so mid-turns never go see-through
-      set('center', 1 - ramp(strongest, 0.9, 1));
-      set('left', L);
-      set('right', R_);
-      set('up', U);
-      set('down', D);
-      set('blink', blink);
+      show(target, target === 'blink' || current === 'blink' ? 35 : SWAP_MS);
 
-      if (body.current) body.current.style.transform = `translate3d(${(x * 9).toFixed(2)}px, ${(y * 4).toFixed(2)}px, 0) rotate(${(x * 1.4).toFixed(2)}deg)`;
+      // continuous motion: this is what makes it feel smooth between the discrete poses
+      if (body.current) {
+        const bob = Math.sin(now / 1500) * 2;
+        body.current.style.transform =
+          `perspective(1100px) translate3d(${(x * 16).toFixed(2)}px, ${(y * 7 + bob).toFixed(2)}px, 0) ` +
+          `rotateY(${(x * 7).toFixed(2)}deg) rotateX(${(-y * 4).toFixed(2)}deg) rotate(${(x * 1.2).toFixed(2)}deg)`;
+      }
     };
 
     const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; });
@@ -106,6 +148,7 @@ export const Avatar = ({ className }: { className?: string }) => {
     raf = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(raf);
+      window.clearTimeout(cleanup);
       io.disconnect();
       window.removeEventListener('pointermove', move);
       document.documentElement.removeEventListener('mouseleave', leave);
@@ -119,7 +162,7 @@ export const Avatar = ({ className }: { className?: string }) => {
         className="relative w-full origin-[50%_100%] will-change-transform"
         style={{ aspectRatio: `${W} / ${H}`, maskImage: SIDE_MASK, WebkitMaskImage: SIDE_MASK }}
       >
-        {/* steady body */}
+        {/* steady body (front-facing), always underneath */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/avatar/center.webp" alt="" width={W} height={H} draggable={false} decoding="async" className="pointer-events-none absolute inset-0 h-full w-full" style={{ maskImage: BODY_MASK, WebkitMaskImage: BODY_MASK }} />
         {POSES.map((p) => (
@@ -135,7 +178,7 @@ export const Avatar = ({ className }: { className?: string }) => {
             decoding="async"
             fetchPriority={p === 'center' ? 'high' : 'low'}
             className="pointer-events-none absolute inset-0 h-full w-full"
-            style={{ opacity: p === 'center' ? 1 : 0, maskImage: HEAD_MASK, WebkitMaskImage: HEAD_MASK }}
+            style={{ opacity: p === 'center' ? 1 : 0, zIndex: p === 'center' ? 1 : 0, maskImage: HEAD_MASK, WebkitMaskImage: HEAD_MASK }}
           />
         ))}
       </div>

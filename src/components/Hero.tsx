@@ -61,7 +61,7 @@ const Hero = () => {
       <div aria-hidden className="absolute inset-x-0 bottom-0 z-30 h-[17svh] bg-background lg:hidden" />
 
       {/* desktop: intro + actions float on the colour field, either side of the character */}
-      <div className="absolute inset-x-0 top-[49svh] z-30 hidden lg:block">
+      <div className="absolute inset-x-0 top-[max(49svh,calc(22svh+13vw+3rem))] z-30 hidden lg:block">
         <div className="wrap flex items-start justify-between">
           <Reveal immediate delay={0.9} className="max-w-[22rem]">
             <p className="font-display text-[1.35rem] font-semibold leading-snug tracking-tight">
