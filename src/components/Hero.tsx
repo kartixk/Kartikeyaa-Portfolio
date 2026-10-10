@@ -48,7 +48,7 @@ const Hero = () => {
           initial={{ y: 160, opacity: 0, scale: 0.94 }}
           animate={ready ? { y: 0, opacity: 1, scale: 1 } : undefined}
           transition={{ type: 'spring', stiffness: 80, damping: 16, delay: 0.35 }}
-          className="w-[min(78svh,142vw)] shrink-0 sm:w-[min(72svh,110vw)] lg:w-[min(72svh,64vw)]"
+          className="w-[min(66svh,118vw)] shrink-0 sm:w-[min(60svh,92vw)] lg:w-[min(72svh,64vw)]"
         >
           <div className="animate-float" style={{ animationDuration: '7s' }}>
             <Avatar />

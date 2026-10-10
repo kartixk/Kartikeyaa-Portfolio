@@ -4,102 +4,142 @@ import { useEffect, useRef } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-const SKIN = '#c98d62';
-const SKIN_SHADE = '#b3774f';
-const HAIR = '#17120f';
-const INK = '#2a1a12';
+/** Exported canvas of every pose (see public/avatar/size.json). All poses share one body position. */
+const W = 900;
+const H = 1013;
+
+const POSES = ['center', 'left', 'right', 'up', 'down', 'blink'] as const;
+type Pose = (typeof POSES)[number];
+
+// head poses fade out below the collar; the front-facing body always sits underneath, so shoulders never jump or show edges
+const HEAD_MASK = 'linear-gradient(to bottom, #000 60%, transparent 73%)';
+const BODY_MASK = 'linear-gradient(to bottom, transparent 54%, #000 66%)';
+
+// soften the sleeves where the artwork meets the frame
+const SIDE_MASK = 'linear-gradient(to right, transparent, #000 7%, #000 93%, transparent)';
+
+const clamp = (v: number, a = -1, b = 1) => Math.min(b, Math.max(a, v));
+const smooth = (t: number) => t * t * (3 - 2 * t);
+const ramp = (v: number, a: number, b: number) => smooth(clamp((v - a) / (b - a), 0, 1));
 
 /**
- * Illustrated character (flat vector, drawn in SVG). On fine pointers the head turns toward the cursor and the
- * pupils follow it; the eyes blink on their own. All motion is written straight to the DOM — no re-renders.
+ * The illustrated portrait. Six hand-made poses are stacked and cross-faded by where the cursor is, so the head
+ * turns to follow it (left / right / up / down), with a small body sway on top and an occasional blink.
+ *  - mouse / pen: follows the pointer; after a few idle seconds he starts glancing around on his own
+ *  - touch / no hover: idle glancing only
+ *  - prefers-reduced-motion: stays on the front-facing pose
+ * Everything is written straight to the DOM from one rAF loop, which pauses while the hero is off-screen.
  */
 export const Avatar = ({ className }: { className?: string }) => {
-  const svg = useRef<SVGSVGElement>(null);
-  const head = useRef<SVGGElement>(null);
-  const pupils = useRef<SVGGElement>(null);
   const reduce = useReducedMotion();
+  const root = useRef<HTMLDivElement>(null);
+  const body = useRef<HTMLDivElement>(null);
+  const layers = useRef<Record<Pose, HTMLImageElement | null>>({ center: null, left: null, right: null, up: null, down: null, blink: null });
 
   useEffect(() => {
-    if (reduce || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    if (reduce) return;
+    const el = root.current;
+    if (!el) return;
+
     let raf = 0;
+    let visible = true;
     let tx = 0, ty = 0, x = 0, y = 0;
+    let lastInput = -1e9;
+    let blinkUntil = 0;
+    let nextBlink = performance.now() + 2500;
+
     const move = (e: PointerEvent) => {
-      const r = svg.current?.getBoundingClientRect();
-      if (!r) return;
+      const r = el.getBoundingClientRect();
       const cx = r.left + r.width / 2;
-      const cy = r.top + r.height * 0.45;
-      tx = Math.max(-1, Math.min(1, (e.clientX - cx) / (window.innerWidth * 0.5)));
-      ty = Math.max(-1, Math.min(1, (e.clientY - cy) / (window.innerHeight * 0.5)));
+      const cy = r.top + r.height * 0.4; // roughly the face
+      tx = clamp((e.clientX - cx) / (window.innerWidth * 0.34));
+      ty = clamp((e.clientY - cy) / (window.innerHeight * 0.42));
+      lastInput = performance.now();
     };
-    const tick = () => {
-      x += (tx - x) * 0.09;
-      y += (ty - y) * 0.09;
-      head.current?.setAttribute('transform', `translate(${x * 9} ${y * 5}) rotate(${x * 5} 250 400)`);
-      pupils.current?.setAttribute('transform', `translate(${x * 7} ${y * 5})`);
+    const leave = () => { lastInput = -1e9; };
+
+    const set = (p: Pose, o: number) => {
+      const img = layers.current[p];
+      if (img) img.style.opacity = o <= 0.002 ? '0' : o.toFixed(3);
+    };
+
+    const tick = (now: number) => {
       raf = requestAnimationFrame(tick);
+      if (!visible) return;
+
+      // no input for a while (or on touch) → look around on his own
+      if (now - lastInput > 3200) {
+        tx = clamp(Math.sin(now / 2300) * 2.6, -0.85, 0.85);
+        ty = clamp(Math.sin(now / 3700 + 1.3) * 2.2, -0.7, 0.7) * 0.5;
+      }
+      x += (tx - x) * 0.085;
+      y += (ty - y) * 0.085;
+
+      const l = x > 0 ? ramp(x, 0.06, 0.42) : 0; // Left.png faces the viewer's right
+      const r = x < 0 ? ramp(-x, 0.06, 0.42) : 0;
+      const u = y < 0 ? ramp(-y, 0.08, 0.46) : 0;
+      const d = y > 0 ? ramp(y, 0.08, 0.46) : 0;
+      const horiz = Math.max(l, r), vert = Math.max(u, d);
+      const useH = horiz >= vert;
+      const [L, R_, U, D] = useH ? [l, r, 0, 0] : [0, 0, u, d];
+      const strongest = Math.max(L, R_, U, D);
+
+      // blink only when looking roughly straight ahead
+      if (now > nextBlink) { blinkUntil = now + 130; nextBlink = now + 2800 + Math.random() * 3600; }
+      const blink = now < blinkUntil && strongest < 0.3 ? 1 : 0;
+
+      // the base pose fades out only once an overlay is (almost) fully in, so mid-turns never go see-through
+      set('center', 1 - ramp(strongest, 0.9, 1));
+      set('left', L);
+      set('right', R_);
+      set('up', U);
+      set('down', D);
+      set('blink', blink);
+
+      if (body.current) body.current.style.transform = `translate3d(${(x * 9).toFixed(2)}px, ${(y * 4).toFixed(2)}px, 0) rotate(${(x * 1.4).toFixed(2)}deg)`;
     };
+
+    const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; });
+    io.observe(el);
     window.addEventListener('pointermove', move, { passive: true });
+    document.documentElement.addEventListener('mouseleave', leave);
     raf = requestAnimationFrame(tick);
     return () => {
-      window.removeEventListener('pointermove', move);
       cancelAnimationFrame(raf);
+      io.disconnect();
+      window.removeEventListener('pointermove', move);
+      document.documentElement.removeEventListener('mouseleave', leave);
     };
   }, [reduce]);
 
   return (
-    <svg ref={svg} viewBox="0 0 500 560" role="img" aria-label="Illustration of Kartikeya" className={cn('block h-auto w-full overflow-visible', className)}>
-      {/* hoodie */}
-      <path d="M40 560C40 470 100 428 190 412L310 412C400 428 460 470 460 560Z" fill="#f3f0e2" />
-      <path d="M40 560C40 500 70 462 118 440C98 480 94 520 96 560Z" fill="#e2dec9" />
-      <path d="M185 412Q250 478 315 412Q250 440 185 412Z" fill="#d6d1ba" />
-      <path d="M232 448v52M268 448v52" stroke="#bdb79e" strokeWidth="5" strokeLinecap="round" />
-
-      {/* neck */}
-      <path d="M214 352h72v68Q250 452 214 420Z" fill={SKIN_SHADE} />
-
-      {/* head group */}
-      <g ref={head} style={{ transformOrigin: '250px 400px' }}>
-        {/* ears */}
-        <ellipse cx="141" cy="265" rx="17" ry="27" fill={SKIN} />
-        <ellipse cx="359" cy="265" rx="17" ry="27" fill={SKIN} />
-        <ellipse cx="143" cy="267" rx="8" ry="15" fill={SKIN_SHADE} />
-        <ellipse cx="357" cy="267" rx="8" ry="15" fill={SKIN_SHADE} />
-
-        {/* face */}
-        <ellipse cx="250" cy="250" rx="110" ry="124" fill={SKIN} />
-        <ellipse cx="250" cy="336" rx="70" ry="30" fill={SKIN_SHADE} opacity="0.18" />
-
-        {/* hair */}
-        <path d="M138 240C124 150 188 104 256 106C334 108 380 160 362 242C346 208 322 184 288 174C252 194 190 194 154 228Z" fill={HAIR} />
-        <path d="M176 134C200 86 292 80 334 128C300 106 232 108 176 134Z" fill={HAIR} />
-        <path d="M150 232C150 214 160 196 176 184" stroke={HAIR} strokeWidth="14" strokeLinecap="round" fill="none" />
-
-        {/* brows */}
-        <path d="M180 214Q210 198 240 212" stroke={HAIR} strokeWidth="8" strokeLinecap="round" fill="none" />
-        <path d="M260 212Q290 198 320 214" stroke={HAIR} strokeWidth="8" strokeLinecap="round" fill="none" />
-
-        {/* eyes */}
-        {[212, 288].map((cx, i) => (
-          <g key={cx} className="origin-center animate-eye-blink [transform-box:fill-box]" style={{ animationDelay: `${i * 0.03}s` }}>
-            <ellipse cx={cx} cy="256" rx="21" ry="25" fill="#faf8f0" />
-          </g>
+    <div ref={root} role="img" aria-label="Illustrated portrait of Kartikeya, who follows the cursor with his head" className={cn('block w-full select-none', className)}>
+      <div
+        ref={body}
+        className="relative w-full origin-[50%_100%] will-change-transform"
+        style={{ aspectRatio: `${W} / ${H}`, maskImage: SIDE_MASK, WebkitMaskImage: SIDE_MASK }}
+      >
+        {/* steady body */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/avatar/center.webp" alt="" width={W} height={H} draggable={false} decoding="async" className="pointer-events-none absolute inset-0 h-full w-full" style={{ maskImage: BODY_MASK, WebkitMaskImage: BODY_MASK }} />
+        {POSES.map((p) => (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            key={p}
+            ref={(n) => { layers.current[p] = n; }}
+            src={`/avatar/${p}.webp`}
+            alt=""
+            width={W}
+            height={H}
+            draggable={false}
+            decoding="async"
+            fetchPriority={p === 'center' ? 'high' : 'low'}
+            className="pointer-events-none absolute inset-0 h-full w-full"
+            style={{ opacity: p === 'center' ? 1 : 0, maskImage: HEAD_MASK, WebkitMaskImage: HEAD_MASK }}
+          />
         ))}
-        <g ref={pupils}>
-          {[212, 288].map((cx) => (
-            <g key={cx}>
-              <circle cx={cx} cy="258" r="11.5" fill={INK} />
-              <circle cx={cx - 4} cy="253" r="3.4" fill="#fff" />
-            </g>
-          ))}
-        </g>
-
-        {/* nose + mouth + cheeks */}
-        <path d="M244 282Q250 300 262 302" stroke={SKIN_SHADE} strokeWidth="5" strokeLinecap="round" fill="none" />
-        <path d="M218 326Q250 350 282 326" stroke="#5b2f22" strokeWidth="5" strokeLinecap="round" fill="none" />
-        <circle cx="186" cy="304" r="16" fill="#e0805e" opacity="0.28" />
-        <circle cx="314" cy="304" r="16" fill="#e0805e" opacity="0.28" />
-      </g>
-    </svg>
+      </div>
+    </div>
   );
 };
 
