@@ -4,7 +4,7 @@ import { ArrowUpRight } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import TransitionLink from '@/components/TransitionLink';
 import FloodRow from '@/components/FloodRow';
-import FolderGrid from '@/components/FolderGrid';
+import Desktop from '@/components/desk/Desktop';
 import Hero from '@/components/Hero';
 import { Counter, Magnetic, Reveal, ScrollText, TextReveal, Tilt, VelocityMarquee } from '@/components/fx';
 import { experiences, projects, skillGroups, stats } from '@/lib/data';
@@ -123,7 +123,7 @@ const Home = () => (
           </Magnetic>
         </Reveal>
       </div>
-      <FolderGrid items={projects} />
+      <Desktop />
     </section>
 
     {/* experience */}

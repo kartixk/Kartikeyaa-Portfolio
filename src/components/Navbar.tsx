@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import { useLenis } from 'lenis/react';
-import { ArrowUpRight, Download } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ROUTES, SITE } from '@/lib/site';
 import { RESUME_URL } from '@/lib/data';
@@ -14,7 +14,7 @@ import Eyes from '@/components/desk/Eyes';
 import LocalTime from '@/components/LocalTime';
 import { Magnetic } from '@/components/fx';
 
-const quick = ROUTES.filter((r) => ['/projects', '/about', '/contact'].includes(r.path));
+const quick = ROUTES.filter((r) => ['/', '/about', '/projects', '/contact'].includes(r.path));
 const menuRoutes = ROUTES.filter((r) => r.path !== '/');
 const ease = [0.76, 0, 0.24, 1] as const;
 
@@ -23,12 +23,10 @@ const Navbar = () => {
   const lenis = useLenis();
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const lastY = useRef(0);
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, 'change', (y) => {
-    setScrolled(y > 40);
     // hide on the way down, bring back on the way up
     setHidden(y > lastY.current && y > 220);
     lastY.current = y;
@@ -51,81 +49,61 @@ const Navbar = () => {
   return (
     <>
       <motion.header
-        animate={{ y: hidden && !open ? '-110%' : '0%' }}
+        animate={{ y: hidden && !open ? '-130%' : '0%' }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="fixed inset-x-0 top-0 z-[70]"
+        className="pointer-events-none fixed inset-x-0 top-3 z-[70] flex justify-center px-3 sm:top-4"
       >
-        <div
-          className={cn(
-            'wrap flex h-[76px] items-center justify-between transition-colors duration-500',
-            scrolled && !open && 'bg-background/70 backdrop-blur-xl',
-            open && 'text-[#0c0f0a]'
-          )}
-        >
-          <TransitionLink href="/" className="group flex items-center gap-2.5" aria-label="Home">
-            <span
-              className={cn(
-                'grid h-10 place-items-center rounded-full px-3 transition-colors duration-300',
-                open ? 'bg-[#0c0f0a]' : 'bg-foreground group-hover:bg-lime'
-              )}
-            >
+        <div className="pointer-events-auto flex max-w-full items-center gap-1 rounded-full border border-white/10 bg-[#141714] p-1.5 text-[#f1f2ea] shadow-[0_18px_50px_-18px_rgba(0,0,0,0.7)]">
+          <TransitionLink href="/" className="group flex items-center gap-2.5 rounded-full py-1 pl-1 pr-2 sm:pr-3" aria-label="Home — Kartikeya">
+            <span className="grid h-9 place-items-center rounded-full bg-[#f1f2ea] px-2.5 transition-colors duration-300 group-hover:bg-lime">
               <Eyes />
             </span>
-            <span className="hidden font-display text-lg font-semibold tracking-tight sm:block">
-              Kartikeya<span className="text-primary">®</span>
+            <span className="hidden items-center gap-2 text-sm font-medium sm:flex">
+              Available for work
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-lime opacity-70" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-lime" />
+              </span>
             </span>
           </TransitionLink>
 
-          <nav aria-label="Primary" className={cn('hidden items-center gap-9 md:flex', open && 'invisible')}>
+          <nav aria-label="Primary" className="hidden items-center md:flex">
             {quick.map((r) => {
-              const active = pathname === r.path || pathname.startsWith(`${r.path}/`);
+              const active = r.path === '/' ? pathname === '/' : pathname === r.path || pathname.startsWith(`${r.path}/`);
               return (
                 <TransitionLink
                   key={r.path}
                   href={r.path}
-                  className={cn('group relative py-2 text-sm font-medium transition-colors', active ? 'text-foreground' : 'text-muted-foreground hover:text-foreground')}
+                  className={cn('relative rounded-full px-3.5 py-2 text-sm font-medium transition-colors', active ? 'text-lime' : 'text-[#f1f2ea]/80 hover:text-[#f1f2ea]')}
                 >
                   {r.label}
-                  <span
-                    className={cn(
-                      'absolute -bottom-0.5 left-0 h-px w-full origin-left bg-primary transition-transform duration-500',
-                      active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
-                    )}
-                  />
+                  {active && <motion.span layoutId="nav-dot" className="absolute inset-x-3.5 -bottom-0.5 h-[2px] rounded-full bg-lime" />}
                 </TransitionLink>
               );
             })}
           </nav>
 
-          <div className="flex items-center gap-2.5">
-            <ThemeToggle className={open ? "!border-[#0c0f0a]/30 !text-[#0c0f0a] hover:!bg-[#0c0f0a] hover:!text-white" : ""} />
-            <a
-              href={RESUME_URL}
-              download="Kartikeya_Resume.pdf"
-              className={cn("btn btn-ghost hidden !px-5 !py-3 lg:inline-flex", open && "!invisible")}
-            >
-              Resume <Download size={14} />
-            </a>
-            <button
-              onClick={() => setOpen((v) => !v)}
-              aria-expanded={open}
-              aria-label={open ? 'Close menu' : 'Open menu'}
-              className={cn("group flex h-11 items-center gap-3 rounded-full pl-5 pr-4 transition-colors hover:bg-grad hover:text-[#0c0f0a]", open ? "bg-[#0c0f0a] text-white" : "bg-foreground text-background")}
-            >
-              <span className="relative h-5 overflow-hidden text-sm font-semibold">
-                <motion.span animate={{ y: open ? '-100%' : '0%' }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="block leading-5">
-                  Menu
-                </motion.span>
-                <motion.span animate={{ y: open ? '-100%' : '0%' }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="block leading-5">
-                  Close
-                </motion.span>
-              </span>
-              <span className="relative block h-3 w-4">
-                <motion.span animate={open ? { rotate: 45, y: 5 } : { rotate: 0, y: 0 }} className="absolute left-0 top-0 h-[1.5px] w-full bg-current" />
-                <motion.span animate={open ? { rotate: -45, y: -5 } : { rotate: 0, y: 0 }} className="absolute bottom-0 left-0 h-[1.5px] w-full bg-current" style={{ top: 'auto' }} />
-              </span>
-            </button>
-          </div>
+          <ThemeToggle className="!h-9 !w-9 !border-white/15 !text-[#f1f2ea] hover:!bg-[#f1f2ea] hover:!text-[#141714]" />
+
+          <a
+            href={RESUME_URL}
+            download="Kartikeya_Resume.pdf"
+            className="hidden h-9 items-center gap-1.5 rounded-full bg-lime px-4 text-sm font-semibold text-[#0c0f0a] transition-transform duration-300 hover:scale-[1.04] sm:inline-flex"
+          >
+            Resume <ArrowUpRight size={15} />
+          </a>
+
+          <button
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            className="grid h-9 w-9 place-items-center rounded-full border border-white/15 transition-colors hover:bg-[#f1f2ea] hover:text-[#141714]"
+          >
+            <span className="relative block h-3 w-4">
+              <motion.span animate={open ? { rotate: 45, y: 5 } : { rotate: 0, y: 0 }} className="absolute left-0 top-0 h-[1.5px] w-full bg-current" />
+              <motion.span animate={open ? { rotate: -45, y: -5 } : { rotate: 0, y: 0 }} className="absolute bottom-0 left-0 h-[1.5px] w-full bg-current" style={{ top: 'auto' }} />
+            </span>
+          </button>
         </div>
       </motion.header>
 

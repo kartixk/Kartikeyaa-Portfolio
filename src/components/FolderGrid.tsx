@@ -11,9 +11,11 @@ import type { Project } from '@/lib/data';
  * Projects as desktop folders. Hover (or focus) a tile and the sheets fan out of the folder;
  * click to open the project window, which links on to the full case study.
  */
-const FolderGrid = ({ items, startIndex = 0 }: { items: Project[]; startIndex?: number }) => {
+const FolderGrid = ({ items, startIndex = 0, onOpen }: { items: Project[]; startIndex?: number; onOpen?: (p: Project) => void }) => {
   const [open, setOpen] = useState<Project | null>(null);
   const close = useCallback(() => setOpen(null), []);
+  // when a parent owns the window (e.g. the desktop), don't render a second one
+  const pick = onOpen ?? setOpen;
 
   return (
     <>
@@ -31,7 +33,7 @@ const FolderGrid = ({ items, startIndex = 0 }: { items: Project[]; startIndex?: 
             >
               <button
                 type="button"
-                onClick={() => setOpen(p)}
+                onClick={() => pick(p)}
                 aria-haspopup="dialog"
                 data-cursor="Open"
                 className="group/folder flex h-full w-full flex-col rounded-3xl border border-line/10 bg-card/40 p-4 text-left outline-none transition-[border-color,background-color,transform] duration-300 hover:-translate-y-1 hover:border-line/25 hover:bg-card/70 focus-visible:border-lime sm:p-5"
@@ -70,7 +72,7 @@ const FolderGrid = ({ items, startIndex = 0 }: { items: Project[]; startIndex?: 
           ))}
         </AnimatePresence>
       </motion.ul>
-      <ProjectWindow project={open} onClose={close} />
+      {!onOpen && <ProjectWindow project={open} onClose={close} />}
     </>
   );
 };
