@@ -1,104 +1,13 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { ArrowUpRight, Download } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import TransitionLink from '@/components/TransitionLink';
 import FloodRow from '@/components/FloodRow';
-import LocalTime from '@/components/LocalTime';
 import WorkList from '@/components/WorkList';
-import AsciiArt from '@/components/AsciiArt';
-import { Counter, Magnetic, Reveal, ScrollText, SplitChars, TextReveal, Tilt, VelocityMarquee } from '@/components/fx';
-import { experiences, PHOTO, projects, RESUME_URL, skillGroups, stats } from '@/lib/data';
-
-/* ───────────────────────── HERO: code-tag ASCII art + headline ───────────────────────── */
-
-const Hero = () => {
-  const ref = useRef<HTMLElement>(null);
-  const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
-  const y = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : -90]);
-  const fade = useTransform(scrollYProgress, [0, 0.8], [1, reduce ? 1 : 0.2]);
-
-  return (
-    <section ref={ref} className="relative flex min-h-svh flex-col justify-end overflow-hidden md:min-h-[min(100svh,58rem)] pb-8 pt-28 sm:pb-10 md:pb-14 md:pt-32">
-      <AsciiArt className="absolute right-[4vw] top-24 z-0 opacity-50 [--w:min(86vw,24rem)] sm:opacity-80 md:top-[31%] md:opacity-100 md:[--w:min(44vw,30rem)] lg:[--w:min(40vw,40rem)]" />
-      <motion.div style={{ y, opacity: fade }} className="wrap relative z-10 w-full">
-        {/* status row */}
-        <Reveal immediate delay={0.1} className="mb-6 flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:text-[11px] md:mb-12">
-          <span className="flex items-center gap-2.5">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-lime opacity-70" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-lime" />
-            </span>
-            Available for work
-          </span>
-          <span className="hidden lg:block">
-            Visakhapatnam, IN — <LocalTime />
-          </span>
-        </Reveal>
-
-        {/* headline */}
-        <TextReveal
-          as="h1"
-          immediate
-          delay={0.15}
-          className="display text-[clamp(2.6rem,14.5vw,5rem)] uppercase sm:text-[clamp(3rem,10.5vw,10.5rem)]"
-          lines={[
-            <SplitChars key="1" text="Building" />,
-            <span key="2" className="flex items-center gap-[0.12em] whitespace-nowrap normal-case">
-              <span className="serif text-gradient">reliable</span>
-              <span
-                data-cursor="Hello"
-                className="group relative inline-block h-[0.66em] w-[1.5em] shrink-0 overflow-hidden rounded-full ring-2 ring-line/30 transition-shadow duration-500 hover:ring-4 hover:ring-lime"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={PHOTO}
-                  alt="Portrait of B Venkata Sai Kartikeya"
-                  className="h-full w-full scale-110 object-cover object-[50%_58%] grayscale transition-all duration-700 group-hover:scale-100 group-hover:grayscale-0"
-                />
-              </span>
-            </span>,
-            <span key="3" className="flex items-start gap-3">
-              <SplitChars text="Software" />
-              <sup className="mt-[0.35em] hidden font-mono text-[clamp(0.6rem,0.9vw,0.8rem)] font-normal normal-case leading-snug tracking-[0.18em] text-muted-foreground lg:block">
-                (FULL-STACK
-                <br />
-                ML · IoT)
-              </sup>
-            </span>,
-          ]}
-        />
-
-        {/* intro + CTAs */}
-        <div className="mt-8 grid gap-7 md:mt-14 md:grid-cols-[1.3fr_1fr] md:items-end md:gap-8">
-          <Reveal immediate delay={0.75}>
-            <p className="max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg md:text-xl">
-              I&apos;m <span className="font-semibold text-foreground">Kartikeya</span> — a CS undergrad who designs and ships full-stack products across{' '}
-              <span className="font-medium text-foreground underline decoration-[hsl(var(--c-lime))] decoration-2 underline-offset-4">MERN</span>, <span className="font-medium text-foreground underline decoration-[hsl(var(--c-lime))] decoration-2 underline-offset-4">machine learning</span> and{' '}
-              <span className="font-medium text-foreground underline decoration-[hsl(var(--c-lime))] decoration-2 underline-offset-4">IoT</span>.
-            </p>
-          </Reveal>
-          <Reveal immediate delay={0.85} className="flex flex-wrap items-center gap-3 md:justify-end">
-            <Magnetic strength={0.25}>
-              <TransitionLink href="/projects" className="btn btn-grad">
-                View projects <ArrowUpRight size={16} />
-              </TransitionLink>
-            </Magnetic>
-            <Magnetic strength={0.25}>
-              <a href={RESUME_URL} download="Kartikeya_Resume.pdf" className="btn btn-ghost">
-                Resume <Download size={15} />
-              </a>
-            </Magnetic>
-          </Reveal>
-        </div>
-      </motion.div>
-
-    </section>
-  );
-};
+import Hero from '@/components/Hero';
+import { Counter, Magnetic, Reveal, ScrollText, TextReveal, Tilt, VelocityMarquee } from '@/components/fx';
+import { experiences, projects, skillGroups, stats } from '@/lib/data';
 
 /* ───────────────────────── TILTED BANDS ───────────────────────── */
 
