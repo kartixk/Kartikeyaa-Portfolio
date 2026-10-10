@@ -67,6 +67,10 @@ export default {
           "0%, 100%": { transform: "rotate(var(--r, 0deg)) translateY(0)" },
           "50%": { transform: "rotate(calc(var(--r, 0deg) + 3deg)) translateY(-8px)" },
         },
+        "eye-blink": {
+          "0%, 93%, 100%": { transform: "scaleY(1)" },
+          "96%": { transform: "scaleY(0.08)" },
+        },
       },
       animation: {
         marquee: "marquee 32s linear infinite",
@@ -77,6 +81,7 @@ export default {
         blink: "blink 1.6s ease-in-out infinite",
         drift: "drift 22s ease-in-out infinite",
         wobble: "wobble 5s ease-in-out infinite",
+        "eye-blink": "eye-blink 6.5s ease-in-out infinite",
       },
     },
   },

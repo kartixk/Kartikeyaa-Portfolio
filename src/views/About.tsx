@@ -7,9 +7,9 @@ import PageTransition from '@/components/PageTransition';
 import PageHeader from '@/components/PageHeader';
 import TransitionLink from '@/components/TransitionLink';
 import FloodRow from '@/components/FloodRow';
-import WorkList from '@/components/WorkList';
+import FolderGrid from '@/components/FolderGrid';
 import { Magnetic, Marquee, Reveal, ScrollText, TextReveal } from '@/components/fx';
-import { interests, PHONE, PHOTO, softSkills, specializations, timeline } from '@/lib/data';
+import { interests, PHONE, PHOTO, projects, softSkills, specializations, timeline } from '@/lib/data';
 import { SITE } from '@/lib/site';
 
 const facts = [
@@ -207,7 +207,7 @@ const About = () => (
           </Magnetic>
         </Reveal>
       </div>
-      <WorkList />
+      <FolderGrid items={projects} />
     </section>
 
     {/* soft skills */}

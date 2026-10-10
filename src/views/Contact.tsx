@@ -35,7 +35,12 @@ const Contact = () => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   const openedAt = useRef(0); // bot check: humans take more than a moment to fill the form
-  useEffect(() => { openedAt.current = Date.now(); }, []);
+  useEffect(() => {
+    openedAt.current = Date.now();
+    // the hero's "Message me…" bar hands its text over via ?message=
+    const carried = new URLSearchParams(window.location.search).get('message');
+    if (carried) setMessage(carried.slice(0, 5000));
+  }, []);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sentTo, setSentTo] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);

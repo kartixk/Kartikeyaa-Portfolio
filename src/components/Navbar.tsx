@@ -10,6 +10,7 @@ import { ROUTES, SITE } from '@/lib/site';
 import { RESUME_URL } from '@/lib/data';
 import TransitionLink from '@/components/TransitionLink';
 import ThemeToggle from '@/components/ThemeToggle';
+import Eyes from '@/components/desk/Eyes';
 import LocalTime from '@/components/LocalTime';
 import { Magnetic } from '@/components/fx';
 
@@ -62,8 +63,13 @@ const Navbar = () => {
           )}
         >
           <TransitionLink href="/" className="group flex items-center gap-2.5" aria-label="Home">
-            <span className={cn("grid h-10 w-10 place-items-center rounded-full font-display text-lg font-bold tracking-tighter transition-colors duration-300 group-hover:bg-primary group-hover:text-white-foreground", open ? "bg-[#0c0f0a] text-white" : "bg-foreground text-background")}>
-              K
+            <span
+              className={cn(
+                'grid h-10 place-items-center rounded-full px-3 transition-colors duration-300',
+                open ? 'bg-[#0c0f0a]' : 'bg-foreground group-hover:bg-lime'
+              )}
+            >
+              <Eyes />
             </span>
             <span className="hidden font-display text-lg font-semibold tracking-tight sm:block">
               Kartikeya<span className="text-primary">®</span>
