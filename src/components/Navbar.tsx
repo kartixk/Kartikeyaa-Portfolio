@@ -15,7 +15,9 @@ import LocalTime from '@/components/LocalTime';
 import { Magnetic } from '@/components/fx';
 
 const quick = ROUTES.filter((r) => ['/', '/about', '/projects', '/contact'].includes(r.path));
-const menuRoutes = ROUTES.filter((r) => r.path !== '/');
+// full-screen menu: just the five pages that matter, in this order
+const MENU_ORDER = ['/', '/projects', '/experience', '/about', '/contact'];
+const menuRoutes = MENU_ORDER.map((path) => ROUTES.find((r) => r.path === path)!);
 const ease = [0.76, 0, 0.24, 1] as const;
 
 const Navbar = () => {
@@ -84,14 +86,6 @@ const Navbar = () => {
           </nav>
 
           <ThemeToggle className="!h-9 !w-9 !border-white/15 !text-[#f1f2ea] hover:!bg-[#f1f2ea] hover:!text-[#141714]" />
-
-          <a
-            href={RESUME_URL}
-            download="Kartikeya_Resume.pdf"
-            className="hidden h-9 items-center gap-1.5 rounded-full bg-lime px-4 text-sm font-semibold text-[#0c0f0a] transition-transform duration-300 hover:scale-[1.04] sm:inline-flex"
-          >
-            Resume <ArrowUpRight size={15} />
-          </a>
 
           <button
             onClick={() => setOpen((v) => !v)}

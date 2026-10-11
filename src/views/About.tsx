@@ -216,7 +216,7 @@ const About = () => (
         {softSkills.map((s) => (
           <span key={s} className="mx-6 flex items-center gap-12">
             <span className="display text-[clamp(2.2rem,6vw,5rem)]">{s}</span>
-            <span className="text-3xl text-gradient">✺</span>
+            <span aria-hidden className="h-2.5 w-2.5 shrink-0 rounded-full bg-current opacity-50" />
           </span>
         ))}
       </Marquee>

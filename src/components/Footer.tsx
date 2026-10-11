@@ -29,9 +29,6 @@ const Footer = () => {
       {!onContact && (
         <section className="wrap section">
           <div className="relative overflow-hidden rounded-[1.75rem] bg-grad-pan p-6 text-[#0c0f0a] sm:rounded-[2.5rem] sm:p-10 md:p-16">
-            <span aria-hidden className="pointer-events-none absolute -right-8 -top-10 animate-spin-slow text-[9rem] leading-none opacity-20 sm:text-[16rem]">
-              ✺
-            </span>
             <Reveal>
               <p className="eyebrow mb-6 !text-[#0c0f0a]/70 md:mb-8">What&apos;s next?</p>
             </Reveal>
@@ -72,7 +69,7 @@ const Footer = () => {
         <Marquee duration={50} pauseOnHover={false}>
           {['Full-Stack', 'Machine Learning', 'IoT', 'Scalable APIs', 'Clean Interfaces'].map((w) => (
             <span key={w} className="mx-6 flex items-center gap-12 font-display text-xl font-semibold tracking-tight text-muted-foreground md:text-2xl">
-              {w} <span className="text-gradient">✺</span>
+              {w} <span aria-hidden className="h-1.5 w-1.5 shrink-0 rounded-full bg-current opacity-40" />
             </span>
           ))}
         </Marquee>

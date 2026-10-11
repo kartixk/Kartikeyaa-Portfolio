@@ -1,111 +1,89 @@
 'use client';
 
-import { ArrowDown, ArrowUpRight, Download } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useLenis } from 'lenis/react';
-import TransitionLink from '@/components/TransitionLink';
-import LocalTime from '@/components/LocalTime';
 import Avatar from '@/components/hero/Avatar';
 import { CloudsBack, CloudsFront } from '@/components/hero/Clouds';
 import { useReady } from '@/components/ready';
-import { Magnetic, Reveal, TextReveal } from '@/components/fx';
-import { RESUME_URL } from '@/lib/data';
+import { Reveal, TextReveal } from '@/components/fx';
+
+/** Italic serif word with a hand-drawn underline stroke (matches the "Kartikeya" italic); optional hover wiggle. */
+const Marked = ({ children, wiggle }: { children: string; wiggle?: boolean }) => (
+  <motion.em
+    className="serif relative inline-block text-foreground lg:text-[#0c0f0a]"
+    whileHover={wiggle ? { rotate: [0, -4, 3, -2, 0], transition: { duration: 0.5 } } : undefined}
+  >
+    {children}
+    <svg aria-hidden viewBox="0 0 100 8" preserveAspectRatio="none" className="absolute -bottom-[0.14em] left-0 h-[0.26em] w-full overflow-visible">
+      <path d="M1 5 C 18 1, 34 7, 52 3.5 S 86 2, 99 5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+    </svg>
+  </motion.em>
+);
+
 
 /**
- * Hero, in the spirit of an editorial "character" opener: a bold colour field, an oversized tone-on-tone name,
- * an illustrated character in front of it, and layered clouds + bubbles that melt into the page.
- * Stacking order: name → back clouds → character → front clouds → text.
+ * Hero. Reading order is the point: who I am → what I do → proof → what to click.
+ *  - lg+: copy on the left of the colour field, the illustrated portrait anchored bottom-right between the clouds
+ *  - below lg: portrait on top (right-leaning) on the colour field; copy underneath on the page background,
+ *    which the front clouds already blend into
+ * Copy colours follow the surface: ink on lime (lg), foreground on the page background (mobile).
  */
 const Hero = () => {
-  const lenis = useLenis();
   const ready = useReady();
-  const explore = () => {
-    const y = window.innerHeight * 0.98;
-    lenis ? lenis.scrollTo(y, { duration: 1.3 }) : window.scrollTo({ top: y, behavior: 'smooth' });
-  };
 
   return (
-    <section className="relative isolate min-h-svh overflow-hidden bg-[hsl(76_96%_58%)] text-[#0c0f0a]">
-      {/* tone-on-tone name */}
-      <div className="absolute inset-x-0 top-[24svh] z-0 select-none px-[3vw] sm:top-[22svh]">
-        <TextReveal
-          as="h1"
-          immediate
-          delay={0.1}
-          className="display whitespace-nowrap text-center text-[15.6vw] uppercase leading-[0.8] text-[#0c0f0a]/[0.2]"
-          lines={['Kartikeya']}
-        />
-        <Reveal immediate delay={0.7} className="mt-3 flex justify-end pr-[2vw] sm:mt-4">
-          <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#0c0f0a]/65 sm:text-xs md:text-sm">A Full-Stack Developer</p>
-        </Reveal>
-      </div>
+    <section className="relative isolate flex flex-col overflow-hidden bg-background lg:block lg:h-svh lg:min-h-[40rem]">
+      {/* ── visual: colour field + clouds + portrait ── */}
+      <div className={`relative h-[max(50svh,25rem)] shrink-0 overflow-hidden bg-[hsl(76_96%_58%)] lg:absolute lg:inset-0 lg:h-auto`}>
+        <CloudsBack />
 
-      <CloudsBack />
-
-      {/* character */}
-      <div className="pointer-events-none absolute inset-x-0 -bottom-[2svh] z-20 flex justify-center">
-        <motion.div
-          initial={{ y: 160, opacity: 0, scale: 0.94 }}
-          animate={ready ? { y: 0, opacity: 1, scale: 1 } : undefined}
-          transition={{ type: 'spring', stiffness: 80, damping: 16, delay: 0.35 }}
-          className="w-[min(66svh,118vw)] shrink-0 sm:w-[min(60svh,92vw)] lg:w-[min(72svh,64vw)]"
-        >
-          <div className="animate-float" style={{ animationDuration: '7s' }}>
-            <Avatar />
-          </div>
-        </motion.div>
-      </div>
-
-      <CloudsFront />
-      {/* solid base so the actions below stay legible on small screens */}
-      <div aria-hidden className="absolute inset-x-0 bottom-0 z-30 h-[17svh] bg-background lg:hidden" />
-
-      {/* desktop: intro + actions float on the colour field, either side of the character */}
-      <div className="absolute inset-x-0 top-[max(49svh,calc(22svh+13vw+3rem))] z-30 hidden lg:block">
-        <div className="wrap flex items-start justify-between">
-          <Reveal immediate delay={0.9} className="max-w-[22rem]">
-            <p className="font-display text-[1.35rem] font-semibold leading-snug tracking-tight">
-              I design &amp; ship full-stack products across MERN, ML and IoT.
-            </p>
-            <div className="mt-5 flex flex-wrap gap-3">
-              <Magnetic strength={0.2}>
-                <TransitionLink href="/projects" className="btn !bg-[#0c0f0a] !px-5 !py-3 !text-[#f1f2ea] [--btn-fill:#fff] hover:!text-[#0c0f0a]">
-                  View projects <ArrowUpRight size={15} />
-                </TransitionLink>
-              </Magnetic>
-              <a href={RESUME_URL} download="Kartikeya_Resume.pdf" className="btn border border-[#0c0f0a]/50 !px-5 !py-3 text-[#0c0f0a] [--btn-fill:#0c0f0a] hover:!border-transparent hover:!text-[#f1f2ea]">
-                Resume <Download size={14} />
-              </a>
+        <div className="pointer-events-none absolute -bottom-[1svh] right-[-8vw] z-20 sm:right-[6vw] lg:-bottom-[2svh] lg:right-[3vw]">
+          <motion.div
+            initial={{ y: 48, opacity: 0 }}
+            animate={ready ? { y: 0, opacity: 1 } : undefined}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+            className="w-[min(78vw,22rem)] shrink-0 lg:w-[min(66svh,44vw)]"
+          >
+            {/* desktop, light theme: shoulders dissolve into the off-white clouds instead of ending in a flat cut (dark theme needs no fade) */}
+            <div className="lg:[-webkit-mask-image:linear-gradient(to_bottom,#000_82%,transparent_97%)] lg:[mask-image:linear-gradient(to_bottom,#000_82%,transparent_97%)] dark:lg:[-webkit-mask-image:none] dark:lg:[mask-image:none]">
+              <Avatar />
             </div>
-          </Reveal>
+          </motion.div>
+        </div>
 
-          <Reveal immediate delay={1} className="flex items-center gap-4">
-            <span className="text-right font-mono text-[10px] uppercase tracking-[0.2em] text-[#0c0f0a]/70">
-              Visakhapatnam, IN
-              <br />
-              <LocalTime />
-            </span>
-            <button
-              onClick={explore}
-              aria-label="Scroll to the work"
-              data-cursor="Scroll"
-              className="grid h-12 w-12 place-items-center rounded-full border border-[#0c0f0a]/50 transition-colors duration-300 hover:bg-[#0c0f0a] hover:text-[#f1f2ea]"
-            >
-              <ArrowDown size={18} className="animate-bounce [animation-duration:2.2s]" />
-            </button>
-          </Reveal>
+        <CloudsFront />
+        {/* below lg the portrait is cut by the panel edge — fade it into the page background the copy sits on */}
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-24 bg-gradient-to-t from-background via-background/70 to-transparent lg:hidden" />
+      </div>
+
+      {/* ── copy ── */}
+      <div className="relative z-30 text-foreground lg:absolute lg:inset-x-0 lg:top-0 lg:pt-[max(8rem,25svh)] lg:text-[#0c0f0a]">
+        <div className="wrap pb-14 pt-2 lg:pb-0 lg:pt-0">
+          <div className="max-w-[36rem] lg:max-w-[44rem] 2xl:max-w-[60rem]">
+            <TextReveal
+              as="h1"
+              immediate
+              delay={0.15}
+              className="display text-[clamp(2.4rem,10.5vw,3.75rem)] lg:text-[clamp(2.6rem,min(4.4vw,8svh),5.25rem)]"
+              lines={[
+                <span key="a">
+                  Hi, I&apos;m <span className="serif">Kartikeya</span>
+                </span>,
+                <span key="b">a Full-Stack Developer.</span>,
+              ]}
+            />
+
+            {/* supporting copy: heading → line 1 → line 2, each one beat after the last */}
+            <p className="mt-5 max-w-xl font-[family-name:var(--font-serif)] text-[1.5rem] leading-[1.25] text-foreground/90 sm:mt-6 xl:text-[1.75rem] lg:text-[#0f0f0f]/90">
+              <Reveal as="span" immediate delay={0.5} duration={0.7} distance={16} className="block text-balance">
+                From the first query to the final deploy,
+              </Reveal>
+              <Reveal as="span" immediate delay={0.68} duration={0.7} distance={16} className="block text-balance">
+                I build what lives on your <Marked>screen</Marked> and in your <Marked wiggle>pocket</Marked>.
+              </Reveal>
+            </p>
+          </div>
         </div>
       </div>
-
-      {/* phones & tablets: actions sit on the solid base */}
-      <Reveal immediate delay={0.9} className="absolute inset-x-0 bottom-0 z-40 flex h-[17svh] flex-wrap items-center justify-center gap-3 px-4 text-foreground lg:hidden">
-        <TransitionLink href="/projects" className="btn btn-grad !px-5 !py-3">
-          View projects <ArrowUpRight size={15} />
-        </TransitionLink>
-        <a href={RESUME_URL} download="Kartikeya_Resume.pdf" className="btn btn-ghost !px-5 !py-3">
-          Resume <Download size={14} />
-        </a>
-      </Reveal>
     </section>
   );
 };
