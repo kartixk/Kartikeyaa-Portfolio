@@ -1,132 +1,75 @@
 'use client';
 
-import { Briefcase, MapPin, ArrowUpRight, Award, BookOpen } from 'lucide-react';
+import { ArrowUpRight, MapPin } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import PageHeader from '@/components/PageHeader';
-import { GlowingEffect } from '@/components/ui/glowing-effect';
-import { Reveal, TiltCard } from '@/components/fx';
+import FloodRow from '@/components/FloodRow';
+import { Reveal } from '@/components/fx';
+import { certifications, experiences } from '@/lib/data';
 
-const experiences = [
-  {
-    company: 'Spotmies LLP',
-    role: 'Software Developer Intern',
-    period: 'Dec 2025 – Present',
-    location: 'Remote',
-    accent: 'hsl(186 100% 52%)',
-    points: [
-      'Contributing to core development tasks across the product.',
-      'Collaborating with the team to build and maintain scalable web applications.',
-    ],
-  },
-  {
-    company: 'NTPC Limited',
-    role: 'Software Engineer Intern',
-    period: 'May 2025',
-    location: 'Visakhapatnam, India',
-    accent: 'hsl(220 90% 62%)',
-    points: [
-      'Improved frontend usability of internal web tools, reducing user interaction time by 35%.',
-      'Resolved UI defects through cross-team collaboration, decreasing reported issues by 20%.',
-    ],
-  },
-  {
-    company: 'Zenith-Zap',
-    role: 'Software Engineer Intern',
-    period: 'May 2025 – Jun 2025',
-    location: 'Remote',
-    accent: 'hsl(315 90% 62%)',
-    points: [
-      'Built responsive React interfaces, improving page load performance by 25%.',
-      'Optimized API integration and state handling, reducing request latency by 15%.',
-    ],
-  },
-];
+const Experience = () => (
+  <PageTransition>
+    <PageHeader
+      index="04"
+      eyebrow="Professional journey"
+      lines={[<span key="a">Where I&apos;ve</span>, <span key="b" className="serif text-gradient">worked.</span>]}
+      subtitle="Full-time at Spotmies today, after internships at NTPC and Zenith-Zap where I cut interaction time by 35% and page load by 25%."
+      meta={`${String(experiences.length).padStart(2, '0')} roles`}
+    />
 
-const certifications = [
-  { title: 'AI-ML Virtual Internship', org: 'EduSkills', period: 'Apr 2025 – Jun 2025', icon: Award },
-  { title: 'MERN Full Stack Training', org: 'XceedIQ Innovate360', period: 'Jan 2024 – Jul 2024', icon: BookOpen },
-];
-
-const Experience = () => {
-  return (
-    <PageTransition>
-      <div className="gradient-bg">
-        <PageHeader
-          eyebrow="Professional Journey"
-          title={<><span className="text-foreground">Where I've</span> <span className="aurora-text">worked.</span></>}
-          subtitle="Internships where I shipped real features, collaborated across teams, and drove measurable impact."
-        />
-
-        <section className="section-container !pt-4">
-          {/* Timeline */}
-          <div className="relative mx-auto max-w-3xl">
-            <div className="absolute left-[19px] top-2 bottom-2 w-px bg-gradient-to-b from-brand-2/60 via-brand-1/40 to-transparent" />
-            {experiences.map((exp, i) => (
-              <Reveal key={exp.company} delay={i * 0.08} direction="left" className="relative mb-7 pl-14">
-                {/* node */}
-                <span className="absolute left-0 top-1.5 grid h-10 w-10 place-items-center rounded-full border bg-background"
-                  style={{ borderColor: `${exp.accent.replace(')', ' / 0.5)')}`, boxShadow: `0 0 16px ${exp.accent.replace(')', ' / 0.4)')}` }}>
-                  <Briefcase size={16} style={{ color: exp.accent }} />
-                </span>
-                <div className="group relative rounded-3xl border-[0.75px] border-border p-2">
-                  <GlowingEffect spread={44} glow disabled={false} proximity={70} inactiveZone={0.01} borderWidth={3} />
-                  <TiltCard intensity={3} className="overflow-hidden rounded-2xl glass-panel p-7">
-                    <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                      <h3 className="font-display text-xl font-bold tracking-tight transition-colors group-hover:text-brand-2">{exp.company}</h3>
-                      <span className="font-mono text-xs" style={{ color: exp.accent }}>{exp.period}</span>
-                    </div>
-                    <div className="mb-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                      <span className="font-medium text-foreground/80">{exp.role}</span>
-                      <span className="inline-flex items-center gap-1"><MapPin size={12} className="text-brand-2/70" />{exp.location}</span>
-                    </div>
-                    <ul className="space-y-2">
-                      {exp.points.map((p, j) => (
-                        <li key={j} className="flex gap-2.5 text-sm leading-relaxed text-muted-foreground">
-                          <ArrowUpRight size={14} className="mt-0.5 shrink-0" style={{ color: exp.accent }} />
-                          {p}
-                        </li>
-                      ))}
-                    </ul>
-                  </TiltCard>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-
-          {/* Certifications */}
-          <Reveal className="mt-16 mb-8 flex items-center gap-4">
-            <span className="h-px flex-1 bg-border" />
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Certifications & Training</h2>
-            <span className="h-px flex-1 bg-border" />
+    <section className="wrap pb-24 md:pb-40">
+      {experiences.map((e, i) => (
+        <article key={`${e.company}-${e.role}`} className="grid gap-8 border-t border-line/15 py-12 md:grid-cols-[1fr_2fr] md:gap-16 md:py-20">
+          <Reveal className="md:sticky md:top-28 md:self-start">
+            <span className="font-mono text-xs tracking-widest text-primary">0{i + 1}</span>
+            <div className="mt-4 space-y-1.5 font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
+              {(e.periods ?? [e.period]).map((d) => (
+                <p key={d}>{d}</p>
+              ))}
+            </div>
+            <p className="mt-2 inline-flex items-center gap-1.5 text-sm text-muted-foreground">
+              <MapPin size={13} /> {e.location}
+            </p>
           </Reveal>
-          <div className="grid gap-5 sm:grid-cols-2">
-            {certifications.map((cert, i) => {
-              const Icon = cert.icon;
-              return (
-                <Reveal key={cert.title} delay={i * 0.08}>
-                  <div className="group relative h-full rounded-3xl border-[0.75px] border-border p-2">
-                    <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
-                    <div className="relative flex h-full items-start gap-4 rounded-2xl glass-panel p-6">
-                      <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-brand-1/20 bg-brand-1/10 transition-transform group-hover:scale-110">
-                        <Icon className="text-brand-1" size={18} />
-                      </div>
-                      <div>
-                        <h4 className="font-display font-bold leading-snug transition-colors group-hover:text-brand-2">{cert.title}</h4>
-                        <p className="mt-1 text-sm text-muted-foreground">{cert.org}</p>
-                        <span className="mt-2 inline-flex rounded-full border border-brand-2/20 bg-brand-2/10 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest text-brand-2">
-                          {cert.period}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+          <div>
+            <Reveal>
+              <h2 className="display text-[clamp(2.4rem,6.4vw,6rem)]">{e.company}</h2>
+              <p className="serif mt-3 text-2xl text-primary md:text-3xl">{e.role}</p>
+            </Reveal>
+            <ul className="mt-10 border-b border-line/15">
+              {e.points.map((p, j) => (
+                <Reveal key={j} as="li" delay={0.05} className="grid grid-cols-[2.5rem_1fr] gap-3 border-t border-line/15 py-6">
+                  <ArrowUpRight size={20} className="mt-1 text-primary" />
+                  <p className="text-lg leading-relaxed md:text-xl">{p}</p>
                 </Reveal>
-              );
-            })}
+              ))}
+            </ul>
           </div>
-        </section>
+        </article>
+      ))}
+    </section>
+
+    <section className="wrap pb-24 md:pb-40">
+      <Reveal>
+        <p className="eyebrow mb-10">Certifications &amp; training</p>
+      </Reveal>
+      <div className="border-b border-line/15">
+        {certifications.map((c, i) => (
+          <Reveal key={c.title} delay={i * 0.06}>
+            <FloodRow>
+              <div className="grid items-baseline gap-2 py-8 md:grid-cols-[1fr_auto] md:gap-8 md:py-10 md:pl-4 md:pr-6">
+                <div>
+                  <h3 className="display text-[clamp(1.8rem,4vw,3.4rem)]">{c.title}</h3>
+                  <p className="mt-2 opacity-70">{c.org}</p>
+                </div>
+                <span className="font-mono text-xs uppercase tracking-[0.18em] opacity-70">{c.period}</span>
+              </div>
+            </FloodRow>
+          </Reveal>
+        ))}
       </div>
-    </PageTransition>
-  );
-};
+    </section>
+  </PageTransition>
+);
 
 export default Experience;

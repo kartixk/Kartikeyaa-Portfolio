@@ -78,9 +78,6 @@ export const autoReplyHtml = ({ name }: Pick<ContactPayload, 'name'>) => `<!DOCT
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Message Received</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
-  </style>
 </head>
 <body style="margin:0;padding:0;background:#f8fafc;font-family:'DM Sans',Helvetica,Arial,sans-serif;">
 
@@ -194,3 +191,17 @@ export const autoReplyHtml = ({ name }: Pick<ContactPayload, 'name'>) => `<!DOCT
 
 </body>
 </html>`;
+
+export const autoReplyText = ({ name }: Pick<ContactPayload, 'name'>) =>
+  [
+    `Hi ${name},`,
+    '',
+    "Thank you for reaching out. Your message has been delivered to my inbox and I'll get back to you within 24–48 hours.",
+    '',
+    'In the meantime you can see my work at https://kartikeyaa.me or https://github.com/kartixk.',
+    '',
+    'B Venkata Sai Kartikeya',
+    'Full-Stack Developer · Visakhapatnam, India',
+    '',
+    'This is an automated confirmation — no reply necessary.',
+  ].join('\n');

@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, JetBrains_Mono, Orbitron, Space_Grotesk } from 'next/font/google';
+import { Bricolage_Grotesque, Instrument_Serif, Inter, JetBrains_Mono } from 'next/font/google';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Providers from '@/components/Providers';
 import AppShell from '@/components/AppShell';
 import { SITE } from '@/lib/site';
 import './globals.css';
 
-const orbitron = Orbitron({ subsets: ['latin'], weight: ['500', '600', '700', '800', '900'], variable: '--font-hero', display: 'swap' });
-const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-display', display: 'swap' });
+const bricolage = Bricolage_Grotesque({ subsets: ['latin'], variable: '--font-display', display: 'swap' });
+const instrumentSerif = Instrument_Serif({ subsets: ['latin'], weight: '400', style: ['normal', 'italic'], variable: '--font-serif', display: 'swap' });
 const inter = Inter({ subsets: ['latin'], variable: '--font-body', display: 'swap' });
 const jetbrains = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono', display: 'swap' });
 
@@ -28,14 +28,20 @@ export const metadata: Metadata = {
     images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: SITE.title }],
   },
   twitter: { card: 'summary_large_image', title: SITE.title, description: SITE.description, images: ['/opengraph-image'] },
-  icons: { icon: '/favicon.svg', apple: '/favicon.svg' },
+  icons: {
+    icon: [
+      { url: '/favicon-64.png?v=5', sizes: '64x64', type: 'image/png' },
+      { url: '/icon-512.png?v=5', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png?v=5', sizes: '180x180', type: 'image/png' }],
+  },
   robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: '#05070d' },
-    { media: '(prefers-color-scheme: light)', color: '#f4f8fb' },
+    { media: '(prefers-color-scheme: dark)', color: '#0b0d0a' },
+    { media: '(prefers-color-scheme: light)', color: '#f6f1e6' },
   ],
   width: 'device-width',
   initialScale: 1,
@@ -54,7 +60,7 @@ const personJsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${orbitron.variable} ${spaceGrotesk.variable} ${inter.variable} ${jetbrains.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${bricolage.variable} ${instrumentSerif.variable} ${inter.variable} ${jetbrains.variable}`} suppressHydrationWarning>
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
         <Providers>

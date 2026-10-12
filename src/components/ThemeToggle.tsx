@@ -14,18 +14,18 @@ const ThemeToggle = ({ className = '' }: { className?: string }) => {
 
   return (
     <button
-      aria-label="Toggle theme"
+      aria-label={!mounted ? 'Toggle theme' : isDark ? 'Switch to light theme' : 'Switch to dark theme'}
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className={`relative grid h-9 w-9 place-items-center overflow-hidden rounded-lg border border-line/12 bg-line/[0.04] text-foreground transition-colors hover:border-brand-2/50 hover:text-brand-2 ${className}`}
+      className={`relative grid h-11 w-11 place-items-center overflow-hidden rounded-full border border-line/25 text-foreground transition-colors hover:bg-foreground hover:text-background ${className}`}
     >
       {mounted && (
         <AnimatePresence mode="wait" initial={false}>
           <motion.span
             key={isDark ? 'moon' : 'sun'}
-            initial={{ y: 14, opacity: 0, rotate: -40 }}
+            initial={{ y: 16, opacity: 0, rotate: -60 }}
             animate={{ y: 0, opacity: 1, rotate: 0 }}
-            exit={{ y: -14, opacity: 0, rotate: 40 }}
-            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            exit={{ y: -16, opacity: 0, rotate: 60 }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             className="absolute"
           >
             {isDark ? <Moon size={16} /> : <Sun size={16} />}

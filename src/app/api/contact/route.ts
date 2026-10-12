@@ -3,6 +3,7 @@ import { Resend } from 'resend';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import {
   autoReplyHtml,
+  autoReplyText,
   formatIstTimestamp,
   ownerEmailHtml,
   ownerEmailText,
@@ -79,8 +80,8 @@ export async function POST(request: NextRequest) {
     return fail('Invalid request body.', 400);
   }
 
-  // honeypot: silently accept bots without doing any work
-  if (clean(body.website, 200)) return NextResponse.json({ success: true, data: { id: null } }, { status: 201 });
+  // bot check: a form submitted within 1.5s of opening isn't a human (browser autofill can't trip this)
+  if (typeof body.elapsedMs === 'number' && body.elapsedMs < 1500) return NextResponse.json({ success: true, data: { id: null } }, { status: 201 });
 
   const payload: ContactPayload = {
     name: clean(body.name, 120),
@@ -148,7 +149,7 @@ export async function POST(request: NextRequest) {
         'Owner notification'
       ),
       sendWithRetry(
-        () => send({ from, to: payload.email, subject: 'Thanks for reaching out', html: autoReplyHtml(payload) }),
+        () => send({ from, to: payload.email, subject: 'Thanks for reaching out', text: autoReplyText(payload), html: autoReplyHtml(payload) }),
         'Auto-reply'
       ),
     ]);

@@ -34,3 +34,6 @@ dist-ssr
 out
 next-env.d.ts
 *.tsbuildinfo
+
+# large source art (the optimised WebPs live in public/avatar)
+/design-source/

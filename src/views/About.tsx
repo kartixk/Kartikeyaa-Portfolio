@@ -1,243 +1,199 @@
 'use client';
 
-import {
-  User, MapPin, Mail, Phone, Github, Linkedin,
-  Globe, Cpu, Server, GraduationCap, Briefcase, Code2, Rocket,
-} from 'lucide-react';
+import { useSyncExternalStore, type ReactNode } from 'react';
+import { motion } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import PageHeader from '@/components/PageHeader';
-import { GlowingEffect } from '@/components/ui/glowing-effect';
-import { Reveal, TiltCard, Magnetic } from '@/components/fx';
+import TransitionLink from '@/components/TransitionLink';
+import PathChart from '@/components/PathChart';
+import ProjectStack from '@/components/ProjectStack';
+import { Magnetic, Marquee, Reveal, TextReveal } from '@/components/fx';
+import Avatar from '@/components/hero/Avatar';
+import { FullStackIcon, GaugeIcon, ShipIcon } from '@/components/PillIcons';
+import { experiences, projects, softSkills } from '@/lib/data';
 
-const timeline = [
-  { year: 'Dec 2025 — Present', title: 'Software Developer Intern · Spotmies LLP', description: 'Building and maintaining scalable web applications with the core dev team.', icon: Briefcase },
-  { year: '2025', title: 'Software Engineer Intern', description: 'Interned at NTPC Limited & Zenith-Zap — shipped features used by real users.', icon: Briefcase },
-  { year: '2025', title: 'AI-ML Virtual Internship', description: 'Explored ML foundations & NLP through the EduSkills virtual internship.', icon: Code2 },
-  { year: '2024', title: 'MERN Full Stack Training', description: 'Intensive training at XceedIQ Innovate360 — built production-ready apps end to end.', icon: Code2 },
-  { year: '2022', title: 'Started B.Tech · GITAM University', description: 'Computer Science Engineering specializing in IoT.', icon: GraduationCap },
-  { year: '2020', title: 'Senior Secondary', description: 'Sri Chaitanya Junior College — PCM. Developed a strong interest in computing.', icon: GraduationCap },
-];
+const EASE = [0.16, 1, 0.3, 1] as const;
 
-const specializations = [
-  { label: 'MERN Stack Development', icon: Globe },
-  { label: 'API & Backend Engineering', icon: Server },
-  { label: 'IoT & Real-time Systems', icon: Cpu },
-  { label: 'Clean, Usable Interfaces', icon: Code2 },
-];
+/* ───────────────────────── 1 · who: portrait stage + proof numbers ───────────────────────── */
 
-const interests = [
-  { title: 'Web Development', description: 'Building modern, responsive web applications with React and Node.js.', icon: Globe },
-  { title: 'IoT Systems', description: 'Developing real-time sensor monitoring and data acquisition systems.', icon: Cpu },
-  { title: 'Scalable Systems', description: 'Designing multi-tenant architectures and optimized backend services.', icon: Rocket },
-  { title: 'Learning AI / ML', description: 'Exploring ML concepts through internships and personal projects.', icon: Code2 },
-];
+/** Floating label that sits around the portrait; its icon is a tiny looping visualisation of what the label says. */
+const Chip = ({ label, icon, className, delay }: { label: string; icon: ReactNode; className: string; delay: number }) => (
+  <motion.span
+    initial={{ opacity: 0, scale: 0.8, y: 12 }}
+    whileInView={{ opacity: 1, scale: 1, y: 0 }}
+    viewport={{ once: true, margin: '-10% 0px' }}
+    transition={{ duration: 0.7, delay, ease: EASE }}
+    className={`absolute z-20 hidden items-center gap-2.5 whitespace-nowrap rounded-full border border-line/20 bg-background/85 py-2 pl-3 pr-4 text-sm font-medium shadow-[0_10px_30px_-14px_rgba(0,0,0,0.35)] backdrop-blur sm:inline-flex ${className}`}
+  >
+    {icon}
+    {label}
+  </motion.span>
+);
 
-const softSkills = ['Problem Solving', 'Team Collaboration', 'Time Management', 'Adaptability'];
+/** Rotating ring of text — the one playful detail. Stops for reduced motion. */
+const Badge = () => (
+  <div aria-hidden className="absolute -right-2 top-[22%] z-20 hidden h-28 w-28 sm:block md:-right-8">
+    <svg viewBox="0 0 120 120" className="h-full w-full animate-[spin_22s_linear_infinite] motion-reduce:animate-none">
+      <defs>
+        <path id="badge-ring" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" />
+      </defs>
+      <text className="fill-current font-mono text-[10.5px] uppercase tracking-[0.28em]">
+        <textPath href="#badge-ring">Full-Stack Developer • Visakhapatnam •</textPath>
+      </text>
+    </svg>
+    <span className="absolute inset-0 grid place-items-center text-2xl">✦</span>
+  </div>
+);
 
-const About = () => {
+/** Months since joining Spotmies (Dec 2025). Server snapshot is null so the markup never depends on the server's clock. */
+const JOINED = { year: 2025, month: 11 };
+const subscribe = () => () => {};
+const monthsSinceJoining = () => {
+  const n = new Date();
+  return Math.max(0, (n.getFullYear() - JOINED.year) * 12 + n.getMonth() - JOINED.month);
+};
+
+/** What a hiring manager actually scans for: where I am now, how long I've shipped professionally, where I've been. */
+const NowStrip = () => {
+  const months = useSyncExternalStore(subscribe, monthsSinceJoining, () => null);
+  const now = experiences[0];
+  const years = months === null ? 0 : Math.floor(months / 12);
+  const rest = months === null ? 0 : months % 12;
+
   return (
-    <PageTransition>
-      <div className="gradient-bg">
-        <PageHeader
-          eyebrow="About Me"
-          title={
+    <div className="mx-auto mt-10 grid max-w-3xl divide-y divide-line/15 border-y border-line/15 text-left md:mt-14 md:grid-cols-2 md:divide-x md:divide-y-0">
+      <Reveal className="px-0 py-6 md:px-6">
+        <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60 motion-reduce:animate-none" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+          </span>
+          Now
+        </p>
+        <p className="display mt-3 text-2xl leading-tight">{now.role}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{now.company} · full-time</p>
+      </Reveal>
+
+      <Reveal delay={0.07} className="px-0 py-6 md:px-6">
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Shipping professionally</p>
+        <p className="display mt-3 flex items-baseline gap-2 text-[clamp(2rem,4vw,2.8rem)] leading-none" aria-live="off">
+          {months === null ? (
+            <span className="opacity-0">0</span>
+          ) : years > 0 ? (
             <>
-              <span className="gradient-text">Crafting</span> <span className="text-foreground">reliable</span>
-              <br />
-              <span className="text-outline">software</span> <span className="aurora-text italic">from scratch.</span>
+              {years}
+              <span className="text-base font-medium text-muted-foreground">yr</span>
+              {rest}
+              <span className="text-base font-medium text-muted-foreground">mo</span>
             </>
-          }
-          subtitle="Computer Science undergraduate at GITAM University. I turn ideas into production-ready applications — MERN stack first, clean architecture always."
-        />
-
-        {/* ── BIO BENTO ── */}
-        <section className="section-container !pt-4">
-          <div className="grid gap-5 md:grid-cols-5">
-            {/* Bio */}
-            <Reveal className="md:col-span-3">
-              <div className="group relative h-full rounded-3xl border-[0.75px] border-border p-2">
-                <GlowingEffect spread={44} glow disabled={false} proximity={70} inactiveZone={0.01} borderWidth={3} />
-                <TiltCard intensity={4} className="h-full overflow-hidden rounded-2xl glass-panel p-8">
-                  <div className="mb-7 flex items-center gap-4">
-                    <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-brand-1/25 bg-brand-1/15">
-                      <User className="text-brand-1" size={22} />
-                    </div>
-                    <div>
-                      <h3 className="font-display text-lg font-bold leading-tight">B Venkata Sai Kartikeya</h3>
-                      <p className="mt-0.5 text-xs font-medium tracking-wide text-brand-2">Full Stack MERN Developer · IoT Enthusiast</p>
-                    </div>
-                  </div>
-                  <p className="mb-3 leading-relaxed text-muted-foreground">
-                    I enjoy taking ideas from a simple sketch to a reliable, production-ready application.
-                    My recent work lives in the MERN stack and real-time IoT monitoring systems.
-                  </p>
-                  <p className="mb-7 leading-relaxed text-muted-foreground">
-                    I care about clear architecture, maintainable code, and smooth user experiences
-                    more than chasing every new buzzword.
-                  </p>
-                  <div className="flex flex-wrap gap-3">
-                    <Magnetic strength={0.3}>
-                      <a href="https://github.com/kartixk" target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-xl border border-line/10 bg-line/[0.03] px-4 py-2 text-sm font-medium transition-colors hover:border-brand-2/40 hover:text-brand-2">
-                        <Github size={15} /> GitHub
-                      </a>
-                    </Magnetic>
-                    <Magnetic strength={0.3}>
-                      <a href="https://linkedin.com/in/b-venkata-sai-kartikeya-28a99b357" target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-xl border border-brand-1/30 bg-brand-1/10 px-4 py-2 text-sm font-medium text-brand-1 transition-colors hover:bg-brand-1/20">
-                        <Linkedin size={15} /> LinkedIn
-                      </a>
-                    </Magnetic>
-                    <Magnetic strength={0.3}>
-                      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=kartikeyaa15@gmail.com" target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-xl border border-line/10 bg-line/[0.03] px-4 py-2 text-sm font-medium transition-colors hover:border-brand-3/40 hover:text-brand-3">
-                        <Mail size={15} /> Email
-                      </a>
-                    </Magnetic>
-                  </div>
-                </TiltCard>
-              </div>
-            </Reveal>
-
-            {/* Info + soft skills */}
-            <Reveal delay={0.1} className="md:col-span-2">
-              <div className="flex h-full flex-col gap-5">
-                <div className="relative rounded-3xl border-[0.75px] border-border p-2">
-                  <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
-                  <div className="relative rounded-2xl glass-panel p-6">
-                    <h3 className="mb-5 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Quick Info</h3>
-                    <div className="space-y-3.5">
-                      {[
-                        { Icon: MapPin, text: 'Visakhapatnam, India' },
-                        { Icon: Mail, text: 'kartikeyaa15@gmail.com' },
-                        { Icon: Phone, text: '+91-8250977949' },
-                        { Icon: GraduationCap, text: 'GITAM University · B.Tech CSE' },
-                      ].map(({ Icon, text }) => (
-                        <div key={text} className="flex items-start gap-3">
-                          <div className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-brand-2/10">
-                            <Icon className="text-brand-2" size={13} />
-                          </div>
-                          <span className="text-sm leading-snug text-muted-foreground">{text}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="relative flex-1 rounded-3xl border-[0.75px] border-border p-2">
-                  <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
-                  <div className="relative h-full rounded-2xl glass-panel p-6">
-                    <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Soft Skills</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {softSkills.map((s) => (
-                        <span key={s} className="rounded-full border border-brand-1/20 bg-brand-1/10 px-3 py-1.5 text-xs font-medium text-brand-1">
-                          {s}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ── SPECIALIZATIONS ── */}
-        <section className="section-container">
-          <Reveal className="mb-10 flex items-center gap-4">
-            <span className="h-px flex-1 bg-border" />
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">What I Specialize In</h2>
-            <span className="h-px flex-1 bg-border" />
-          </Reveal>
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-            {specializations.map(({ label, icon: Icon }, i) => (
-              <Reveal key={label} delay={i * 0.08}>
-                <div className="group relative h-full rounded-3xl border-[0.75px] border-border p-2">
-                  <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={3} />
-                  <TiltCard intensity={8} className="h-full rounded-2xl glass-panel p-6 text-center">
-                    <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl border border-brand-2/20 bg-brand-2/10 transition-all duration-300 group-hover:scale-110 group-hover:border-brand-2/40">
-                      <Icon className="text-brand-2" size={20} />
-                    </div>
-                    <p className="text-sm font-semibold leading-snug text-foreground">{label}</p>
-                  </TiltCard>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </section>
-
-        {/* ── TIMELINE ── */}
-        <section className="section-container">
-          <Reveal className="mb-14 flex items-center gap-4">
-            <span className="h-px flex-1 bg-border" />
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">My Journey</h2>
-            <span className="h-px flex-1 bg-border" />
-          </Reveal>
-
-          <div className="relative mx-auto max-w-3xl">
-            <div className="absolute left-3.5 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-border to-transparent md:left-1/2 md:-translate-x-1/2" />
-            {timeline.map((item, i) => {
-              const Icon = item.icon;
-              const isLeft = i % 2 === 0;
-              return (
-                <Reveal
-                  key={i}
-                  delay={i * 0.05}
-                  direction={isLeft ? 'right' : 'left'}
-                  className={`relative mb-10 flex items-start pl-12 md:mb-14 md:pl-0 ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'}`}
-                >
-                  <div className="absolute left-0 top-3 z-10 grid h-8 w-8 -translate-x-0 place-items-center rounded-full border-2 border-brand-1 bg-background shadow-[0_0_14px_hsl(var(--brand-1)/0.5)] md:left-1/2 md:-translate-x-1/2">
-                    <Icon className="text-brand-1" size={13} />
-                  </div>
-                  <div className={`md:w-[calc(50%-2.5rem)] ${isLeft ? 'md:mr-auto md:pr-6' : 'md:ml-auto md:pl-6'}`}>
-                    <div className="relative rounded-2xl border-[0.75px] border-border p-1.5">
-                      <GlowingEffect spread={40} glow disabled={false} proximity={64} inactiveZone={0.01} borderWidth={2} />
-                      <div className="relative rounded-xl glass-panel p-5 transition-colors hover:border-brand-2/30">
-                        <span className="inline-flex items-center rounded-full border border-brand-1/20 bg-brand-1/10 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest text-brand-1">
-                          {item.year}
-                        </span>
-                        <h4 className="mt-2 font-display text-sm font-bold leading-snug">{item.title}</h4>
-                        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{item.description}</p>
-                      </div>
-                    </div>
-                  </div>
-                </Reveal>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* ── INTERESTS ── */}
-        <section className="section-container">
-          <Reveal className="mb-10 flex items-center gap-4">
-            <span className="h-px flex-1 bg-border" />
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Areas of Interest</h2>
-            <span className="h-px flex-1 bg-border" />
-          </Reveal>
-          <div className="grid gap-5 sm:grid-cols-2">
-            {interests.map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <Reveal key={item.title} delay={i * 0.08}>
-                  <div className="group relative h-full rounded-3xl border-[0.75px] border-border p-2">
-                    <GlowingEffect spread={44} glow disabled={false} proximity={70} inactiveZone={0.01} borderWidth={3} />
-                    <div className="relative flex h-full items-start gap-4 rounded-2xl glass-panel p-7">
-                      <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-brand-2/20 bg-brand-2/10 transition-all duration-300 group-hover:scale-110 group-hover:border-brand-2/40">
-                        <Icon className="text-brand-2" size={20} />
-                      </div>
-                      <div>
-                        <h4 className="font-display font-bold transition-colors group-hover:text-brand-2">{item.title}</h4>
-                        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
-                      </div>
-                    </div>
-                  </div>
-                </Reveal>
-              );
-            })}
-          </div>
-        </section>
-      </div>
-    </PageTransition>
+          ) : (
+            <>
+              {rest}
+              <span className="text-base font-medium text-muted-foreground">months</span>
+            </>
+          )}
+        </p>
+      </Reveal>
+    </div>
   );
 };
+
+/**
+ * The portrait steps out of a peach arch (the crown of the head breaks it) and stands on a ground line.
+ * Underneath: one sentence and a strip with where I am now and how long I've shipped.
+ */
+const WhoBlock = () => (
+  <section className="wrap pb-20 md:pb-32">
+    <div className="mx-auto max-w-4xl text-center">
+      <div className="relative mx-auto w-[min(88vw,26rem)]">
+        <motion.div
+          aria-hidden
+          initial={{ clipPath: 'inset(100% 0% 0% 0%)' }}
+          whileInView={{ clipPath: 'inset(0% 0% 0% 0%)' }}
+          viewport={{ once: true, margin: '-10% 0px' }}
+          transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
+          className="absolute inset-x-[9%] bottom-0 top-[17%] overflow-hidden rounded-t-[999px] bg-[linear-gradient(180deg,hsl(var(--c-lime)),hsl(var(--c-lime)/0.72))]"
+        >
+          <div className="absolute -left-[20%] bottom-[24%] h-[18%] w-[70%] rounded-full bg-white/35" />
+          <div className="absolute -right-[24%] bottom-[44%] h-[15%] w-[62%] rounded-full bg-white/25" />
+        </motion.div>
+
+        <div data-cursor="Hi!" className="relative z-10">
+          <Avatar />
+        </div>
+
+        <Chip label="Full-stack, end to end" icon={<FullStackIcon />} delay={0.5} className="-left-4 top-[30%] md:-left-24" />
+        <Chip label="Fast by default" icon={<GaugeIcon />} delay={0.62} className="-left-1 top-[58%] md:-left-16" />
+        <Chip label="Ships to production" icon={<ShipIcon />} delay={0.74} className="-right-1 top-[64%] md:-right-28" />
+        <Badge />
+      </div>
+      <div aria-hidden className="mx-auto h-px w-full max-w-3xl bg-line/20" />
+
+      <Reveal className="mt-10 md:mt-14">
+        <p className="display mx-auto max-w-2xl text-[clamp(1.5rem,3vw,2.4rem)] leading-[1.15] tracking-[-0.025em] text-balance">
+          Full-stack developer who ships <span className="serif text-primary">reliable</span> products — web, mobile and real-time IoT.
+        </p>
+      </Reveal>
+
+      <NowStrip />
+    </div>
+  </section>
+);
+
+/* ───────────────────────── 2 · work: every project, stacked as you scroll ───────────────────────── */
+
+const WorkSection = () => (
+  <section className="wrap pb-20 md:pb-32">
+    <div className="mb-10 flex flex-col justify-between gap-6 md:mb-16 md:flex-row md:items-end">
+      <div>
+        <Reveal>
+          <p className="eyebrow mb-5 md:mb-6">Selected work</p>
+        </Reveal>
+        <TextReveal
+          as="h2"
+          className="display text-[clamp(2.4rem,6.5vw,6rem)] leading-[0.98]"
+          lines={[<span key="a">Projects</span>, <span key="b" className="serif text-primary">built by me</span>]}
+        />
+      </div>
+      <Reveal delay={0.1}>
+        <Magnetic strength={0.25}>
+          <TransitionLink href="/projects" className="btn btn-ghost">
+            All projects <ArrowUpRight size={16} />
+          </TransitionLink>
+        </Magnetic>
+      </Reveal>
+    </div>
+    <ProjectStack items={projects} />
+  </section>
+);
+
+/* ───────────────────────── 3 · path: a timeline you click through, not scroll through ───────────────────────── */
+
+const About = () => (
+  <PageTransition>
+    <PageHeader
+      index="01"
+      eyebrow="About me"
+      lines={[<span key="a">Crafting</span>, <span key="b" className="serif text-gradient">reliable</span>, <span key="c">software.</span>]}
+    />
+
+    <WhoBlock />
+    <WorkSection />
+    <PathChart />
+
+    {/* soft skills */}
+    <section className="border-y border-line/15 py-8" aria-label="Soft skills">
+      <Marquee duration={40}>
+        {softSkills.map((s) => (
+          <span key={s} className="mx-6 flex items-center gap-12">
+            <span className="display text-[clamp(2.2rem,6vw,5rem)]">{s}</span>
+            <span aria-hidden className="h-2.5 w-2.5 shrink-0 rounded-full bg-current opacity-50" />
+          </span>
+        ))}
+      </Marquee>
+    </section>
+  </PageTransition>
+);
 
 export default About;

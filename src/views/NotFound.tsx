@@ -1,35 +1,35 @@
 'use client';
 
-import Link from 'next/link';
+import { useRef } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
-import { Magnetic, AnimatedText } from '@/components/fx';
+import TransitionLink from '@/components/TransitionLink';
+import { Draggable, Magnetic, Reveal, TextReveal } from '@/components/fx';
 
 const NotFound = () => {
-
+  const ref = useRef<HTMLDivElement>(null);
   return (
     <PageTransition>
-      <div className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center">
-        <div className="absolute inset-0 grid-bg opacity-40" />
-        <div className="relative z-10">
-          <h1 className="font-display text-[28vw] font-extrabold leading-none tracking-tighter md:text-[16rem]">
-            <span className="aurora-text">404</span>
-          </h1>
-          <p className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
-            <AnimatedText text="This page drifted into space." />
-          </p>
-          <p className="mx-auto mt-4 max-w-md text-muted-foreground">
-            The page you're looking for doesn't exist or has been moved. Let's get you back on track.
-          </p>
-          <div className="mt-9 flex justify-center">
-            <Magnetic strength={0.4}>
-              <Link href="/" className="btn-gradient group inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-bold">
-                <ArrowLeft size={16} className="transition-transform group-hover:-translate-x-1" />
-                Back to Home
-              </Link>
+      <div ref={ref} className="relative flex min-h-svh flex-col justify-center overflow-hidden pb-16 pt-32">
+        <div className="wrap relative z-10">
+          <Reveal immediate direction="none">
+            <p className="eyebrow mb-6">Error — page not found</p>
+          </Reveal>
+          <TextReveal as="h1" immediate delay={0.1} className="display text-[clamp(8rem,34vw,34rem)] leading-[0.8]" lines={[<span key="a">404</span>]} />
+          <Reveal immediate delay={0.5} className="mt-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+            <p className="max-w-md text-xl leading-snug text-muted-foreground">
+              This page <span className="serif text-gradient">drifted away.</span> It doesn&apos;t exist or has moved — let&apos;s get you back on track.
+            </p>
+            <Magnetic strength={0.25}>
+              <TransitionLink href="/" className="btn btn-solid !px-8 !py-5 !text-base">
+                <ArrowLeft size={18} /> Back home
+              </TransitionLink>
             </Magnetic>
-          </div>
+          </Reveal>
         </div>
+        <Draggable constraintsRef={ref} rotate={-10} delay={1} className="right-[10%] top-[28%]">
+          <span className="block rounded-full bg-primary px-6 py-3 font-display text-lg font-bold text-primary-foreground">Lost? Drag me 🧭</span>
+        </Draggable>
       </div>
     </PageTransition>
   );
