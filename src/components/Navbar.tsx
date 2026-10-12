@@ -7,7 +7,7 @@ import { useLenis } from 'lenis/react';
 import { ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ROUTES, SITE } from '@/lib/site';
-import { RESUME_URL } from '@/lib/data';
+import { experiences, projects, RESUME_URL } from '@/lib/data';
 import TransitionLink from '@/components/TransitionLink';
 import ThemeToggle from '@/components/ThemeToggle';
 import Eyes from '@/components/desk/Eyes';
@@ -20,11 +20,25 @@ const MENU_ORDER = ['/', '/projects', '/experience', '/about', '/contact'];
 const menuRoutes = MENU_ORDER.map((path) => ROUTES.find((r) => r.path === path)!);
 const ease = [0.76, 0, 0.24, 1] as const;
 
+/** Each page borrows a frame of the hero painting as its backdrop — hover the list and the sky changes with it. */
+const MENU_FRAME: Record<string, number> = { '/': 6, '/projects': 30, '/experience': 52, '/about': 74, '/contact': 94 };
+const frameUrl = (n: number) => `/hero-frames/f${String(n).padStart(3, '0')}.webp`;
+const MENU_HINT: Record<string, string> = {
+  '/': 'Back to the start',
+  '/projects': `${projects.length} case studies`,
+  '/experience': `${experiences[0].company} and earlier`,
+  '/about': 'The person behind it',
+  '/contact': 'Say hello',
+};
+
 const Navbar = () => {
   const pathname = usePathname();
   const lenis = useLenis();
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [hover, setHover] = useState<string | null>(null);
+  const [origin, setOrigin] = useState('calc(100% - 3rem) 3.4rem');
+  const menuBtn = useRef<HTMLButtonElement>(null);
   const lastY = useRef(0);
   const { scrollY } = useScroll();
 
@@ -87,7 +101,12 @@ const Navbar = () => {
           <ThemeToggle className="!h-9 !w-9 !border-white/15 !text-[#f1f2ea] hover:!bg-[#f1f2ea] hover:!text-[#141714]" />
 
           <button
-            onClick={() => setOpen((v) => !v)}
+            ref={menuBtn}
+            onClick={() => {
+              const r = menuBtn.current?.getBoundingClientRect();
+              if (r) setOrigin(`${Math.round(r.left + r.width / 2)}px ${Math.round(r.top + r.height / 2)}px`);
+              setOpen((v) => !v);
+            }}
             aria-expanded={open}
             aria-label={open ? 'Close menu' : 'Open menu'}
             className="grid h-9 w-9 place-items-center rounded-full border border-white/15 transition-colors hover:bg-[#f1f2ea] hover:text-[#141714]"
@@ -104,41 +123,58 @@ const Navbar = () => {
         {open && (
           <motion.div
             key="menu"
-            initial={{ clipPath: 'inset(0% 0% 100% 0%)' }}
-            animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
-            exit={{ clipPath: 'inset(0% 0% 100% 0%)' }}
-            transition={{ duration: 0.8, ease }}
-            className="fixed inset-0 z-[65] flex flex-col bg-grad-pan text-[#0c0f0a]"
+            initial={{ clipPath: `circle(0px at ${origin})` }}
+            animate={{ clipPath: `circle(160vmax at ${origin})` }}
+            exit={{ clipPath: `circle(0px at ${origin})` }}
+            transition={{ duration: 0.9, ease }}
+            className="fixed inset-0 z-[65] overflow-hidden bg-[#0b2447] text-white"
             role="dialog"
             aria-modal="true"
             aria-label="Site menu"
+            onMouseLeave={() => setHover(null)}
           >
-            <div className="wrap flex flex-1 flex-col justify-center gap-10 pb-10 pt-28 lg:grid lg:grid-cols-[1.6fr_1fr] lg:items-end lg:gap-16">
-              <ul className="group/menu space-y-0.5">
+            {/* backdrop: one frame of the painting per page, cross-faded; scrim keeps text readable */}
+            {menuRoutes.map((r) => {
+              const on = (hover ?? (menuRoutes.some((m) => m.path === pathname) ? pathname : '/')) === r.path;
+              return (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={r.path}
+                  src={frameUrl(MENU_FRAME[r.path])}
+                  alt=""
+                  aria-hidden
+                  className={cn('absolute inset-0 h-full w-full scale-105 object-cover transition-opacity duration-700', on ? 'opacity-100' : 'opacity-0')}
+                />
+              );
+            })}
+            <div aria-hidden className="absolute inset-0 bg-[linear-gradient(90deg,rgba(6,22,48,0.78),rgba(6,22,48,0.35)_60%,rgba(6,22,48,0.55))]" />
+
+            <div className="wrap relative flex h-full flex-col justify-center gap-10 pb-10 pt-28 lg:grid lg:grid-cols-[1.5fr_1fr] lg:items-center lg:gap-16">
+              <ul className="group/menu">
                 {menuRoutes.map((r, i) => {
                   const active = pathname === r.path;
                   return (
                     <li key={r.path} className="overflow-hidden">
                       <motion.div
                         initial={{ y: '110%' }}
-                        animate={{ y: '0%', transition: { delay: 0.25 + i * 0.06, duration: 0.9, ease: [0.16, 1, 0.3, 1] } }}
-                        exit={{ y: '110%', transition: { duration: 0.35 } }}
+                        animate={{ y: '0%', transition: { delay: 0.3 + i * 0.07, duration: 0.9, ease: [0.16, 1, 0.3, 1] } }}
+                        exit={{ y: '110%', transition: { duration: 0.3 } }}
                       >
                         <TransitionLink
                           href={r.path}
                           onClick={() => setTimeout(() => setOpen(false), 120)}
-                          className="group flex items-baseline gap-4 py-1 transition-opacity duration-300 group-hover/menu:opacity-40 hover:!opacity-100 md:gap-6"
+                          onMouseEnter={() => setHover(r.path)}
+                          onFocus={() => setHover(r.path)}
+                          className="group flex items-center gap-4 py-1.5 transition-opacity duration-300 group-hover/menu:opacity-35 hover:!opacity-100 focus-visible:!opacity-100 md:gap-6"
                         >
-                          <span className="font-mono text-xs tracking-widest opacity-50">0{i + 1}</span>
-                          <span
-                            className={cn(
-                              'display relative text-[clamp(2.6rem,9vw,7.5rem)] transition-all duration-500 group-hover:translate-x-3',
-                              active && 'underline decoration-[3px] underline-offset-[0.12em]'
-                            )}
-                          >
+                          <span className="w-7 font-mono text-xs tracking-widest text-white/55">0{i + 1}</span>
+                          <span className="display relative text-[clamp(2.4rem,7.2vw,6.2rem)] leading-[1.02] transition-transform duration-500 group-hover:translate-x-3">
                             {r.label}
+                            {active && <span aria-hidden className="absolute -right-5 top-[0.28em] h-2.5 w-2.5 rounded-full bg-[hsl(var(--c-lime))]" />}
                           </span>
-                          <ArrowUpRight className="h-6 w-6 -translate-x-2 self-center opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100 md:h-9 md:w-9" />
+                          <span className="hidden -translate-x-2 whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.2em] text-white/70 opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100 md:block">
+                            {MENU_HINT[r.path]}
+                          </span>
                         </TransitionLink>
                       </motion.div>
                     </li>
@@ -146,27 +182,49 @@ const Navbar = () => {
                 })}
               </ul>
 
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0, transition: { delay: 0.6, duration: 0.7 } }}
+              {/* glass card: where I am, how to reach me */}
+              <motion.aside
+                initial={{ opacity: 0, y: 28 }}
+                animate={{ opacity: 1, y: 0, transition: { delay: 0.65, duration: 0.7 } }}
                 exit={{ opacity: 0 }}
-                className="space-y-8 text-sm"
+                className="rounded-3xl border border-white/15 bg-white/10 p-6 text-sm backdrop-blur-xl md:p-7"
               >
-                <div>
-                  <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] opacity-50">Say hello</p>
-                  <a href={`mailto:${SITE.email}`} className="display text-2xl underline-offset-4 hover:underline">
-                    {SITE.email}
-                  </a>
+                <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-white/60">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[hsl(var(--c-lime))] opacity-60" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-[hsl(var(--c-lime))]" />
+                  </span>
+                  Now
+                </p>
+                <p className="display mt-3 text-2xl leading-tight">{experiences[0].role}</p>
+                <p className="mt-1 text-white/70">{experiences[0].company}</p>
+
+                <div className="my-6 h-px bg-white/15" />
+
+                <a href={`mailto:${SITE.email}`} className="display block break-all text-xl underline-offset-4 hover:underline">
+                  {SITE.email}
+                </a>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {[
+                    { label: 'GitHub', href: SITE.github, ext: true },
+                    { label: 'LinkedIn', href: SITE.linkedin, ext: true },
+                    { label: 'Resume', href: RESUME_URL, ext: false },
+                  ].map((l) => (
+                    <a
+                      key={l.label}
+                      href={l.href}
+                      {...(l.ext ? { target: '_blank', rel: 'noopener noreferrer' } : { download: 'Kartikeya_Resume.pdf' })}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-white/25 px-3.5 py-1.5 font-medium transition-colors hover:bg-white hover:text-[#0b2447]"
+                    >
+                      {l.label} {l.ext ? <ArrowUpRight size={14} /> : '↓'}
+                    </a>
+                  ))}
                 </div>
-                <div className="flex gap-6">
-                  <a href={SITE.github} target="_blank" rel="noopener noreferrer" className="link-u font-medium">GitHub ↗</a>
-                  <a href={SITE.linkedin} target="_blank" rel="noopener noreferrer" className="link-u font-medium">LinkedIn ↗</a>
-                  <a href={RESUME_URL} download="Kartikeya_Resume.pdf" className="link-u font-medium">Resume ↓</a>
-                </div>
-                <p className="font-mono text-[11px] uppercase tracking-[0.22em] opacity-50">
+
+                <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.22em] text-white/55">
                   Visakhapatnam, IN · <LocalTime />
                 </p>
-              </motion.div>
+              </motion.aside>
             </div>
           </motion.div>
         )}
