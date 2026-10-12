@@ -1,6 +1,6 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useSyncExternalStore, type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
@@ -10,22 +10,23 @@ import PathChart from '@/components/PathChart';
 import ProjectStack from '@/components/ProjectStack';
 import { Magnetic, Marquee, Reveal, TextReveal } from '@/components/fx';
 import Avatar from '@/components/hero/Avatar';
+import { FullStackIcon, GaugeIcon, ShipIcon } from '@/components/PillIcons';
 import { experiences, projects, softSkills } from '@/lib/data';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 /* ───────────────────────── 1 · who: portrait stage + proof numbers ───────────────────────── */
 
-/** Floating label that sits around the portrait; position is part of the composition so each carries its own. */
-const Chip = ({ label, className, delay }: { label: string; className: string; delay: number }) => (
+/** Floating label that sits around the portrait; its icon is a tiny looping visualisation of what the label says. */
+const Chip = ({ label, icon, className, delay }: { label: string; icon: ReactNode; className: string; delay: number }) => (
   <motion.span
     initial={{ opacity: 0, scale: 0.8, y: 12 }}
     whileInView={{ opacity: 1, scale: 1, y: 0 }}
     viewport={{ once: true, margin: '-10% 0px' }}
     transition={{ duration: 0.7, delay, ease: EASE }}
-    className={`absolute z-20 hidden items-center gap-2 whitespace-nowrap rounded-full border border-line/20 bg-background/85 px-4 py-2 text-sm font-medium shadow-[0_10px_30px_-14px_rgba(0,0,0,0.35)] backdrop-blur sm:inline-flex ${className}`}
+    className={`absolute z-20 hidden items-center gap-2.5 whitespace-nowrap rounded-full border border-line/20 bg-background/85 py-2 pl-3 pr-4 text-sm font-medium shadow-[0_10px_30px_-14px_rgba(0,0,0,0.35)] backdrop-blur sm:inline-flex ${className}`}
   >
-    <span aria-hidden className="h-2 w-2 rounded-full bg-[hsl(var(--c-lime))]" />
+    {icon}
     {label}
   </motion.span>
 );
@@ -122,9 +123,9 @@ const WhoBlock = () => (
           <Avatar />
         </div>
 
-        <Chip label="MERN stack" delay={0.5} className="-left-4 top-[30%] md:-left-24" />
-        <Chip label="Real-time IoT" delay={0.62} className="-left-1 top-[58%] md:-left-16" />
-        <Chip label="Ships to production" delay={0.74} className="-right-1 top-[64%] md:-right-28" />
+        <Chip label="Full-stack, end to end" icon={<FullStackIcon />} delay={0.5} className="-left-4 top-[30%] md:-left-24" />
+        <Chip label="Fast by default" icon={<GaugeIcon />} delay={0.62} className="-left-1 top-[58%] md:-left-16" />
+        <Chip label="Ships to production" icon={<ShipIcon />} delay={0.74} className="-right-1 top-[64%] md:-right-28" />
         <Badge />
       </div>
       <div aria-hidden className="mx-auto h-px w-full max-w-3xl bg-line/20" />
