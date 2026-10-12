@@ -122,7 +122,7 @@ const NowCard = ({ className }: { className?: string }) => (
 );
 
 const ResumeFile = () => (
-  <a href={RESUME_URL} download="Kartikeya_Resume.pdf" className="group/file flex w-full flex-col items-center gap-2 text-center outline-none" aria-label="Download resume (PDF)">
+  <a href={RESUME_URL} download="kartikeya-resume.pdf" className="group/file flex w-full flex-col items-center gap-2 text-center outline-none" aria-label="Download resume (PDF)">
     <span className="relative block aspect-[4/5] w-full rounded-lg bg-[#f6f7f2] shadow-[0_20px_36px_-14px_rgba(0,0,0,0.6)] ring-1 ring-black/10 transition-transform duration-300 group-hover/file:-translate-y-1">
       <span className="flex items-center justify-between px-2.5 pt-2 text-[#0c0f0a]">
         <FileText size={14} className="text-[#d6453d]" />

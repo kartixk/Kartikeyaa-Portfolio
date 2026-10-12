@@ -221,5 +221,5 @@ export const stats = [
 ];
 
 export const PHOTO = 'https://res.cloudinary.com/dvf0ugwrr/image/upload/v1779630443/My_o9qgpi.jpg';
-export const RESUME_URL = 'https://res.cloudinary.com/dvf0ugwrr/image/upload/fl_attachment/v1773757669/kartikeyaa-Resume_khl64p.pdf';
+export const RESUME_URL = 'https://res.cloudinary.com/dvf0ugwrr/image/upload/fl_attachment:kartikeya-resume/v1791798886/Kartikeya01_go1lam.pdf';
 export const PHONE = '+91-8250977949';

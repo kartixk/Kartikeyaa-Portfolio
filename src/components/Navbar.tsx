@@ -213,7 +213,7 @@ const Navbar = () => {
                     <a
                       key={l.label}
                       href={l.href}
-                      {...(l.ext ? { target: '_blank', rel: 'noopener noreferrer' } : { download: 'Kartikeya_Resume.pdf' })}
+                      {...(l.ext ? { target: '_blank', rel: 'noopener noreferrer' } : { download: 'kartikeya-resume.pdf' })}
                       className="inline-flex items-center gap-1.5 rounded-full border border-white/25 px-3.5 py-1.5 font-medium transition-colors hover:bg-white hover:text-[#0b2447]"
                     >
                       {l.label} {l.ext ? <ArrowUpRight size={14} /> : '↓'}

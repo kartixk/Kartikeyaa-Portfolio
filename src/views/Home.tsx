@@ -86,8 +86,8 @@ const Home = () => (
           eyebrow="Selected work"
           lines={[
             <span key="a">Things I&apos;ve</span>,
-            <span key="b">
-              <span className="serif text-gradient">shipped</span> ({String(projects.length).padStart(2, '0')})
+            <span key="b" className="serif text-gradient">
+              shipped
             </span>,
           ]}
         />

@@ -108,7 +108,7 @@ const Footer = () => {
               </li>
             ))}
             <li>
-              <a href={RESUME_URL} download="Kartikeya_Resume.pdf" className="link-u text-base font-medium">
+              <a href={RESUME_URL} download="kartikeya-resume.pdf" className="link-u text-base font-medium">
                 Resume ↓
               </a>
             </li>
