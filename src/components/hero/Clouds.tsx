@@ -33,10 +33,10 @@ export const CloudsBack = () => {
       className="pointer-events-none absolute inset-x-0 bottom-0 h-[max(44svh,25vw)] min-h-[16rem] w-full"
     >
       {BACK.map(([cx, cy, r]) => (
-        <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={r} className="fill-white/60 dark:fill-[#ece9c4]" />
+        <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={r} className="fill-white/60 dark:fill-[#d6f4f9]" />
       ))}
       {BUBBLES.map(([cx, cy, r, d]) => (
-        <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={r} className={`fill-white/90 dark:fill-[#fbf9e2] ${reduce ? '' : 'animate-float'}`} style={{ animationDelay: `${d}s`, animationDuration: `${5 + d}s` }} />
+        <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={r} className={`fill-white/90 dark:fill-[#effcfe] ${reduce ? '' : 'animate-float'}`} style={{ animationDelay: `${d}s`, animationDuration: `${5 + d}s` }} />
       ))}
     </motion.svg>
   );

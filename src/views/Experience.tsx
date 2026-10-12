@@ -13,16 +13,20 @@ const Experience = () => (
       index="04"
       eyebrow="Professional journey"
       lines={[<span key="a">Where I&apos;ve</span>, <span key="b" className="serif text-gradient">worked.</span>]}
-      subtitle="Internships where I shipped real features, collaborated across teams and drove measurable impact."
+      subtitle="Full-time at Spotmies today, after internships at NTPC and Zenith-Zap where I cut interaction time by 35% and page load by 25%."
       meta={`${String(experiences.length).padStart(2, '0')} roles`}
     />
 
     <section className="wrap pb-24 md:pb-40">
       {experiences.map((e, i) => (
-        <article key={e.company} className="grid gap-8 border-t border-line/15 py-12 md:grid-cols-[1fr_2fr] md:gap-16 md:py-20">
+        <article key={`${e.company}-${e.role}`} className="grid gap-8 border-t border-line/15 py-12 md:grid-cols-[1fr_2fr] md:gap-16 md:py-20">
           <Reveal className="md:sticky md:top-28 md:self-start">
             <span className="font-mono text-xs tracking-widest text-primary">0{i + 1}</span>
-            <p className="mt-4 font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">{e.period}</p>
+            <div className="mt-4 space-y-1.5 font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
+              {(e.periods ?? [e.period]).map((d) => (
+                <p key={d}>{d}</p>
+              ))}
+            </div>
             <p className="mt-2 inline-flex items-center gap-1.5 text-sm text-muted-foreground">
               <MapPin size={13} /> {e.location}
             </p>

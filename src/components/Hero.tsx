@@ -25,7 +25,7 @@ const Marked = ({ children, wiggle }: { children: string; wiggle?: boolean }) =>
  *  - lg+: copy on the left of the colour field, the illustrated portrait anchored bottom-right between the clouds
  *  - below lg: portrait on top (right-leaning) on the colour field; copy underneath on the page background,
  *    which the front clouds already blend into
- * Copy colours follow the surface: ink on lime (lg), foreground on the page background (mobile).
+ * Copy colours follow the surface: ink on cyan (lg), foreground on the page background (mobile).
  */
 const Hero = () => {
   const ready = useReady();
@@ -33,7 +33,7 @@ const Hero = () => {
   return (
     <section className="relative isolate flex flex-col overflow-hidden bg-background lg:block lg:h-svh lg:min-h-[40rem]">
       {/* ── visual: colour field + clouds + portrait ── */}
-      <div className={`relative h-[max(50svh,25rem)] shrink-0 overflow-hidden bg-[hsl(76_96%_58%)] lg:absolute lg:inset-0 lg:h-auto`}>
+      <div className={`relative h-[max(50svh,25rem)] shrink-0 overflow-hidden bg-[hsl(187_92%_55%)] lg:absolute lg:inset-0 lg:h-auto`}>
         <CloudsBack />
 
         <div className="pointer-events-none absolute -bottom-[1svh] right-[-8vw] z-20 sm:right-[6vw] lg:-bottom-[2svh] lg:right-[3vw]">

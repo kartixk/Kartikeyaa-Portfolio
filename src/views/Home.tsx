@@ -52,7 +52,7 @@ const Bands = () => (
         <Band items={WORK} />
       </VelocityMarquee>
     </div>
-    <div className="absolute -left-[5%] top-[4.6rem] w-[110%] rotate-2 bg-[#efe9cf] py-2.5 text-[#0c0f0a] shadow-[0_18px_50px_-24px_rgba(0,0,0,0.45)] sm:top-[6.2rem] sm:py-4 md:top-[8.2rem]">
+    <div className="absolute -left-[5%] top-[4.6rem] w-[110%] rotate-2 bg-[#e3f7fa] py-2.5 text-[#0c0f0a] shadow-[0_18px_50px_-24px_rgba(0,0,0,0.45)] sm:top-[6.2rem] sm:py-4 md:top-[8.2rem]">
       <VelocityMarquee direction={1} speed={3.2}>
         <Band items={TOOLS} />
       </VelocityMarquee>
@@ -164,7 +164,7 @@ const Home = () => (
 
       <div className="border-b border-line/15">
         {experiences.map((e, i) => (
-          <Reveal key={e.company} delay={i * 0.06}>
+          <Reveal key={`${e.company}-${e.role}`} delay={i * 0.06}>
             <FloodRow>
               <div className="grid items-center gap-2 py-6 md:grid-cols-[14rem_1fr_1fr] md:gap-8 md:py-10 md:pl-4">
                 <span className="font-mono text-xs uppercase tracking-[0.18em] opacity-60">{e.short}</span>

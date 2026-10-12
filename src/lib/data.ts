@@ -40,8 +40,8 @@ export const projects: Project[] = [
     category: ['Web'],
     github: '#',
     cover: 'plate',
-    hue: '76 96% 58%',
-    hue2: '76 96% 58%',
+    hue: '187 92% 55%',
+    hue2: '187 92% 55%',
   },
   {
     slug: 'zenith-zap',
@@ -58,8 +58,8 @@ export const projects: Project[] = [
     category: ['Web'],
     link: 'https://zenithzap.vercel.app',
     cover: 'bolt',
-    hue: '76 96% 58%',
-    hue2: '76 96% 58%',
+    hue: '187 92% 55%',
+    hue2: '187 92% 55%',
     image: '/projects/zenith-zap.jpg',
   },
   {
@@ -104,12 +104,15 @@ export const getProject = (slug: string) => projects.find((p) => p.slug === slug
 export const experiences = [
   {
     company: 'Spotmies LLP',
-    role: 'Software Developer Intern',
+    role: 'Software Developer',
     period: 'Dec 2025 – Present',
+    // shown stacked on the Experience page, newest first
+    periods: ['Jul 2026 – Present · Full-time', 'Dec 2025 – Jun 2026 · Intern'],
     short: 'Dec 2025 — Now',
     location: 'Remote',
-    highlight: 'Building & maintaining scalable web apps',
+    highlight: 'Intern to full-time on the core dev team',
     points: [
+      'Joined as a Software Developer Intern in Dec 2025 and moved to a full-time role in Jul 2026.',
       'Contributing to core development tasks across the product.',
       'Collaborating with the team to build and maintain scalable web applications.',
     ],
@@ -191,7 +194,7 @@ export const strengths = [
 ];
 
 export const timeline = [
-  { year: 'Dec 2025 — Now', title: 'Software Developer Intern · Spotmies LLP', description: 'Building and maintaining scalable web applications with the core dev team.' },
+  { year: 'Dec 2025 — Now', title: 'Software Developer · Spotmies LLP', description: 'Joined as an intern, full-time since Jul 2026 — building and maintaining scalable web applications with the core dev team.' },
   { year: '2025', title: 'Software Engineer Intern', description: 'Interned at NTPC Limited & Zenith-Zap — shipped features used by real users.' },
   { year: '2025', title: 'AI-ML Virtual Internship', description: 'Explored ML foundations & NLP through the EduSkills virtual internship.' },
   { year: '2024', title: 'MERN Full Stack Training', description: 'Intensive training at XceedIQ Innovate360 — built production-ready apps end to end.' },

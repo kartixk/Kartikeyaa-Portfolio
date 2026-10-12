@@ -79,17 +79,17 @@ const FolderButton = ({ project, onOpen }: { project: Project; onOpen: (p: Proje
 );
 
 const Sticky = ({ className }: { className?: string }) => (
-  <div className={cn('relative rounded-md bg-[hsl(76_88%_72%)] p-5 text-[#0c0f0a] shadow-[0_26px_50px_-18px_rgba(0,0,0,0.55)] sm:p-6', className)}>
+  <div className={cn('relative rounded-md bg-[hsl(187_85%_78%)] p-5 text-[#0c0f0a] shadow-[0_26px_50px_-18px_rgba(0,0,0,0.55)] sm:p-6', className)}>
     {/* folded corner */}
     <span aria-hidden className="absolute bottom-0 right-0 h-7 w-7 rounded-tl-md bg-gradient-to-br from-black/15 to-transparent" />
     <p className="font-display text-[1.45rem] font-semibold leading-[1.12] tracking-tight sm:text-[1.6rem]">
       I&apos;m Kartikeya, a Full-Stack Developer who ships MERN, ML &amp; IoT products
     </p>
     <p className="mt-3 text-[13px] leading-relaxed text-black/70 sm:text-sm">
-      Internships at <strong className="font-semibold text-black">Spotmies</strong>, <strong className="font-semibold text-black">NTPC</strong> and{' '}
+      Full-time at <strong className="font-semibold text-black">Spotmies</strong>, internships at <strong className="font-semibold text-black">NTPC</strong> and{' '}
       <strong className="font-semibold text-black">Zenith-Zap</strong> — building scalable web apps, an 82%-accurate sentiment model and live IoT dashboards.
     </p>
-    <TransitionLink href="/contact" className="mt-4 inline-flex items-center gap-2 rounded-lg bg-black/15 px-3.5 py-2 text-sm font-semibold transition-colors hover:bg-black hover:text-[hsl(76_88%_72%)]">
+    <TransitionLink href="/contact" className="mt-4 inline-flex items-center gap-2 rounded-lg bg-black/15 px-3.5 py-2 text-sm font-semibold transition-colors hover:bg-black hover:text-[hsl(187_85%_78%)]">
       <ArrowUpRight size={15} /> Say hello
     </TransitionLink>
   </div>
@@ -110,7 +110,7 @@ const NowCard = ({ className }: { className?: string }) => (
       <ArrowUpRight size={18} className="shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
     </div>
     <p className="mt-3 text-[13px] leading-snug">
-      Developer Intern at Spotmies LLP — currently exploring <span className="font-semibold">ML, NLP and IoT</span>.
+      Software Developer at Spotmies LLP — currently exploring <span className="font-semibold">ML, NLP and IoT</span>.
     </p>
     <div className="mt-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.14em] text-black/55">
       <span className="inline-flex items-center gap-1.5">
