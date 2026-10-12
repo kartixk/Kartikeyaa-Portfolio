@@ -3,7 +3,10 @@
 import { Children, Fragment, isValidElement, useLayoutEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import './ScrollStack.css';
 
-/* Port of React Bits' ScrollStack (JS + CSS variant) to TypeScript. */
+/*
+ * Adapted from the ScrollStack component in React Bits (https://reactbits.dev, https://github.com/DavidHDev/react-bits),
+ * licensed MIT + Commons Clause. Ported to TypeScript. Used here as part of a website; do not resell or redistribute it standalone.
+ */
 
 const resolveOffset = (value: number | string, size: number) => {
   if (typeof value === 'number') return value;

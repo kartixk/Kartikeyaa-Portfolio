@@ -28,7 +28,13 @@ export const metadata: Metadata = {
     images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: SITE.title }],
   },
   twitter: { card: 'summary_large_image', title: SITE.title, description: SITE.description, images: ['/opengraph-image'] },
-  icons: { icon: '/favicon.svg', apple: '/favicon.svg' },
+  icons: {
+    icon: [
+      { url: '/favicon-64.png?v=5', sizes: '64x64', type: 'image/png' },
+      { url: '/icon-512.png?v=5', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png?v=5', sizes: '180x180', type: 'image/png' }],
+  },
   robots: { index: true, follow: true },
 };
 
