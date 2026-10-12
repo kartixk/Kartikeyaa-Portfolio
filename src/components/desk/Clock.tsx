@@ -61,9 +61,9 @@ export const Clock = ({ className }: { className?: string }) => {
         <line ref={h} x1="50" y1="50" x2="50" y2="29" stroke="#f1f2ea" strokeWidth="3" strokeLinecap="round" transform="rotate(300 50 50)" />
         <line ref={m} x1="50" y1="50" x2="50" y2="19" stroke="#f1f2ea" strokeWidth="2" strokeLinecap="round" transform="rotate(60 50 50)" />
         <g ref={s} transform="rotate(0 50 50)">
-          <line x1="50" y1="56" x2="50" y2="14" stroke="hsl(187 92% 55%)" strokeWidth="1" strokeLinecap="round" />
+          <line x1="50" y1="56" x2="50" y2="14" stroke="hsl(18 92% 70%)" strokeWidth="1" strokeLinecap="round" />
         </g>
-        <circle cx="50" cy="50" r="2.4" fill="hsl(187 92% 55%)" />
+        <circle cx="50" cy="50" r="2.4" fill="hsl(18 92% 70%)" />
       </svg>
     </div>
   );

@@ -34,7 +34,7 @@ const Footer = () => {
             </Reveal>
             <TextReveal
               as="h2"
-              className="display relative text-[clamp(2.6rem,11.5vw,12rem)]"
+              className="display relative text-[clamp(2.2rem,7vw,7.5rem)]"
               lines={[
                 <span key="a">Let&apos;s make</span>,
                 <span key="b">

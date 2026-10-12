@@ -26,22 +26,27 @@ const Home = () => (
   <PageTransition>
     <Hero />
 
-    {/* about */}
+    {/* introduction — a short teaser; the full story lives on /about, so this deliberately isn't labelled "About me" */}
     <section className="wrap section">
       <div className="grid gap-8 lg:grid-cols-[1fr_4fr] lg:gap-10">
         <Reveal>
-          <p className="eyebrow">About me</p>
+          <p className="eyebrow">Introduction</p>
         </Reveal>
         <div>
           <ScrollText
-            className="display text-[clamp(1.7rem,4.7vw,4.6rem)] leading-[1.1] tracking-[-0.035em]"
-            text="Engineer by logic, builder by obsession. I turn ideas into production-ready software — clear architecture, maintainable code, and interfaces that feel fast, smart and alive."
-            highlight={['logic', 'obsession', 'alive']}
+            className="display text-[clamp(2.2rem,6.2vw,6.2rem)] leading-[1.02] tracking-[-0.04em]"
+            text="Engineer by logic, builder by obsession."
+            highlight={['logic', 'obsession']}
           />
-          <Reveal delay={0.1} className="mt-10 flex flex-wrap items-center gap-3 md:mt-12">
+          <Reveal delay={0.1}>
+            <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground md:mt-10 md:text-xl">
+              I turn ideas into production-ready software — clear architecture, maintainable code, and interfaces that feel fast, smart and alive.
+            </p>
+          </Reveal>
+          <Reveal delay={0.15} className="mt-10 flex flex-wrap items-center gap-3 md:mt-12">
             <Magnetic strength={0.25}>
               <TransitionLink href="/about" className="btn btn-grad">
-                More about me <ArrowUpRight size={16} />
+                Read my story <ArrowUpRight size={16} />
               </TransitionLink>
             </Magnetic>
             <Magnetic strength={0.25}>

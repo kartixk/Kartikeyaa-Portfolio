@@ -11,3 +11,4 @@ export { ProjectCover } from './ProjectCover';
 export { Cursor } from './Cursor';
 export { Tilt } from './Tilt';
 export { SplitChars } from './SplitChars';
+export { default as ScrollStack, ScrollStackItem } from './ScrollStack';

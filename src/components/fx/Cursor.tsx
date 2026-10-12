@@ -79,8 +79,8 @@ export const Cursor = () => {
               width: size,
               height: size,
               scale: down ? 0.85 : 1,
-              backgroundColor: labelled ? 'hsl(187 92% 55%)' : hover ? 'rgb(255 255 255)' : 'rgb(255 255 255 / 0)',
-              borderColor: labelled ? 'hsl(187 92% 55%)' : 'rgb(255 255 255)',
+              backgroundColor: labelled ? 'hsl(18 92% 70%)' : hover ? 'rgb(255 255 255)' : 'rgb(255 255 255 / 0)',
+              borderColor: labelled ? 'hsl(18 92% 70%)' : 'rgb(255 255 255)',
             }}
             transition={{ type: 'spring', stiffness: 320, damping: 26 }}
             className="grid place-items-center rounded-full border"

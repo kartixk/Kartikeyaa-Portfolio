@@ -61,7 +61,6 @@ const Navbar = () => {
               <Eyes />
             </span>
             <span className="hidden items-center gap-2 text-sm font-medium sm:flex">
-              Available for work
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-lime opacity-70" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-lime" />

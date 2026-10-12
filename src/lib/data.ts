@@ -40,8 +40,8 @@ export const projects: Project[] = [
     category: ['Web'],
     github: '#',
     cover: 'plate',
-    hue: '187 92% 55%',
-    hue2: '187 92% 55%',
+    hue: '18 90% 70%',
+    hue2: '36 95% 76%',
   },
   {
     slug: 'zenith-zap',
@@ -58,8 +58,8 @@ export const projects: Project[] = [
     category: ['Web'],
     link: 'https://zenithzap.vercel.app',
     cover: 'bolt',
-    hue: '187 92% 55%',
-    hue2: '187 92% 55%',
+    hue: '18 90% 70%',
+    hue2: '36 95% 76%',
     image: '/projects/zenith-zap.jpg',
   },
   {

@@ -141,7 +141,7 @@ const Word = ({ token, index, progress }: { token: Token; index: number; progres
           <motion.path
             d="M1 5 C 18 1, 34 7, 52 3.5 S 86 2, 99 5"
             fill="none"
-            stroke="hsl(187 92% 62%)"
+            stroke="hsl(22 95% 78%)"
             strokeWidth="2.6"
             strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
@@ -192,10 +192,9 @@ const Hero = () => {
       <div className="sticky top-0 h-svh min-h-[34rem] overflow-hidden bg-[#0f4c8a]">
         <FrameScrub progress={progress} staticEnd={reduced} />
 
-        {/* legibility: soft blue scrim behind the copy, extra dim in dark theme, fade into the page at the bottom */}
+        {/* legibility: soft blue scrim behind the copy; the scene is fully theme-independent; the light-theme-only fade at the bottom blends it into the off-white page */}
         <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_34%_at_50%_41%,rgba(6,28,62,0.36),transparent_78%)]" />
-        <div aria-hidden className="pointer-events-none absolute inset-0 hidden bg-black/35 dark:block" />
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background via-background/60 to-transparent" />
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background via-background/60 to-transparent dark:hidden" />
 
         {/* ── copy ── optically centred a little above the middle, where the sky gap sits calmest.
             The shadow is a filter on the wrapper: a text-shadow would be clipped by the line-reveal masks (visible as a box). */}

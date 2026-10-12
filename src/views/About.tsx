@@ -1,81 +1,173 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { useSyncExternalStore } from 'react';
+import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import PageHeader from '@/components/PageHeader';
 import TransitionLink from '@/components/TransitionLink';
-import FloodRow from '@/components/FloodRow';
-import FolderGrid from '@/components/FolderGrid';
-import { Magnetic, Marquee, Reveal, ScrollText, TextReveal } from '@/components/fx';
-import { interests, PHONE, PHOTO, projects, softSkills, specializations, timeline } from '@/lib/data';
-import { SITE } from '@/lib/site';
+import PathChart from '@/components/PathChart';
+import ProjectStack from '@/components/ProjectStack';
+import { Magnetic, Marquee, Reveal, TextReveal } from '@/components/fx';
+import Avatar from '@/components/hero/Avatar';
+import { experiences, projects, softSkills } from '@/lib/data';
 
-const facts = [
-  { k: 'Based in', v: 'Visakhapatnam, India' },
-  { k: 'Studying', v: 'B.Tech CSE (IoT) · GITAM University' },
-  { k: 'Focus', v: 'Full-Stack · ML · IoT' },
-  { k: 'Email', v: SITE.email, href: `mailto:${SITE.email}` },
-  { k: 'Phone', v: PHONE, href: 'tel:+918250977949' },
-];
+const EASE = [0.16, 1, 0.3, 1] as const;
 
-const Portrait = () => {
-  const reduce = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-  const y = useTransform(scrollYProgress, [0, 1], reduce ? ['0%', '0%'] : ['-9%', '9%']);
+/* ───────────────────────── 1 · who: portrait stage + proof numbers ───────────────────────── */
+
+/** Floating label that sits around the portrait; position is part of the composition so each carries its own. */
+const Chip = ({ label, className, delay }: { label: string; className: string; delay: number }) => (
+  <motion.span
+    initial={{ opacity: 0, scale: 0.8, y: 12 }}
+    whileInView={{ opacity: 1, scale: 1, y: 0 }}
+    viewport={{ once: true, margin: '-10% 0px' }}
+    transition={{ duration: 0.7, delay, ease: EASE }}
+    className={`absolute z-20 hidden items-center gap-2 whitespace-nowrap rounded-full border border-line/20 bg-background/85 px-4 py-2 text-sm font-medium shadow-[0_10px_30px_-14px_rgba(0,0,0,0.35)] backdrop-blur sm:inline-flex ${className}`}
+  >
+    <span aria-hidden className="h-2 w-2 rounded-full bg-[hsl(var(--c-lime))]" />
+    {label}
+  </motion.span>
+);
+
+/** Rotating ring of text — the one playful detail. Stops for reduced motion. */
+const Badge = () => (
+  <div aria-hidden className="absolute -right-2 top-[22%] z-20 hidden h-28 w-28 sm:block md:-right-8">
+    <svg viewBox="0 0 120 120" className="h-full w-full animate-[spin_22s_linear_infinite] motion-reduce:animate-none">
+      <defs>
+        <path id="badge-ring" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" />
+      </defs>
+      <text className="fill-current font-mono text-[10.5px] uppercase tracking-[0.28em]">
+        <textPath href="#badge-ring">Full-Stack Developer • Visakhapatnam •</textPath>
+      </text>
+    </svg>
+    <span className="absolute inset-0 grid place-items-center text-2xl">✦</span>
+  </div>
+);
+
+/** Months since joining Spotmies (Dec 2025). Server snapshot is null so the markup never depends on the server's clock. */
+const JOINED = { year: 2025, month: 11 };
+const subscribe = () => () => {};
+const monthsSinceJoining = () => {
+  const n = new Date();
+  return Math.max(0, (n.getFullYear() - JOINED.year) * 12 + n.getMonth() - JOINED.month);
+};
+
+/** What a hiring manager actually scans for: where I am now, how long I've shipped professionally, where I've been. */
+const NowStrip = () => {
+  const months = useSyncExternalStore(subscribe, monthsSinceJoining, () => null);
+  const now = experiences[0];
+  const years = months === null ? 0 : Math.floor(months / 12);
+  const rest = months === null ? 0 : months % 12;
 
   return (
-    <motion.div ref={ref} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-10% 0px' }} data-cursor="Hi!" className="group relative aspect-[4/5]">
-    <motion.div
-      variants={{
-        hidden: { clipPath: 'inset(100% 0% 0% 0% round 28px)' },
-        show: { clipPath: 'inset(0% 0% 0% 0% round 28px)', transition: { duration: 1.2, ease: [0.76, 0, 0.24, 1] } },
-      }}
-      className="absolute inset-0 overflow-hidden rounded-[28px] bg-muted"
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <motion.img
-        src={PHOTO}
-        alt="B Venkata Sai Kartikeya"
-        style={{ y, scale: 1.2 }}
-        className="h-full w-full object-cover object-[50%_30%] grayscale transition-[filter] duration-700 group-hover:grayscale-0"
-      />
-      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-black/70 to-transparent p-6 text-[#f1ecdc]">
-        <div>
-          <p className="display text-2xl">Kartikeya</p>
-          <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.2em] opacity-80">Full-Stack Developer</p>
+    <div className="mx-auto mt-10 grid max-w-3xl divide-y divide-line/15 border-y border-line/15 text-left md:mt-14 md:grid-cols-2 md:divide-x md:divide-y-0">
+      <Reveal className="px-0 py-6 md:px-6">
+        <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60 motion-reduce:animate-none" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+          </span>
+          Now
+        </p>
+        <p className="display mt-3 text-2xl leading-tight">{now.role}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{now.company} · full-time</p>
+      </Reveal>
+
+      <Reveal delay={0.07} className="px-0 py-6 md:px-6">
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Shipping professionally</p>
+        <p className="display mt-3 flex items-baseline gap-2 text-[clamp(2rem,4vw,2.8rem)] leading-none" aria-live="off">
+          {months === null ? (
+            <span className="opacity-0">0</span>
+          ) : years > 0 ? (
+            <>
+              {years}
+              <span className="text-base font-medium text-muted-foreground">yr</span>
+              {rest}
+              <span className="text-base font-medium text-muted-foreground">mo</span>
+            </>
+          ) : (
+            <>
+              {rest}
+              <span className="text-base font-medium text-muted-foreground">months</span>
+            </>
+          )}
+        </p>
+      </Reveal>
+    </div>
+  );
+};
+
+/**
+ * The portrait steps out of a peach arch (the crown of the head breaks it) and stands on a ground line.
+ * Underneath: one sentence and a strip with where I am now and how long I've shipped.
+ */
+const WhoBlock = () => (
+  <section className="wrap pb-20 md:pb-32">
+    <div className="mx-auto max-w-4xl text-center">
+      <div className="relative mx-auto w-[min(88vw,26rem)]">
+        <motion.div
+          aria-hidden
+          initial={{ clipPath: 'inset(100% 0% 0% 0%)' }}
+          whileInView={{ clipPath: 'inset(0% 0% 0% 0%)' }}
+          viewport={{ once: true, margin: '-10% 0px' }}
+          transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
+          className="absolute inset-x-[9%] bottom-0 top-[17%] overflow-hidden rounded-t-[999px] bg-[linear-gradient(180deg,hsl(var(--c-lime)),hsl(var(--c-lime)/0.72))]"
+        >
+          <div className="absolute -left-[20%] bottom-[24%] h-[18%] w-[70%] rounded-full bg-white/35" />
+          <div className="absolute -right-[24%] bottom-[44%] h-[15%] w-[62%] rounded-full bg-white/25" />
+        </motion.div>
+
+        <div data-cursor="Hi!" className="relative z-10">
+          <Avatar />
         </div>
-        <span className="font-mono text-[11px] uppercase tracking-widest opacity-70">Vizag, IN</span>
+
+        <Chip label="MERN stack" delay={0.5} className="-left-4 top-[30%] md:-left-24" />
+        <Chip label="Real-time IoT" delay={0.62} className="-left-1 top-[58%] md:-left-16" />
+        <Chip label="Ships to production" delay={0.74} className="-right-1 top-[64%] md:-right-28" />
+        <Badge />
       </div>
-    </motion.div>
-    </motion.div>
-  );
-};
+      <div aria-hidden className="mx-auto h-px w-full max-w-3xl bg-line/20" />
 
-const Journey = () => {
-  const ref = useRef<HTMLOListElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.7', 'end 0.6'] });
-  const scaleY = useSpring(scrollYProgress, { stiffness: 90, damping: 24 });
+      <Reveal className="mt-10 md:mt-14">
+        <p className="display mx-auto max-w-2xl text-[clamp(1.5rem,3vw,2.4rem)] leading-[1.15] tracking-[-0.025em] text-balance">
+          Full-stack developer who ships <span className="serif text-primary">reliable</span> products — web, mobile and real-time IoT.
+        </p>
+      </Reveal>
 
-  return (
-    <ol ref={ref} className="relative">
-      <span aria-hidden className="absolute bottom-0 left-[7px] top-0 w-px bg-line/15 md:left-[11rem]" />
-      <motion.span aria-hidden style={{ scaleY }} className="absolute bottom-0 left-[7px] top-0 w-px origin-top bg-primary md:left-[11rem]" />
-      {timeline.map((t, i) => (
-        <Reveal key={i} as="li" delay={0.03} className="relative grid gap-2 pb-12 pl-8 md:grid-cols-[11rem_1fr] md:gap-12 md:pb-16 md:pl-0">
-          <span className="absolute left-0 top-1.5 h-[15px] w-[15px] rounded-full border border-primary bg-background md:left-[calc(11rem-7px)]" />
-          <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground md:pt-1.5 md:text-right md:pr-8">{t.year}</p>
-          <div className="md:pl-8">
-            <h3 className="display text-2xl leading-[1.05] md:text-3xl">{t.title}</h3>
-            <p className="mt-3 max-w-xl text-base leading-relaxed text-muted-foreground">{t.description}</p>
-          </div>
+      <NowStrip />
+    </div>
+  </section>
+);
+
+/* ───────────────────────── 2 · work: every project, stacked as you scroll ───────────────────────── */
+
+const WorkSection = () => (
+  <section className="wrap pb-20 md:pb-32">
+    <div className="mb-10 flex flex-col justify-between gap-6 md:mb-16 md:flex-row md:items-end">
+      <div>
+        <Reveal>
+          <p className="eyebrow mb-5 md:mb-6">Selected work</p>
         </Reveal>
-      ))}
-    </ol>
-  );
-};
+        <TextReveal
+          as="h2"
+          className="display text-[clamp(2.4rem,6.5vw,6rem)] leading-[0.98]"
+          lines={[<span key="a">Projects</span>, <span key="b" className="serif text-primary">built by me</span>]}
+        />
+      </div>
+      <Reveal delay={0.1}>
+        <Magnetic strength={0.25}>
+          <TransitionLink href="/projects" className="btn btn-ghost">
+            All projects <ArrowUpRight size={16} />
+          </TransitionLink>
+        </Magnetic>
+      </Reveal>
+    </div>
+    <ProjectStack items={projects} />
+  </section>
+);
+
+/* ───────────────────────── 3 · path: a timeline you click through, not scroll through ───────────────────────── */
 
 const About = () => (
   <PageTransition>
@@ -83,132 +175,11 @@ const About = () => (
       index="01"
       eyebrow="About me"
       lines={[<span key="a">Crafting</span>, <span key="b" className="serif text-gradient">reliable</span>, <span key="c">software.</span>]}
-      subtitle="Computer Science undergraduate at GITAM University. I turn ideas into production-ready applications — MERN stack first, clean architecture always."
     />
 
-    {/* bio */}
-    <section className="wrap pb-24 md:pb-40">
-      <div className="grid gap-14 lg:grid-cols-[5fr_7fr] lg:gap-24">
-        <div className="lg:sticky lg:top-28 lg:self-start">
-          <Portrait />
-        </div>
-        <div>
-          <ScrollText
-            className="display text-[clamp(1.7rem,3.6vw,3.4rem)] leading-[1.12] tracking-[-0.03em]"
-            text="I enjoy taking ideas from a simple sketch to a reliable, production-ready application. My recent work lives in the MERN stack and real-time IoT monitoring systems. I care about clear architecture, maintainable code and smooth user experiences more than chasing every new buzzword."
-            highlight={['reliable', 'clear', 'maintainable']}
-          />
-
-          <dl className="mt-16 border-t border-line/15">
-            {facts.map((f) => (
-              <Reveal key={f.k} className="grid grid-cols-[7rem_1fr] gap-4 border-b border-line/15 py-5 md:grid-cols-[10rem_1fr]">
-                <dt className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">{f.k}</dt>
-                <dd className="text-lg font-medium">
-                  {f.href ? (
-                    <a href={f.href} className="link-u">
-                      {f.v}
-                    </a>
-                  ) : (
-                    f.v
-                  )}
-                </dd>
-              </Reveal>
-            ))}
-          </dl>
-
-          <Reveal className="mt-10 flex flex-wrap gap-3">
-            <Magnetic strength={0.25}>
-              <a href={SITE.github} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
-                GitHub <ArrowUpRight size={16} />
-              </a>
-            </Magnetic>
-            <Magnetic strength={0.25}>
-              <a href={SITE.linkedin} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
-                LinkedIn <ArrowUpRight size={16} />
-              </a>
-            </Magnetic>
-            <Magnetic strength={0.25}>
-              <TransitionLink href="/contact" className="btn btn-solid">
-                Let&apos;s talk <ArrowUpRight size={16} />
-              </TransitionLink>
-            </Magnetic>
-          </Reveal>
-        </div>
-      </div>
-    </section>
-
-    {/* specializations */}
-    <section className="wrap pb-24 md:pb-40">
-      <Reveal>
-        <p className="eyebrow mb-10">What I specialise in</p>
-      </Reveal>
-      <div className="border-b border-line/15">
-        {specializations.map((s, i) => (
-          <Reveal key={s} delay={i * 0.05}>
-            <FloodRow>
-              <div className="flex items-baseline justify-between gap-6 py-7 md:py-9 md:pl-4 md:pr-6">
-                <div className="flex items-baseline gap-6 md:gap-12">
-                  <span className="font-mono text-xs tracking-widest opacity-60">0{i + 1}</span>
-                  <h3 className="display text-[clamp(1.6rem,4.6vw,4.2rem)]">{s}</h3>
-                </div>
-                <ArrowUpRight className="hidden shrink-0 md:block" />
-              </div>
-            </FloodRow>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-
-    {/* journey */}
-    <section className="wrap pb-24 md:pb-40">
-      <div className="mb-16 md:mb-24">
-        <Reveal>
-          <p className="eyebrow mb-6">The journey</p>
-        </Reveal>
-        <TextReveal as="h2" className="display text-[clamp(2.8rem,8.5vw,8.5rem)]" lines={[<span key="a">How I got</span>, <span key="b" className="serif text-gradient">here</span>]} />
-      </div>
-      <Journey />
-    </section>
-
-    {/* interests */}
-    <section className="wrap pb-24 md:pb-40">
-      <Reveal>
-        <p className="eyebrow mb-10">Areas of interest</p>
-      </Reveal>
-      <div className="grid border-t border-line/15 md:grid-cols-2">
-        {interests.map((it, i) => (
-          <Reveal key={it.title} delay={i * 0.06} className={`border-b border-line/15 py-10 md:py-14 ${i % 2 === 0 ? 'md:border-r md:pr-12' : 'md:pl-12'}`}>
-            <span className="font-mono text-xs tracking-widest text-primary">0{i + 1}</span>
-            <h3 className="display mt-5 text-[clamp(1.9rem,3.6vw,3.2rem)]">{it.title}</h3>
-            <p className="mt-4 max-w-md text-lg leading-relaxed text-muted-foreground">{it.description}</p>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-
-    {/* projects — easy to reach from the About page, with a hover image preview */}
-    <section className="wrap pb-16 sm:pb-24 md:pb-40">
-      <div className="mb-10 flex flex-col justify-between gap-6 md:mb-16 md:flex-row md:items-end">
-        <div>
-          <Reveal>
-            <p className="eyebrow mb-5 md:mb-6">Selected work</p>
-          </Reveal>
-          <TextReveal
-            as="h2"
-            className="display text-[clamp(2.5rem,8.5vw,8.5rem)]"
-            lines={[<span key="a">Things I&apos;ve</span>, <span key="b" className="serif text-gradient">built</span>]}
-          />
-        </div>
-        <Reveal delay={0.1}>
-          <Magnetic strength={0.25}>
-            <TransitionLink href="/projects" className="btn btn-ghost">
-              All projects <ArrowUpRight size={16} />
-            </TransitionLink>
-          </Magnetic>
-        </Reveal>
-      </div>
-      <FolderGrid items={projects} />
-    </section>
+    <WhoBlock />
+    <WorkSection />
+    <PathChart />
 
     {/* soft skills */}
     <section className="border-y border-line/15 py-8" aria-label="Soft skills">
