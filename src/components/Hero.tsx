@@ -1,27 +1,24 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
-import { Reveal, TextReveal } from '@/components/fx';
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+  type MotionValue,
+} from 'framer-motion';
+import { TextReveal } from '@/components/fx';
 
 const FRAME_COUNT = 96;
 /** Extra zoom into the footage (1 = none). The watermark crop is already baked into the exported frames. */
 const ZOOM = 1;
 const ZOOM_ORIGIN = { x: 0.2, y: 0.2 };
-const frameSrc =(i: number) => `/hero-frames/f${String(i + 1).padStart(3, '0')}.webp`;
-
-/** Italic serif word with a hand-drawn underline stroke (matches the "Kartikeya" italic); optional hover wiggle. */
-const Marked = ({ children, wiggle }: { children: string; wiggle?: boolean }) => (
-  <motion.em
-    className="serif relative inline-block"
-    whileHover={wiggle ? { rotate: [0, -4, 3, -2, 0], transition: { duration: 0.5 } } : undefined}
-  >
-    {children}
-    <svg aria-hidden viewBox="0 0 100 8" preserveAspectRatio="none" className="absolute -bottom-[0.14em] left-0 h-[0.26em] w-full overflow-visible">
-      <path d="M1 5 C 18 1, 34 7, 52 3.5 S 86 2, 99 5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-    </svg>
-  </motion.em>
-);
+const frameSrc = (i: number) => `/hero-frames/f${String(i + 1).padStart(3, '0')}.webp`;
 
 /**
  * Scroll-scrubbed background: an image sequence painted to a canvas (object-fit: cover).
@@ -111,9 +108,73 @@ const FrameScrub = ({ progress, staticEnd }: { progress: ReturnType<typeof useSp
   return <canvas ref={canvasRef} aria-hidden className="absolute inset-0 h-full w-full" />;
 };
 
+/* ───────────── the statement: assembles word by word as the valley opens up ───────────── */
+
+type Token = { word: string; mark?: boolean };
+const STATEMENT: Token[][] = [
+  [{ word: 'From' }, { word: 'the' }, { word: 'first' }, { word: 'query' }, { word: 'to' }, { word: 'the' }, { word: 'final' }, { word: 'deploy,' }],
+  [
+    { word: 'I' }, { word: 'build' }, { word: 'what' }, { word: 'lives' }, { word: 'on' }, { word: 'your' },
+    { word: 'screen', mark: true }, { word: 'and' }, { word: 'in' }, { word: 'your' }, { word: 'pocket.', mark: true },
+  ],
+];
+
+const WORDS_START = 0.34; // scroll progress where the first word begins to land
+const WORD_STEP = 0.016; // stagger between words
+const WORD_SPAN = 0.1; // how long a single word takes to resolve
+
+/** One word: rises, un-blurs and fades in against the scroll. Marked words are italic serif with a hand-drawn underline that draws itself. */
+const Word = ({ token, index, progress }: { token: Token; index: number; progress: MotionValue<number> }) => {
+  const start = WORDS_START + index * WORD_STEP;
+  const end = start + WORD_SPAN;
+  const opacity = useTransform(progress, [start, end], [0, 1]);
+  const y = useTransform(progress, [start, end], [22, 0]);
+  const blur = useTransform(progress, [start, end], [10, 0]);
+  const filter = useMotionTemplate`blur(${blur}px)`;
+  const draw = useTransform(progress, [end, end + 0.12], [0, 1]);
+
+  return (
+    <motion.span style={{ opacity, y, filter }} className={`relative inline-block ${token.mark ? 'serif' : ''}`}>
+      {token.word}
+      {token.mark && (
+        <svg aria-hidden viewBox="0 0 100 8" preserveAspectRatio="none" className="absolute -bottom-[0.12em] left-0 h-[0.28em] w-full overflow-visible">
+          <motion.path
+            d="M1 5 C 18 1, 34 7, 52 3.5 S 86 2, 99 5"
+            fill="none"
+            stroke="hsl(187 92% 62%)"
+            strokeWidth="2.6"
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+            style={{ pathLength: draw }}
+          />
+        </svg>
+      )}
+    </motion.span>
+  );
+};
+
+const Statement = ({ progress }: { progress: MotionValue<number> }) => {
+  let index = 0;
+  return (
+    <p className="font-[family-name:var(--font-serif)] text-[clamp(1.55rem,min(3.6vw,7svh),3.6rem)] leading-[1.18] tracking-[-0.01em] text-balance">
+      {STATEMENT.map((line, li) => (
+        <span key={li} className="block">
+          {line.map((token, ti) => (
+            <span key={ti}>
+              <Word token={token} index={index++} progress={progress} />
+              {ti < line.length - 1 ? ' ' : ''}
+            </span>
+          ))}
+        </span>
+      ))}
+    </p>
+  );
+};
+
 /**
  * Hero. A pinned, scroll-scrubbed painted sky: the camera pushes through the clouds and settles over the valley
- * as you scroll, while the copy sits centred and fades out so the scene takes over.
+ * as you scroll. Act one is the name (fades as you start scrolling), act two is the statement, which assembles
+ * word by word once the valley opens up.
  */
 const Hero = () => {
   const reduced = useReducedMotion() ?? false;
@@ -122,7 +183,9 @@ const Hero = () => {
   const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 28, mass: 0.4 });
 
   const copyOpacity = useTransform(progress, [0, 0.28], [1, 0]);
-  const copyY = useTransform(progress, [0, 0.28], [0, -48]);
+  const copyY = useTransform(progress, [0, 0.28], [0, -72]);
+  const statementScrim = useTransform(progress, [0.3, 0.5], [0, 1]);
+  const staticProgress = useMotionValue(1); // reduced motion: statement fully formed
 
   return (
     <section ref={sectionRef} className={`relative ${reduced ? 'h-svh min-h-[34rem]' : 'h-[340svh]'}`}>
@@ -130,22 +193,23 @@ const Hero = () => {
         <FrameScrub progress={progress} staticEnd={reduced} />
 
         {/* legibility: soft blue scrim behind the copy, extra dim in dark theme, fade into the page at the bottom */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_45%_at_50%_46%,rgba(6,28,62,0.42),transparent_75%)]" />
+        <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_34%_at_50%_41%,rgba(6,28,62,0.36),transparent_78%)]" />
         <div aria-hidden className="pointer-events-none absolute inset-0 hidden bg-black/35 dark:block" />
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background via-background/60 to-transparent" />
 
-        {/* ── copy ── */}
+        {/* ── copy ── optically centred a little above the middle, where the sky gap sits calmest.
+            The shadow is a filter on the wrapper: a text-shadow would be clipped by the line-reveal masks (visible as a box). */}
         <motion.div
           style={reduced ? undefined : { opacity: copyOpacity, y: copyY }}
-          className="absolute inset-0 z-10 flex items-center justify-center text-white [text-shadow:0_2px_24px_rgba(6,28,62,0.45)]"
+          className="absolute inset-0 z-10 flex items-center justify-center pb-[18svh] pt-20 text-white [filter:drop-shadow(0_2px_20px_rgba(6,28,62,0.5))]"
         >
           <div className="wrap">
-            <div className="mx-auto max-w-[36rem] text-center lg:max-w-[52rem] 2xl:max-w-[60rem]">
+            <div className="mx-auto max-w-[72rem] text-balance text-center">
               <TextReveal
                 as="h1"
                 immediate
                 delay={0.15}
-                className="display text-[clamp(2.4rem,10.5vw,3.75rem)] lg:text-[clamp(2.6rem,min(4.4vw,8svh),5.25rem)]"
+                className="display text-[clamp(2.25rem,min(6.4vw,13svh),7rem)]"
                 lines={[
                   <span key="a">
                     Hi, I&apos;m <span className="serif">Kartikeya</span>
@@ -153,28 +217,28 @@ const Hero = () => {
                   <span key="b">a Full-Stack Developer.</span>,
                 ]}
               />
-
-              {/* supporting copy: heading → line 1 → line 2, each one beat after the last */}
-              <p className="mx-auto mt-5 max-w-xl font-[family-name:var(--font-serif)] text-[1.5rem] leading-[1.25] text-white/95 sm:mt-6 xl:text-[1.75rem]">
-                <Reveal as="span" immediate delay={0.5} duration={0.7} distance={16} className="block text-balance">
-                  From the first query to the final deploy,
-                </Reveal>
-                <Reveal as="span" immediate delay={0.68} duration={0.7} distance={16} className="block text-balance">
-                  I build what lives on your <Marked>screen</Marked> and in your <Marked wiggle>pocket</Marked>.
-                </Reveal>
-              </p>
             </div>
           </div>
         </motion.div>
 
-        {!reduced && (
-          <motion.p
-            aria-hidden
-            style={{ opacity: copyOpacity }}
-            className="absolute inset-x-0 bottom-8 z-10 text-center font-mono text-[11px] uppercase tracking-[0.25em] text-white/80"
-          >
-            Scroll
-          </motion.p>
+        {/* ── act two: the statement ── */}
+        {reduced ? (
+          <div className="absolute inset-x-0 bottom-[16svh] z-10 px-6 text-center text-white [filter:drop-shadow(0_2px_20px_rgba(6,28,62,0.5))]">
+            <Statement progress={staticProgress} />
+          </div>
+        ) : (
+          <>
+            <motion.div
+              aria-hidden
+              style={{ opacity: statementScrim }}
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_85%_36%_at_50%_40%,rgba(6,28,62,0.42),transparent_78%)]"
+            />
+            <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-6 pb-[16svh] pt-20 text-center text-white [filter:drop-shadow(0_2px_22px_rgba(6,28,62,0.55))]">
+              <div className="mx-auto max-w-[62rem]">
+                <Statement progress={progress} />
+              </div>
+            </div>
+          </>
         )}
       </div>
     </section>
