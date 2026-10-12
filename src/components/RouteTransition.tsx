@@ -147,21 +147,19 @@ export const RouteTransitionProvider = ({ children }: { children: ReactNode }) =
       {children}
       <div aria-hidden className={`fixed inset-0 z-[90] ${covered ? 'pointer-events-auto' : 'pointer-events-none'}`}>
         <div className="absolute inset-0 grid" style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)`, gridTemplateRows: `repeat(${ROWS}, 1fr)` }}>
-          {Array.from({ length: CELLS }).map((_, i) => {
+          {covered && Array.from({ length: CELLS }).map((_, i) => {
             const d = dist[i] ?? 0;
-            const l = Math.min(86, Math.max(52, tone.l + (jitter(i) - 0.5) * 12));
+            const l = Math.round(Math.min(86, Math.max(52, tone.l + (jitter(i) - 0.5) * 12)));
             const colour = `hsl(${tone.h} ${tone.s}% ${l}%)`;
             return (
               <motion.div
                 key={i}
-                initial={false}
-                animate={phase === 'in' ? { scale: 1.02, opacity: 1 } : phase === 'out' ? { scale: 0, opacity: 1 } : { scale: 0, opacity: 0 }}
+                initial={{ scale: 0, opacity: 1 }}
+                animate={phase === 'out' ? { scale: 0, opacity: 1 } : { scale: 1.02, opacity: 1 }}
                 transition={
                   phase === 'in'
                     ? { duration: 0.36, ease: EASE, delay: d * 0.46 }
-                    : phase === 'out'
-                      ? { duration: 0.42, ease: EASE, delay: d * 0.5 }
-                      : { duration: 0 }
+                    : { duration: 0.42, ease: EASE, delay: d * 0.5 }
                 }
                 onAnimationComplete={() => {
                   if (phase === 'out' && i === last) {
