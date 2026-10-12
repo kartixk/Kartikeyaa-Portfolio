@@ -181,7 +181,7 @@ export const education = [
 
 export const skillGroups = [
   { title: 'Programming', skills: ['Python', 'Java', 'C', 'JavaScript', 'TypeScript', 'SQL'] },
-  { title: 'Web', skills: ['HTML', 'CSS', 'React.js', 'Node.js', 'Express.js', 'REST APIs'] },
+  { title: 'Web', skills: ['HTML', 'CSS', 'React.js', 'Next.js', 'Node.js', 'Express.js', 'REST APIs'] },
   { title: 'Data & Tools', skills: ['MongoDB', 'Git', 'GitHub', 'Firebase', 'Supabase', 'ThingSpeak', 'Figma'] },
   { title: 'Exploring', skills: ['Machine Learning', 'IoT', 'NLP', 'TensorFlow', 'Deep Learning'] },
 ];

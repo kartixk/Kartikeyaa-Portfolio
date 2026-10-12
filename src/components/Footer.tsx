@@ -28,7 +28,7 @@ const Footer = () => {
     <footer className="relative z-10 mt-12 border-t border-line/15">
       {!onContact && (
         <section className="wrap section">
-          <div className="relative overflow-hidden rounded-[1.75rem] bg-grad-pan p-6 text-[#0c0f0a] sm:rounded-[2.5rem] sm:p-10 md:p-16">
+          <div className="relative overflow-hidden rounded-[1.75rem] bg-grad-pan p-6 text-[#0c0f0a] dark:[background:hsl(17_56%_56%)] sm:rounded-[2.5rem] sm:p-10 md:p-16">
             <Reveal>
               <p className="eyebrow mb-6 !text-[#0c0f0a]/70 md:mb-8">What&apos;s next?</p>
             </Reveal>
