@@ -39,6 +39,8 @@ const Navbar = () => {
   const [hover, setHover] = useState<string | null>(null);
   const [origin, setOrigin] = useState('calc(100% - 3rem) 3.4rem');
   const menuBtn = useRef<HTMLButtonElement>(null);
+  const [navHover, setNavHover] = useState<string | null>(null);
+  const activePath = quick.find((r) => (r.path === '/' ? pathname === '/' : pathname === r.path || pathname.startsWith(`${r.path}/`)))?.path ?? null;
   const lastY = useRef(0);
   const { scrollY } = useScroll();
 
@@ -69,36 +71,47 @@ const Navbar = () => {
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className="pointer-events-none fixed inset-x-0 top-3 z-[70] flex justify-center px-3 sm:top-4"
       >
-        <div className="pointer-events-auto flex max-w-full items-center gap-1 rounded-full border border-white/10 bg-[#141714] p-1.5 text-[#f1f2ea] shadow-[0_18px_50px_-18px_rgba(0,0,0,0.7)]">
-          <TransitionLink href="/" className="group flex items-center gap-2.5 rounded-full py-1 pl-1 pr-2 sm:pr-3" aria-label="Home — Kartikeya">
-            <span className="grid h-9 place-items-center rounded-full bg-[#f1f2ea] px-2.5 transition-colors duration-300 group-hover:bg-lime">
+        {/* frosted glass, so the pill takes on whatever is behind it (sky, page, menu) instead of sitting on it as a black slab */}
+        <div
+          onMouseLeave={() => setNavHover(null)}
+          className="pointer-events-auto flex max-w-full items-center gap-1 rounded-full border border-white/15 bg-[#0d1117]/60 p-1.5 text-white shadow-[0_18px_50px_-20px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-xl backdrop-saturate-150"
+        >
+          <TransitionLink href="/" className="group flex items-center rounded-full" aria-label="Home — Kartikeya">
+            <span className="grid h-10 place-items-center rounded-full bg-[#f4f1e8] px-3 transition-transform duration-300 group-hover:scale-[1.04]">
               <Eyes />
-            </span>
-            <span className="hidden items-center gap-2 text-sm font-medium sm:flex">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-lime opacity-70" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-lime" />
-              </span>
             </span>
           </TransitionLink>
 
-          <nav aria-label="Primary" className="hidden items-center md:flex">
+          <nav aria-label="Primary" className="ml-1 hidden items-center md:flex">
             {quick.map((r) => {
               const active = r.path === '/' ? pathname === '/' : pathname === r.path || pathname.startsWith(`${r.path}/`);
+              const lit = (navHover ?? activePath) === r.path;
               return (
                 <TransitionLink
                   key={r.path}
                   href={r.path}
-                  className={cn('relative rounded-full px-3.5 py-2 text-sm font-medium transition-colors', active ? 'text-lime' : 'text-[#f1f2ea]/80 hover:text-[#f1f2ea]')}
+                  onMouseEnter={() => setNavHover(r.path)}
+                  onFocus={() => setNavHover(r.path)}
+                  onBlur={() => setNavHover(null)}
+                  aria-current={active ? 'page' : undefined}
+                  className={cn('relative rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200', lit || active ? 'text-white' : 'text-white/65')}
                 >
-                  {r.label}
-                  {active && <motion.span layoutId="nav-dot" className="absolute inset-x-3.5 -bottom-0.5 h-[2px] rounded-full bg-lime" />}
+                  {lit && (
+                    <motion.span
+                      layoutId="nav-lens"
+                      transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                      className={cn('absolute inset-0 rounded-full', active && navHover === null ? 'bg-white/[0.16]' : 'bg-white/10')}
+                    />
+                  )}
+                  <span className="relative">{r.label}</span>
                 </TransitionLink>
               );
             })}
           </nav>
 
-          <ThemeToggle className="!h-9 !w-9 !border-white/15 !text-[#f1f2ea] hover:!bg-[#f1f2ea] hover:!text-[#141714]" />
+          <span aria-hidden className="mx-1.5 hidden h-5 w-px bg-white/15 md:block" />
+
+          <ThemeToggle className="!h-10 !w-10 !border-white/15 !text-white hover:!bg-white hover:!text-[#0d1117]" />
 
           <button
             ref={menuBtn}
@@ -109,12 +122,13 @@ const Navbar = () => {
             }}
             aria-expanded={open}
             aria-label={open ? 'Close menu' : 'Open menu'}
-            className="grid h-9 w-9 place-items-center rounded-full border border-white/15 transition-colors hover:bg-[#f1f2ea] hover:text-[#141714]"
+            className="group flex h-10 items-center gap-2.5 rounded-full bg-white px-4 text-sm font-semibold text-[#0d1117] transition-transform duration-200 hover:scale-[1.03] active:scale-95"
           >
-            <span className="relative block h-3 w-4">
-              <motion.span animate={open ? { rotate: 45, y: 5 } : { rotate: 0, y: 0 }} className="absolute left-0 top-0 h-[1.5px] w-full bg-current" />
-              <motion.span animate={open ? { rotate: -45, y: -5 } : { rotate: 0, y: 0 }} className="absolute bottom-0 left-0 h-[1.5px] w-full bg-current" style={{ top: 'auto' }} />
+            <span className="relative block h-2.5 w-4">
+              <motion.span animate={open ? { rotate: 45, y: 4.5 } : { rotate: 0, y: 0 }} className="absolute left-0 top-0 h-[1.5px] w-full bg-current" />
+              <motion.span animate={open ? { rotate: -45, y: -4.5 } : { rotate: 0, y: 0 }} className="absolute bottom-0 left-0 h-[1.5px] w-full bg-current" style={{ top: 'auto' }} />
             </span>
+            <span>{open ? 'Close' : 'Menu'}</span>
           </button>
         </div>
       </motion.header>
