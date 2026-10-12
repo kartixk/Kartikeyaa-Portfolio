@@ -6,59 +6,8 @@ import TransitionLink from '@/components/TransitionLink';
 import FloodRow from '@/components/FloodRow';
 import Desktop from '@/components/desk/Desktop';
 import Hero from '@/components/Hero';
-import { Counter, Magnetic, Reveal, ScrollText, TextReveal, Tilt, VelocityMarquee } from '@/components/fx';
+import { Counter, Magnetic, Reveal, ScrollText, TextReveal, Tilt } from '@/components/fx';
 import { experiences, projects, skillGroups, stats } from '@/lib/data';
-
-/* ───────────────────────── TILTED BANDS ───────────────────────── */
-
-type BandItem = { text: string; italic?: boolean };
-
-// Band 1 — what I build. Band 2 — what I build it with.
-// Rule: every word is bold sans; one or two key words per band switch to the italic serif.
-const WORK: BandItem[] = [
-  { text: 'Full-Stack' },
-  { text: 'Web Apps' },
-  { text: 'Mobile Apps', italic: true },
-  { text: 'Client Projects', italic: true },
-  { text: 'Scalable APIs' },
-  { text: 'Production Ready' },
-];
-const TOOLS: BandItem[] = [
-  { text: 'React' },
-  { text: 'Next.js', italic: true },
-  { text: 'Node.js' },
-  { text: 'Express' },
-  { text: 'MongoDB' },
-  { text: 'PostgreSQL', italic: true },
-  { text: 'TypeScript' },
-  { text: 'React Native' },
-];
-
-const Band = ({ items }: { items: BandItem[] }) => (
-  <>
-    {items.map(({ text, italic }) => (
-      <span key={text} className="flex items-center">
-        <span className={`display text-[clamp(1.7rem,5.2vw,4.8rem)] ${italic ? 'serif' : ''}`}>{text}</span>
-        <span aria-hidden className="mx-7 h-2 w-2 shrink-0 rounded-full bg-current opacity-60 sm:mx-12 sm:h-2.5 sm:w-2.5" />
-      </span>
-    ))}
-  </>
-);
-
-const Bands = () => (
-  <section aria-hidden className="relative my-4 h-[9.5rem] overflow-hidden sm:h-[13rem] md:my-8 md:h-[17rem]">
-    <div className="absolute -left-[5%] top-3 w-[110%] -rotate-2 bg-grad-pan py-2.5 text-[#0c0f0a] shadow-[0_20px_60px_-20px_hsl(var(--c-lime)/0.4)] sm:py-4">
-      <VelocityMarquee direction={-1} speed={3.2}>
-        <Band items={WORK} />
-      </VelocityMarquee>
-    </div>
-    <div className="absolute -left-[5%] top-[4.6rem] w-[110%] rotate-2 bg-[#e3f7fa] py-2.5 text-[#0c0f0a] shadow-[0_18px_50px_-24px_rgba(0,0,0,0.45)] sm:top-[6.2rem] sm:py-4 md:top-[8.2rem]">
-      <VelocityMarquee direction={1} speed={3.2}>
-        <Band items={TOOLS} />
-      </VelocityMarquee>
-    </div>
-  </section>
-);
 
 /* ───────────────────────── PAGE ───────────────────────── */
 
@@ -76,7 +25,6 @@ const SectionTitle = ({ eyebrow, lines }: { eyebrow: string; lines: React.ReactN
 const Home = () => (
   <PageTransition>
     <Hero />
-    <Bands />
 
     {/* about */}
     <section className="wrap section">
