@@ -1,8 +1,9 @@
 'use client';
 
-import { useSyncExternalStore, type ReactNode } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
+import { useLenis } from 'lenis/react';
+import { ArrowUpRight, RotateCcw } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import PageHeader from '@/components/PageHeader';
 import TransitionLink from '@/components/TransitionLink';
@@ -100,13 +101,139 @@ const NowStrip = () => {
 };
 
 /**
+ * The freeze-frame moment as a thought bubble over the portrait: three typing dots, then the line every movie says.
+ * Types itself once when it scrolls into view; "Rewind" scrolls to the story below ("How I got here").
+ * A hidden copy of the full text reserves the bubble's size, so nothing shifts while it types.
+ */
+const LINES = [
+  "Yep, that's me.",
+  "You're probably wondering how a guy who started with a few lines of code ended up building things for the web.",
+  "Well, let's start from the beginning.",
+] as const;
+
+/** one circle of the thought-bubble trail */
+const dot = 'absolute rounded-full border border-line/25 bg-background shadow-[0_4px_10px_-4px_rgba(0,0,0,0.25)]';
+
+const FreezeBubble = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: '-5% 0px' });
+  const reduce = useReducedMotion();
+  const lenis = useLenis();
+  const [typedState, setTyped] = useState<number[]>(() => LINES.map(() => 0));
+  // reduced motion: show every line at once, no typing
+  const typed: number[] = reduce ? LINES.map((l) => l.length) : typedState;
+
+  useEffect(() => {
+    if (!inView || reduce) return;
+    let stop = false;
+    const timers: number[] = [];
+    const run = (line: number, i: number) => {
+      if (stop) return;
+      setTyped((t) => t.map((n, k) => (k === line ? i : n)));
+      if (i < LINES[line].length) timers.push(window.setTimeout(() => run(line, i + 1), 26));
+      else if (line < LINES.length - 1) timers.push(window.setTimeout(() => run(line + 1, 0), line === 0 ? 550 : 700));
+    };
+    // 1.3s of "typing…" dots first, like a message about to arrive
+    timers.push(window.setTimeout(() => run(0, 0), 1300));
+    return () => {
+      stop = true;
+      timers.forEach(window.clearTimeout);
+    };
+  }, [inView, reduce]);
+
+  const started = typed[0] > 0;
+  const done = typed[LINES.length - 1] >= LINES[LINES.length - 1].length;
+  const rewind = () => {
+    const el = document.getElementById('path');
+    if (!el) return;
+    if (lenis) lenis.scrollTo(el, { duration: 1.6 });
+    else el.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <div ref={ref} className="absolute bottom-full left-1/2 z-30 mb-3 w-[min(92vw,25rem)] -translate-x-1/2 sm:left-[70%] sm:-mb-2 lg:left-[72%] lg:translate-x-0 lg:-mb-3">
+      <motion.div
+        initial={{ opacity: 0, y: 14, scale: 0.94 }}
+        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+        viewport={{ once: true, margin: '-5% 0px' }}
+        transition={{ duration: 0.6, delay: 0.5, ease: EASE }}
+        className="relative rounded-[1.6rem] border border-line/20 bg-background/95 px-5 py-4 text-left shadow-[0_18px_44px_-18px_rgba(0,0,0,0.45)] backdrop-blur"
+      >
+        {/* reserve the final size */}
+        <div aria-hidden className="invisible">
+          <p className="display text-[1.7rem] leading-[1.1]">{LINES[0]}</p>
+          <p className="mt-2 text-[0.95rem] leading-snug">{LINES[1]}</p>
+          <p className="serif mt-3 text-[1.2rem] leading-snug">{LINES[2]}</p>
+          <span className="mt-3 inline-block h-9" />
+        </div>
+
+        <div className="absolute inset-0 px-5 py-4">
+          {!started && !reduce ? (
+            <span className="flex h-full items-center gap-1.5" aria-label="typing">
+              {[0, 1, 2].map((i) => (
+                <motion.span
+                  key={i}
+                  className="h-2 w-2 rounded-full bg-foreground/60"
+                  animate={{ y: [0, -5, 0], opacity: [0.4, 1, 0.4] }}
+                  transition={{ duration: 0.9, repeat: Infinity, delay: i * 0.15, ease: 'easeInOut' }}
+                />
+              ))}
+            </span>
+          ) : (
+            <>
+              <p className="display text-[1.7rem] leading-[1.1] tracking-[-0.02em]">
+                <span className="serif">{LINES[0].slice(0, typed[0])}</span>
+              </p>
+              <p className="mt-2 text-[0.95rem] leading-snug text-muted-foreground" aria-live="polite">
+                {LINES[1].slice(0, typed[1])}
+                {typed[1] > 0 && typed[1] < LINES[1].length && <span aria-hidden className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[0.18em] animate-pulse bg-current" />}
+              </p>
+              <p className="serif mt-3 min-h-[1.4em] text-[1.2rem] leading-snug">
+                {LINES[2].slice(0, typed[2])}
+                {typed[2] > 0 && !done && <span aria-hidden className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[0.18em] animate-pulse bg-current" />}
+              </p>
+              <motion.button
+                type="button"
+                onClick={rewind}
+                initial={{ opacity: 0, y: 6 }}
+                animate={done || reduce ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
+                transition={{ duration: 0.4, ease: EASE }}
+                className="group mt-3 inline-flex items-center gap-2 rounded-full border border-line/25 px-3.5 py-1.5 text-xs font-semibold transition-colors hover:border-transparent hover:bg-foreground hover:text-background"
+              >
+                <RotateCcw size={13} className="transition-transform duration-500 group-hover:-rotate-[360deg]" />
+                Rewind the tape
+              </motion.button>
+            </>
+          )}
+        </div>
+
+        {/* thought-bubble trail: three shrinking circles on one diagonal, from the bubble toward the head */}
+        {/* wide screens: bubble sits up-and-right of the head, so the trail leaves its lower-left corner */}
+        <span aria-hidden className="pointer-events-none absolute -bottom-14 left-0 hidden h-14 w-14 lg:block">
+          <span className={`${dot} left-[26px] top-[2px] h-[18px] w-[18px]`} />
+          <span className={`${dot} left-[10px] top-[24px] h-[12px] w-[12px]`} />
+          <span className={`${dot} left-[0px] top-[40px] h-[8px] w-[8px]`} />
+        </span>
+        {/* smaller screens: bubble is nearly above the head, so the trail drops from its lower middle */}
+        <span aria-hidden className="pointer-events-none absolute -bottom-14 left-1/2 block h-14 w-14 -translate-x-1/2 sm:left-[33%] lg:hidden">
+          <span className={`${dot} left-[26px] top-[2px] h-[18px] w-[18px]`} />
+          <span className={`${dot} left-[20px] top-[24px] h-[12px] w-[12px]`} />
+          <span className={`${dot} left-[15px] top-[40px] h-[8px] w-[8px]`} />
+        </span>
+      </motion.div>
+    </div>
+  );
+};
+
+/**
  * The portrait steps out of a peach arch (the crown of the head breaks it) and stands on a ground line.
  * Underneath: one sentence and a strip with where I am now and how long I've shipped.
  */
 const WhoBlock = () => (
   <section className="wrap pb-20 md:pb-32">
     <div className="mx-auto max-w-4xl text-center">
-      <div className="relative mx-auto w-[min(88vw,26rem)]">
+      <div className="relative mx-auto mt-40 w-[min(88vw,26rem)] sm:mt-36">
+        <FreezeBubble />
         <motion.div
           aria-hidden
           initial={{ clipPath: 'inset(100% 0% 0% 0%)' }}
@@ -119,9 +246,35 @@ const WhoBlock = () => (
           <div className="absolute -right-[24%] bottom-[44%] h-[15%] w-[62%] rounded-full bg-white/25" />
         </motion.div>
 
-        <div data-cursor="Hi!" className="relative z-10">
+        <motion.div
+          data-cursor="Hi!"
+          className="relative z-10"
+          initial={{ filter: 'grayscale(1) contrast(1.35) brightness(1.15)', scale: 1.035 }}
+          whileInView={{ filter: 'grayscale(0) contrast(1) brightness(1)', scale: 1 }}
+          viewport={{ once: true, margin: '-10% 0px' }}
+          transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        >
           <Avatar />
-        </div>
+        </motion.div>
+
+        {/* viewfinder: four corner marks and a REC tag, as if the frame has just been held */}
+        <motion.div
+          aria-hidden
+          initial={{ opacity: 0, scale: 1.06 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: '-10% 0px' }}
+          transition={{ duration: 0.6, delay: 0.3, ease: EASE }}
+          className="pointer-events-none absolute inset-x-[4%] -top-1 bottom-0 z-20 text-foreground/40 sm:inset-x-[6%] sm:-top-3"
+        >
+          <span className="absolute left-0 top-0 h-6 w-6 rounded-tl-md border-l-2 border-t-2 border-current" />
+          <span className="absolute right-0 top-0 h-6 w-6 rounded-tr-md border-r-2 border-t-2 border-current" />
+          <span className="absolute bottom-0 left-0 h-6 w-6 rounded-bl-md border-b-2 border-l-2 border-current" />
+          <span className="absolute bottom-0 right-0 h-6 w-6 rounded-br-md border-b-2 border-r-2 border-current" />
+          <span className="absolute left-3 top-3 hidden items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] sm:flex">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-red-500 motion-reduce:animate-none" />
+            Rec
+          </span>
+        </motion.div>
 
         <Chip label="Full-stack, end to end" icon={<FullStackIcon />} delay={0.5} className="-left-4 top-[30%] md:-left-24" />
         <Chip label="Fast by default" icon={<GaugeIcon />} delay={0.62} className="-left-1 top-[58%] md:-left-16" />
@@ -179,8 +332,8 @@ const About = () => (
     />
 
     <WhoBlock />
-    <WorkSection />
     <PathChart />
+    <WorkSection />
 
     {/* soft skills */}
     <section className="border-y border-line/15 py-8" aria-label="Soft skills">

@@ -165,7 +165,7 @@ const PathChart = () => {
   const legend = useMemo(() => Object.entries(KINDS) as [Kind, { label: string; color: string }][], []);
 
   return (
-    <section ref={sectionRef} className={`relative ${reduced ? 'pb-20 md:pb-32' : 'h-[260svh]'}`} aria-label="How I got here">
+    <section ref={sectionRef} id="path" className={`relative ${reduced ? 'pb-20 md:pb-32' : 'h-[260svh]'}`} aria-label="How I got here">
       <div className={reduced ? '' : 'sticky top-0 flex min-h-svh flex-col justify-center pb-6 pt-24 md:pt-28'}>
         <div className="wrap w-full">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-4 md:mb-7">
