@@ -105,7 +105,11 @@ const NowStrip = () => {
  * Types itself once when it scrolls into view; "Rewind" scrolls to the story below ("How I got here").
  * A hidden copy of the full text reserves the bubble's size, so nothing shifts while it types.
  */
-const LINES = ["Yup, that's me.", "You're probably wondering how I got here."] as const;
+const LINES = [
+  "Yep, that's me.",
+  "You're probably wondering how a guy who started with a few lines of code ended up building things for the web.",
+  "Well, let's start from the beginning.",
+] as const;
 
 /** one circle of the thought-bubble trail */
 const dot = 'absolute rounded-full border border-line/25 bg-background shadow-[0_4px_10px_-4px_rgba(0,0,0,0.25)]';
@@ -115,19 +119,19 @@ const FreezeBubble = () => {
   const inView = useInView(ref, { once: true, margin: '-5% 0px' });
   const reduce = useReducedMotion();
   const lenis = useLenis();
-  const [typedState, setTyped] = useState<[number, number]>([0, 0]);
-  // reduced motion: show both lines at once, no typing
-  const typed: [number, number] = reduce ? [LINES[0].length, LINES[1].length] : typedState;
+  const [typedState, setTyped] = useState<number[]>(() => LINES.map(() => 0));
+  // reduced motion: show every line at once, no typing
+  const typed: number[] = reduce ? LINES.map((l) => l.length) : typedState;
 
   useEffect(() => {
     if (!inView || reduce) return;
     let stop = false;
     const timers: number[] = [];
-    const run = (line: 0 | 1, i: number) => {
+    const run = (line: number, i: number) => {
       if (stop) return;
-      setTyped((t) => (line === 0 ? [i, t[1]] : [t[0], i]));
-      if (i < LINES[line].length) timers.push(window.setTimeout(() => run(line, i + 1), 34));
-      else if (line === 0) timers.push(window.setTimeout(() => run(1, 0), 600));
+      setTyped((t) => t.map((n, k) => (k === line ? i : n)));
+      if (i < LINES[line].length) timers.push(window.setTimeout(() => run(line, i + 1), 26));
+      else if (line < LINES.length - 1) timers.push(window.setTimeout(() => run(line + 1, 0), line === 0 ? 550 : 700));
     };
     // 1.3s of "typing…" dots first, like a message about to arrive
     timers.push(window.setTimeout(() => run(0, 0), 1300));
@@ -138,7 +142,7 @@ const FreezeBubble = () => {
   }, [inView, reduce]);
 
   const started = typed[0] > 0;
-  const done = typed[1] >= LINES[1].length;
+  const done = typed[LINES.length - 1] >= LINES[LINES.length - 1].length;
   const rewind = () => {
     const el = document.getElementById('path');
     if (!el) return;
@@ -147,7 +151,7 @@ const FreezeBubble = () => {
   };
 
   return (
-    <div ref={ref} className="absolute bottom-full left-1/2 z-30 mb-5 w-[min(92vw,22rem)] -translate-x-1/2 sm:left-[64%] sm:mb-6 lg:left-[58%] lg:translate-x-0 lg:mb-10">
+    <div ref={ref} className="absolute bottom-full left-1/2 z-30 mb-3 w-[min(92vw,25rem)] -translate-x-1/2 sm:left-[70%] sm:-mb-2 lg:left-[72%] lg:translate-x-0 lg:-mb-3">
       <motion.div
         initial={{ opacity: 0, y: 14, scale: 0.94 }}
         whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -158,7 +162,8 @@ const FreezeBubble = () => {
         {/* reserve the final size */}
         <div aria-hidden className="invisible">
           <p className="display text-[1.7rem] leading-[1.1]">{LINES[0]}</p>
-          <p className="mt-1.5 text-[0.95rem] leading-snug">{LINES[1]}</p>
+          <p className="mt-2 text-[0.95rem] leading-snug">{LINES[1]}</p>
+          <p className="serif mt-3 text-[1.2rem] leading-snug">{LINES[2]}</p>
           <span className="mt-3 inline-block h-9" />
         </div>
 
@@ -179,9 +184,13 @@ const FreezeBubble = () => {
               <p className="display text-[1.7rem] leading-[1.1] tracking-[-0.02em]">
                 <span className="serif">{LINES[0].slice(0, typed[0])}</span>
               </p>
-              <p className="mt-1.5 text-[0.95rem] leading-snug text-muted-foreground" aria-live="polite">
+              <p className="mt-2 text-[0.95rem] leading-snug text-muted-foreground" aria-live="polite">
                 {LINES[1].slice(0, typed[1])}
-                {!done && <span aria-hidden className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[0.18em] animate-pulse bg-current" />}
+                {typed[1] > 0 && typed[1] < LINES[1].length && <span aria-hidden className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[0.18em] animate-pulse bg-current" />}
+              </p>
+              <p className="serif mt-3 min-h-[1.4em] text-[1.2rem] leading-snug">
+                {LINES[2].slice(0, typed[2])}
+                {typed[2] > 0 && !done && <span aria-hidden className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[0.18em] animate-pulse bg-current" />}
               </p>
               <motion.button
                 type="button"
