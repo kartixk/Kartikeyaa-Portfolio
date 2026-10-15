@@ -23,14 +23,15 @@ const ProjectStack = ({ items }: { items: Project[] }) => (
   >
     {items.map((p, i) => (
       <ScrollStackItem key={p.slug} itemClassName="!h-auto bg-card text-foreground md:!h-[27rem]">
-        <TransitionLink
-          href={`/projects/${p.slug}`}
-          data-cursor="Open"
-          className="group grid h-full gap-6 p-4 sm:p-6 md:grid-cols-2 md:gap-10 md:p-8"
-        >
-          <div className={`relative aspect-[16/10] overflow-hidden rounded-2xl md:aspect-auto md:h-full ${i % 2 ? 'md:order-2' : ''}`}>
+        <div className="group grid h-full gap-6 p-4 sm:p-6 md:grid-cols-2 md:gap-10 md:p-8">
+          <TransitionLink
+            href={`/projects/${p.slug}`}
+            data-cursor="Open"
+            aria-label={`${p.title} case study`}
+            className={`relative aspect-[16/10] overflow-hidden rounded-2xl md:aspect-auto md:h-full ${i % 2 ? 'md:order-2' : ''}`}
+          >
             <ProjectCover kind={p.cover} hue={p.hue} hue2={p.hue2} image={p.image} alt={`${p.title} preview`} />
-          </div>
+          </TransitionLink>
 
           <div className="flex flex-col justify-between gap-6 py-1">
             <div>
@@ -51,13 +52,30 @@ const ProjectStack = ({ items }: { items: Project[] }) => (
                   </li>
                 ))}
               </ul>
-              <p className="mt-5 inline-flex items-center gap-2 text-sm font-semibold">
-                View case study
-                <ArrowUpRight size={16} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              </p>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <TransitionLink
+                  href={`/projects/${p.slug}`}
+                  data-cursor="Open"
+                  className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-semibold text-background transition-opacity hover:opacity-85"
+                >
+                  View case study
+                  <ArrowUpRight size={16} />
+                </TransitionLink>
+                {p.link && (
+                  <a
+                    href={p.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-line/30 px-5 py-2.5 text-sm font-semibold transition-colors hover:bg-foreground/5"
+                  >
+                    Live link
+                    <ArrowUpRight size={16} />
+                  </a>
+                )}
+              </div>
             </div>
           </div>
-        </TransitionLink>
+        </div>
       </ScrollStackItem>
     ))}
   </ScrollStack>
