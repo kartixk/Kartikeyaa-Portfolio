@@ -39,9 +39,25 @@ const ProjectStack = ({ items }: { items: Project[] }) => (
                 <span>{String(i + 1).padStart(2, '0')}</span>
                 <span aria-hidden className="h-px w-8 bg-line/30" />
                 <span>{p.category.join(' · ')}</span>
+                {p.link && (
+                  <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-line/20 px-2.5 py-1 normal-case tracking-normal">
+                    <span aria-hidden className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+                    Live
+                  </span>
+                )}
               </p>
               <h3 className="display mt-4 text-[clamp(1.9rem,3.4vw,3.1rem)] leading-[1.02]">{p.title}</h3>
-              <p className="mt-3 text-base leading-snug text-muted-foreground md:text-lg">{p.outcome}</p>
+              <p className="serif text-gradient mt-3 text-2xl leading-tight md:text-[1.7rem]">{p.outcome}</p>
+              {p.caseStudy && (
+                <dl className="mt-6 grid grid-cols-3 gap-3 border-t border-line/15 pt-5">
+                  {p.caseStudy.stats.slice(0, 3).map((s) => (
+                    <div key={s.label}>
+                      <dt className="display text-3xl md:text-4xl">{s.value}</dt>
+                      <dd className="mt-1 text-xs leading-snug text-muted-foreground">{s.label}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
             </div>
 
             <div>

@@ -121,6 +121,10 @@
   /* Custom cursor takes over only on fine pointers (class set by <Cursor />) */
   html.has-cursor, html.has-cursor * { cursor: none !important; }
   html.has-cursor input, html.has-cursor textarea { cursor: text !important; }
+
+  /* No blinking text caret on page copy (shows up with Chrome's caret browsing / stray focus); form fields keep theirs */
+  * { caret-color: transparent; }
+  input, textarea, [contenteditable='true'] { caret-color: auto; }
 }
 
 @layer components {
