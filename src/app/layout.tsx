@@ -51,6 +51,7 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image', title: SITE.title, description: SITE.description, images: ['/opengraph-image'] },
   icons: {
     icon: [
+      { url: '/favicon.ico' },
       { url: '/favicon-64.png?v=5', sizes: '64x64', type: 'image/png' },
       { url: '/icon-512.png?v=5', sizes: '512x512', type: 'image/png' },
     ],
