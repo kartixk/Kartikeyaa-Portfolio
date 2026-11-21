@@ -208,10 +208,10 @@ const Navbar = () => {
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[hsl(var(--c-lime))] opacity-60" />
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-[hsl(var(--c-lime))]" />
                   </span>
-                  Now
+                  Status
                 </p>
-                <p className="display mt-3 text-2xl leading-tight">{experiences[0].role}</p>
-                <p className="mt-1 text-white/70">{experiences[0].company}</p>
+                <p className="display mt-3 text-2xl leading-tight">Open to Work</p>
+                <p className="mt-1 text-white/70">Full Stack / Frontend / Backend</p>
 
                 <div className="my-6 h-px bg-white/15" />
 

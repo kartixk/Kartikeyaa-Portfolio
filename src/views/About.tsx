@@ -70,10 +70,10 @@ const NowStrip = () => {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60 motion-reduce:animate-none" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
           </span>
-          Now
+          Status
         </p>
-        <p className="display mt-3 text-2xl leading-tight">{now.role}</p>
-        <p className="mt-1 text-sm text-muted-foreground">{now.company} · full-time</p>
+        <p className="display mt-3 text-2xl leading-tight">Open to Work</p>
+        <p className="mt-1 text-sm text-muted-foreground">Available for full-time &amp; contract roles</p>
       </Reveal>
 
       <Reveal delay={0.07} className="px-0 py-6 md:px-6">

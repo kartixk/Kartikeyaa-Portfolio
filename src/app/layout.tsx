@@ -73,11 +73,7 @@ const personJsonLd = {
   '@type': 'Person',
   name: SITE.name,
   url: SITE.url,
-  jobTitle: 'Software Developer',
-  worksFor: {
-    '@type': 'Organization',
-    name: 'Spotmies LLP',
-  },
+  jobTitle: 'Full Stack Developer',
   alumniOf: {
     '@type': 'EducationalOrganization',
     name: 'GITAM University',

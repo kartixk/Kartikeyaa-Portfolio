@@ -250,16 +250,16 @@ export const experiences = [
   {
     company: 'Spotmies LLP',
     role: 'Software Developer',
-    period: 'Dec 2025 – Present',
+    period: 'Dec 2025 – Oct 2026',
     // shown stacked on the Experience page, newest first
-    periods: ['Jul 2026 – Present · Full-time', 'Dec 2025 – Jun 2026 · Intern'],
-    short: 'Dec 2025 — Now',
+    periods: ['Jul 2026 – Oct 2026 · Full-time', 'Dec 2025 – Jun 2026 · Intern'],
+    short: 'Dec 2025 — Oct 2026',
     location: 'Remote',
     highlight: 'Intern to full-time on the core dev team',
     points: [
       'Joined as a Software Developer Intern in Dec 2025 and moved to a full-time role in Jul 2026.',
-      'Contributing to core development tasks across the product.',
-      'Collaborating with the team to build and maintain scalable web applications.',
+      'Contributed to core development tasks across the product.',
+      'Collaborated with the team to build and maintain scalable web applications.',
     ],
   },
   {
@@ -339,7 +339,7 @@ export const strengths = [
 ];
 
 export const timeline = [
-  { year: 'Dec 2025 — Now', title: 'Software Developer · Spotmies LLP', description: 'Joined as an intern, full-time since Jul 2026 — building and maintaining scalable web applications with the core dev team.' },
+  { year: 'Dec 2025 — Oct 2026', title: 'Software Developer · Spotmies LLP', description: 'Joined as an intern, full-time until Oct 2026 — built and maintained scalable web applications with the core dev team.' },
   { year: '2025', title: 'Software Engineer Intern', description: 'Interned at NTPC Limited & Zenith-Zap — shipped features used by real users.' },
   { year: '2025', title: 'AI-ML Virtual Internship', description: 'Explored ML foundations & NLP through the EduSkills virtual internship.' },
   { year: '2024', title: 'MERN Full Stack Training', description: 'Intensive training at XceedIQ Innovate360 — built production-ready apps end to end.' },
