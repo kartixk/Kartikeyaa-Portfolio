@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
+import CaseStudy, { BrowserFrame } from '@/components/CaseStudy';
 import PageTransition from '@/components/PageTransition';
 import TransitionLink from '@/components/TransitionLink';
 import { Magnetic, ProjectCover, Reveal, TextReveal } from '@/components/fx';
@@ -61,19 +62,34 @@ const ProjectDetail = ({ project }: { project: Project }) => {
 
       {/* cover */}
       <section className="wrap">
-        <div ref={coverRef} className="group relative aspect-[16/9] overflow-hidden rounded-3xl md:aspect-[21/9]">
-          <motion.div style={{ scale }} className="h-full w-full">
-            <ProjectCover kind={project.cover} hue={project.hue} hue2={project.hue2} image={project.image} alt={`${project.title} preview`} />
-          </motion.div>
-        </div>
+        {project.caseStudy && project.image ? (
+          <div
+            ref={coverRef}
+            className="relative overflow-hidden rounded-3xl px-4 pt-8 sm:px-10 sm:pt-14 md:px-20 md:pt-20"
+            style={{ background: `linear-gradient(135deg, hsl(${project.hue}), hsl(${project.hue2}))` }}
+          >
+            <motion.div style={{ scale, transformOrigin: 'bottom center' }} className="mx-auto max-w-[1100px]">
+              <BrowserFrame url={project.link?.replace(/^https?:\/\//, '').replace(/\/$/, '')} className="rounded-b-none border-b-0">
+                { }
+                <img src={project.image} alt={`${project.title} preview`} width={2160} height={1350} fetchPriority="high" className="block h-auto w-full" />
+              </BrowserFrame>
+            </motion.div>
+          </div>
+        ) : (
+          <div ref={coverRef} className="group relative aspect-[16/9] overflow-hidden rounded-3xl md:aspect-[21/9]">
+            <motion.div style={{ scale }} className="h-full w-full">
+              <ProjectCover kind={project.cover} hue={project.hue} hue2={project.hue2} image={project.image} alt={`${project.title} preview`} />
+            </motion.div>
+          </div>
+        )}
       </section>
 
       {/* facts */}
       <section className="wrap section pb-20 md:pb-32">
         <div className="grid gap-10 border-t border-line/15 pt-10 md:grid-cols-4">
           <Reveal>
-            <p className="eyebrow mb-4">Type</p>
-            <p className="text-lg font-medium">{project.subtitle}</p>
+            <p className="eyebrow mb-4">{project.caseStudy ? 'Role' : 'Type'}</p>
+            <p className="text-lg font-medium">{project.caseStudy ? project.caseStudy.role : project.subtitle}</p>
           </Reveal>
           <Reveal delay={0.06}>
             <p className="eyebrow mb-4">Category</p>
@@ -129,6 +145,8 @@ const ProjectDetail = ({ project }: { project: Project }) => {
           </div>
         </div>
       </section>
+
+      {project.caseStudy && <CaseStudy cs={project.caseStudy} />}
 
       {/* next */}
       <section className="border-t border-line/15">

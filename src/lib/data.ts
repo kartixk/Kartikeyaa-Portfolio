@@ -21,7 +21,43 @@ export interface Project {
   hue2: string;
   /** optional real screenshot (served from /public) */
   image?: string;
+  /** long-form write-up; when present the project page renders the full case study */
+  caseStudy?: CaseStudy;
 }
+
+export interface CaseShot {
+  src: string;
+  alt: string;
+  caption: string;
+}
+
+export interface CaseRole {
+  id: string;
+  label: string;
+  tagline: string;
+  shot: CaseShot;
+  points: string[];
+}
+
+export interface CaseStudy {
+  role: string;
+  /** the problem, written as the product's reason to exist */
+  problem: { heading: string; body: string[] };
+  stats: { value: string; label: string }[];
+  roles: CaseRole[];
+  /** ordered states an order moves through */
+  lifecycle: { step: string; note: string }[];
+  decisions: { title: string; body: string }[];
+  gallery: CaseShot[];
+  mobile: CaseShot[];
+  /** full-length page capture, scrolled on hover */
+  scrollShot: CaseShot;
+  stack: { name: string; use: string }[];
+  next: string[];
+  note: string;
+}
+
+const vp = (f: string) => `/projects/velvet-plate/${f}.jpg`;
 
 export const projects: Project[] = [
   {
@@ -38,10 +74,119 @@ export const projects: Project[] = [
     ],
     tech: ['React', 'Node.js', 'MongoDB', 'Express', 'Cloud Storage'],
     category: ['Web'],
+    link: 'https://velvet-plate.vercel.app/',
     github: '#',
     cover: 'plate',
     hue: '18 90% 70%',
     hue2: '36 95% 76%',
+    image: vp('landing-hero'),
+    caseStudy: {
+      role: 'Product design · Full-stack engineering',
+      problem: {
+        heading: 'A restaurant brand is really a network of kitchens.',
+        body: [
+          'Growing from one kitchen to many breaks the tools a single restaurant gets away with: menus drift between locations, stock and pricing differ by branch, and every new outlet has to be vetted before it can take a single order.',
+          'Velvet Plate treats the brand as a platform. Diners get one calm place to order from their nearest branch, branch managers get a console for their own kitchen, and the admin sees the whole network — with strict boundaries between the three.',
+        ],
+      },
+      stats: [
+        { value: '3', label: 'role-based experiences' },
+        { value: '4', label: 'order states, one tap each' },
+        { value: '2', label: 'dining modes: dine-in & takeaway' },
+        { value: '15%', label: 'platform fee, shown to every partner' },
+      ],
+      roles: [
+        {
+          id: 'diner',
+          label: 'Diner',
+          tagline: 'Warm, editorial and fast to order from.',
+          shot: { src: vp('customer-menu'), alt: 'Velvet Plate customer menu with dish photography', caption: 'Branch-aware menu with category filters and search' },
+          points: [
+            'Pick the nearest branch from a searchable location picker grouped by city.',
+            'Browse that branch’s live menu — veg / non-veg markers, quantity steppers and one-tap add to cart.',
+            'Check out as dine-in or takeaway with a transparent SGST / CGST breakdown.',
+            'Follow every order from Received to Completed.',
+          ],
+        },
+        {
+          id: 'manager',
+          label: 'Branch manager',
+          tagline: 'A calm, dense console for running one kitchen.',
+          shot: { src: vp('manager-orders'), alt: 'Partner Center live order board', caption: 'Live order board — advance an order with a single button' },
+          points: [
+            'Dashboard with gross revenue, platform fee, completed orders and average order value.',
+            'Live order board that moves tickets Received → Preparing → Ready → Completed.',
+            'Menu management with per-branch price and availability.',
+            'Store profile, verification status and payouts in one place.',
+          ],
+        },
+        {
+          id: 'admin',
+          label: 'Admin',
+          tagline: 'The whole network at a glance.',
+          shot: { src: vp('admin-overview'), alt: 'Admin Platform Pulse dashboard', caption: 'Platform Pulse — sales, orders and top outlets across every branch' },
+          points: [
+            'Platform Pulse with 7D / 30D / 90D / 12M windows and period-over-period deltas.',
+            'Branch directory with live, hidden, in-review and rejected states, revenue and order counts.',
+            'Application review for new partners: documents, bank details, approve or reject.',
+            'Global menu items that appear in every branch alongside branch-only items.',
+          ],
+        },
+      ],
+      lifecycle: [
+        { step: 'Received', note: 'Customer places the order' },
+        { step: 'Preparing', note: 'Kitchen picks it up' },
+        { step: 'Ready', note: 'Plated and waiting' },
+        { step: 'Completed', note: 'Handed over and counted in revenue' },
+      ],
+      decisions: [
+        {
+          title: 'Two visual languages, one brand',
+          body: 'Diners get warm cream, a serif display face and generous dish photography. Staff tools drop the ornament for dark sidebars, tight tables and clear status colour — same orange, different job.',
+        },
+        {
+          title: 'Tenancy is a product rule, not a filter',
+          body: 'Every query is scoped by role and branch on the server. A manager can only ever see their own orders and menu; only admins see across branches. The UI mirrors those boundaries so no one lands on a screen they cannot use.',
+        },
+        {
+          title: 'Onboarding is a gate',
+          body: 'A new branch moves from pending to under review to verified before it appears to diners. Admins check legal identity, payout bank details and licence documents in a single review screen.',
+        },
+        {
+          title: 'Money is never a surprise',
+          body: 'Checkout itemises SGST and CGST, and partner dashboards show gross revenue next to the 15% platform fee so settlements are predictable.',
+        },
+      ],
+      gallery: [
+        { src: vp('admin-analytics'), alt: 'Admin analytics with sales velocity, weekday and hourly demand charts', caption: 'Analytics — sales velocity, weekday mix and the busiest hours' },
+        { src: vp('manager-dashboard'), alt: 'Branch manager dashboard with revenue chart and order distribution', caption: 'Partner dashboard — revenue trend and dine-in vs takeaway' },
+        { src: vp('admin-branches'), alt: 'Admin branch directory with status and revenue', caption: 'Branch directory — status, revenue and orders per outlet' },
+        { src: vp('customer-cart'), alt: 'Checkout with dine-in and takeaway selection', caption: 'Checkout — order type, payment and tax breakdown' },
+        { src: vp('customer-orders'), alt: 'Customer order history', caption: 'Order history with live status' },
+        { src: vp('admin-requests'), alt: 'Admin application review screen', caption: 'Application review — verify a branch before it goes live' },
+      ],
+      mobile: [
+        { src: vp('m-landing'), alt: 'Velvet Plate landing page on mobile', caption: 'Landing' },
+        { src: vp('m-menu'), alt: 'Menu on mobile', caption: 'Menu' },
+        { src: vp('m-cart'), alt: 'Checkout on mobile', caption: 'Checkout' },
+        { src: vp('m-admin'), alt: 'Admin dashboard on mobile', caption: 'Admin' },
+      ],
+      scrollShot: { src: vp('landing-full'), alt: 'Full Velvet Plate landing page', caption: 'Landing page — hover to scroll the full length' },
+      stack: [
+        { name: 'React + Vite', use: 'Three role-based front ends, one codebase' },
+        { name: 'TanStack Query · Zustand', use: 'Server cache, cart and session state' },
+        { name: 'Tailwind · Motion', use: 'Design system and interaction polish' },
+        { name: 'Node · Express', use: 'REST API with role and branch guards' },
+        { name: 'Prisma · MongoDB', use: 'Orders, branches, catalogue and carts' },
+        { name: 'Cloudinary · Resend', use: 'Media storage and transactional email' },
+      ],
+      next: [
+        'UPI and card payments — the checkout already reserves the slots.',
+        'Push-based order updates so the kitchen board never needs a refresh.',
+        'Per-branch opening hours surfaced to diners at order time.',
+      ],
+      note: 'Dashboards are shown with sample data so the charts have something to say.',
+    },
   },
   {
     slug: 'zenith-zap',
