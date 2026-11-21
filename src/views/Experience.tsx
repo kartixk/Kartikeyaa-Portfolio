@@ -13,7 +13,7 @@ const Experience = () => (
       index="04"
       eyebrow="Professional journey"
       lines={[<span key="a">Where I&apos;ve</span>, <span key="b" className="serif text-gradient">worked.</span>]}
-      subtitle="Full-time at Spotmies today, after internships at NTPC and Zenith-Zap where I cut interaction time by 35% and page load by 25%."
+      subtitle="Previously shipped at Spotmies, with internships at NTPC and Zenith-Zap where I cut interaction time by 35% and page load by 25%."
       meta={`${String(experiences.length).padStart(2, '0')} roles`}
     />
 

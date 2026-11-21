@@ -86,7 +86,7 @@ const Sticky = ({ className }: { className?: string }) => (
       I&apos;m Kartikeya, a Full-Stack Developer who ships MERN, ML &amp; IoT products
     </p>
     <p className="mt-3 text-[13px] leading-relaxed text-black/70 sm:text-sm">
-      Full-time at <strong className="font-semibold text-black">Spotmies</strong>, internships at <strong className="font-semibold text-black">NTPC</strong> and{' '}
+      Previously at <strong className="font-semibold text-black">Spotmies</strong>, internships at <strong className="font-semibold text-black">NTPC</strong> and{' '}
       <strong className="font-semibold text-black">Zenith-Zap</strong> — building scalable web apps, an 82%-accurate sentiment model and live IoT dashboards.
     </p>
     <TransitionLink href="/contact" className="mt-4 inline-flex items-center gap-2 rounded-lg bg-black/15 px-3.5 py-2 text-sm font-semibold transition-colors hover:bg-black hover:text-[hsl(22_92%_84%)]">
@@ -110,7 +110,7 @@ const NowCard = ({ className }: { className?: string }) => (
       <ArrowUpRight size={18} className="shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
     </div>
     <p className="mt-3 text-[13px] leading-snug">
-      Software Developer at Spotmies LLP — currently exploring <span className="font-semibold">ML, NLP and IoT</span>.
+      Full-Stack Developer — previously at Spotmies LLP. Currently exploring <span className="font-semibold">ML, NLP and IoT</span>.
     </p>
     <div className="mt-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.14em] text-black/55">
       <span className="inline-flex items-center gap-1.5">
